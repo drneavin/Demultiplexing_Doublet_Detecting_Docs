@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Demultiplexing & Doublet Detection Workflow's documentation!
+Demultiplexing & Doublet Detection Workflow
 =======================================================================
 
 .. toctree::
