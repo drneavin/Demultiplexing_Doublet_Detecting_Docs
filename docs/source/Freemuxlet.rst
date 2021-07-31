@@ -1,4 +1,4 @@
-Free Tutorial
+Freemuxlet Tutorial
 ===========================
 
 Docs of freemuxlet here
