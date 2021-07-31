@@ -30,9 +30,9 @@ In addition to demultiplexing softwares, there are also doublet detecting softwa
    :caption: General
    :hidden:
    
-   Background
-   Installation
-   Quickstart
+   source/Background
+   source/Installation
+   source/Quickstart
 
 
 .. toctree::
@@ -40,11 +40,11 @@ In addition to demultiplexing softwares, there are also doublet detecting softwa
    :caption: Demultiplexing Tutorials
    :hidden:
 
-   Demuxlet
-   Freemuxlet
-   scSplit
-   Souporcell
-   Vireo
+   source/Demuxlet
+   source/Freemuxlet
+   source/scSplit
+   source/Souporcell
+   source/Vireo
 
 
 .. toctree::
@@ -52,13 +52,13 @@ In addition to demultiplexing softwares, there are also doublet detecting softwa
    :caption: Doublet Detecting Tutorials
    :hidden:
 
-   DoubletDecon
-   DoubletDetection
-   DoubletFinder
-   Scds
-   scDblFinder
-   Scrublet
-   Solo
+   source/DoubletDecon
+   source/DoubletDetection
+   source/DoubletFinder
+   source/Scds
+   source/scDblFinder
+   source/Scrublet
+   source/Solo
 
 
 
