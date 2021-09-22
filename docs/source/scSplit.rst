@@ -36,6 +36,7 @@ This is the data that you will ned to have prepared to run scSplit_:
 
   - Output directory (``$OUTDIR``)
 
+
 Run ScSplit
 -----------
 Prepare Bam file

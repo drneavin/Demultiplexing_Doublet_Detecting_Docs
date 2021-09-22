@@ -54,14 +54,14 @@ os.mkdirs(args.outdir)
 raw_counts = read10x.import_cellranger_mtx(args.counts_matrix)
 
 if args.barcodes is None:
-	if os.path.exists(os.path.join(tenX, "/barcodes.tsv.gz")):
-		barcodes_df = read10x.read_barcodes(os.path.join(tenX ,"/barcodes.tsv.gz"))
-	else if os.path.exists(os.path.join(tenX, "/barcodes.tsv")):
-		barcodes_df = read10x.read_barcodes(os.path.join(tenX ,"/barcodes.tsv"))
-	else:
-		print("No barcode file in provided counts matrix directory)
+    if os.path.exists(os.path.join(tenX, "/barcodes.tsv.gz")):
+        barcodes_df = read10x.read_barcodes(os.path.join(tenX ,"/barcodes.tsv.gz"))
+    elif os.path.exists(os.path.join(tenX, "/barcodes.tsv")):
+        barcodes_df = read10x.read_barcodes(os.path.join(tenX ,"/barcodes.tsv"))
+    else:
+        print("No barcode file in provided counts matrix directory")
 else:
-	barcodes_df = read10x.read_barcodes(args.barcodes)
+    barcodes_df = read10x.read_barcodes(args.barcodes)
 
 print('Counts matrix shape: {} rows, {} columns'.format(raw_counts.shape[0], raw_counts.shape[1]))
 
