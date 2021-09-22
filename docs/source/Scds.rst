@@ -20,7 +20,7 @@ This is the data that you will need to have preparede to run scds_:
 
   - A counts matrix ($COUNTS)
   
-    - DoubletDetection expects counts to be in the cellranger output format (directory containint ``barcodes.tsv``, ``genes.tsv`` and ``matrix.mtx`` **or** ``barcodes.tsv.gz``, ``features.tsv.gz`` and ``matrix.mtx.gz``)
+    - DoubletDetection expects counts to be in the cellranger output format (directory containing ``barcodes.tsv``, ``genes.tsv`` and ``matrix.mtx`` **or** ``barcodes.tsv.gz``, ``features.tsv.gz`` and ``matrix.mtx.gz``)
 
 	  - If you don't have your data in this format, you can run scds_ manually in python and load the data in using a method of your choosing.
 
