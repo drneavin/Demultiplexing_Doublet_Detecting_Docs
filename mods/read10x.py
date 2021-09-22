@@ -4,7 +4,7 @@ import os
 import scipy.io
 import gzip
 import pandas as pd
- 
+
 def import_cellranger_mtx(mtx_directory):
     """
     Reads in a sparse matrix (.mtx) exported by CellRanger in barcodes-by-genes format
