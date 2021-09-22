@@ -109,6 +109,7 @@ You can either run DoubletDecon_ with the wrapper script we have provided or you
 
     .. code-block:: R
 
+      .libPaths("/usr/local/lib/R/site-library") ### This is required so that R uses the libraries loaded in the image and not any local libraries
       library(DoubletDecon)
       library(tidyverse)
       library(Seurat)

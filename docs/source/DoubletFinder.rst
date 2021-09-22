@@ -10,8 +10,6 @@ We have provided a wrapper script that takes common arguments for DoubletFinder_
 
 
 
-
-
 Data
 ----
 This is the data that you will need to have preparede to run DoubletFinder_:
@@ -33,9 +31,9 @@ This is the data that you will need to have preparede to run DoubletFinder_:
 
 
 
-Run DoubletDecon
-----------------
-You can either run DoubletDecon_ with the wrapper script we have provided or you can run it manually if you would prefer to alter more parameters.
+Run DoubletFinder
+------------------
+You can either run DoubletFinder_ with the wrapper script we have provided or you can run it manually if you would prefer to alter more parameters.
 
 .. tabs::
 
@@ -82,6 +80,7 @@ You can either run DoubletDecon_ with the wrapper script we have provided or you
 
     .. code-block:: R
 
+      .libPaths("/usr/local/lib/R/site-library") ### This is required so that R uses the libraries loaded in the image and not any local libraries
       library(Seurat)
       library(ggplot2)
       library(DoubletFinder)
@@ -180,6 +179,7 @@ We have found these to be the most helpful:
   - This is the metric that DoubletFinder_ uses to call doublets and singlets. Typically the ``pK`` value at the maximum ``BC`` value is the best doublet calling threshold.
   
     .. figure:: _figures/pKvBCmetric.png
+
 
 Citation
 --------

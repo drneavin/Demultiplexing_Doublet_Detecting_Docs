@@ -44,7 +44,7 @@ sce <- scDblFinder(sce, dbr=doublet_ratio)
 results <- data.frame("Barcode" = rownames(colData(sce)), "scDblFinder_DropletType" = sce$scDblFinder.class, "scDblFinder_Score" = sce$scDblFinder.score)
 
 
-write_delim(results, path = paste0(args$out,"scDblFinder_doublets_singlets.txt"), delim = "\t")
+write_delim(results, path = paste0(args$out,"scDblFinder_doublets_singlets.tsv"), delim = "\t")
 
 ### Calculate number of doublets and singlets ###
 summary <- as.data.frame(table(results$scDblFinder_DropletType))
