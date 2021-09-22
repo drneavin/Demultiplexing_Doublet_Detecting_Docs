@@ -3,7 +3,7 @@
 DoubletDecon Tutorial
 ===========================
 
-.. _DoubletDecon: https://github.com/statgen/popscle
+.. _DoubletDecon: https://github.com/EDePasquale/DoubletDecon
 
 DoubletDecon_ is a transcription-based doublet detction software that uses deconvolution to identify doublets using the `R` statistical software.
 We have provided a wrapper script that takes common arguments for DoubletDecon_ and also provide example code for you to run manually if you prefer.
@@ -14,6 +14,14 @@ Data
 ----
 This is the data that you will need to have preparede to run DoubletDecon_:
 
+.. admonition:: Required
+  :class: important
+
+  - A QC-filtered and normalized seurat object (``$SEURAT_OBJ``)
+
+    - If you run DoubletDecon_ manually, you can use any data format of interest and read in with a method that works for your data.
+
+  - Output directory (``$OUTDIR``)
 
 
 
@@ -25,9 +33,67 @@ You can either run DoubletDecon_ with the wrapper script we have provided or you
 
   .. tab:: With Wrapper Script
 
+    .. admonition:: Note
+
+      Since it is hard to predict the correct *rhop* to use for each dataset, we typically run a range.
+      For example: 0.6, 0.7, 0.8, 0.9, 1, and 1.1.
+      Then we select the results that predict the number of doublets closest to the expected doublet number.
+      You can estimate that number with our **doublet calculator**
+      The *rhop* paramenter can be set with ``-r`` or ``--rhop`` in the command below.
+
     .. code-block::
 
-      singularity exec image.sif
+      singularity exec image.sif Rscript DoubletDecon.R -o $OUTDIR -s $SEURAT_OBJ
+
+    You can provide many other parameters as well which can be seen from running a help request:
+
+    .. code-block::
+
+      singularity exec image Rscrpt DoubletDecon.R -h
+
+      usage: DoubletDecon.R [-h] -o OUT -s SEURAT_OBJECT [-g NUM_GENES] [-r RHOP]
+                      [-p SPECIES] [-n NCORES] [-c REMOVECC] [-m PMF]
+                      [-f HEATMAP] [-t CENTROIDS] [-d NUM_DOUBS] [-5 ONLY50]
+                      [-u MIN_UNIQ]
+
+      optional arguments:
+        -h, --help            show this help message and exit
+        -o OUT, --out OUT     The output directory where results will be saved
+        -s SEURAT_OBJECT, --seurat_object SEURAT_OBJECT
+                              A QC, normalized seurat object with
+                              classificaitons/clusters as Idents().
+        -g NUM_GENES, --num_genes NUM_GENES
+                              Number of genes to use in
+                              'Improved_Seurat_Pre_Process' function.
+        -r RHOP, --rhop RHOP  rhop to use in DoubletDecon - the number of SD from
+                              the mean to identify upper limit to blacklist
+        -p SPECIES, --species SPECIES
+                              The species of your sample. Can be scientific species
+                              name, KEGG ID, three letter species abbreviation, or
+                              NCBI ID.
+        -n NCORES, --nCores NCORES
+                              The number of unique cores you would like to use to
+                              run DoubletDecon. By default, uses one less than
+                              available detected.
+        -c REMOVECC, --removeCC REMOVECC
+                              Whether to remove clusters enriched in cell cycle
+                              genes.
+        -m PMF, --pmf PMF     Whether to use unique gene expression in doublet
+                              determination.
+        -f HEATMAP, --heatmap HEATMAP
+                              Whether to generate heatmaps.
+        -t CENTROIDS, --centroids CENTROIDS
+                              Whether to use centroids instead of medoids for
+                              doublet detecting.
+        -d NUM_DOUBS, --num_doubs NUM_DOUBS
+                              The nunmber of doublets to simulate for each cluster
+                              pair.
+        -5 ONLY50, --only50 ONLY50
+                              Whether to only compute doublets as 50:50 ratio.
+                              Default is to use other ratios as well.
+        -u MIN_UNIQ, --min_uniq MIN_UNIQ
+                              Minimum number of unique genes to rescue a cluster
+                              identified as doublets.
 
   .. tab:: Run in R
 
@@ -47,6 +113,7 @@ You can either run DoubletDecon_ with the wrapper script we have provided or you
       library(tidyverse)
       library(Seurat)
       library(ggplot2)
+      library(data.table)
 
       ## Set up variables ##
       out <- 
@@ -72,7 +139,7 @@ You can either run DoubletDecon_ with the wrapper script we have provided or you
         fullDataFile = NULL, 
         removeCC = FALSE, 
         species = "hsa", 
-        rhop = 0.9,
+        rhop = 0.9,                         ## We recommend testing multiple rhop parameters to find which fits your data the best
         write = TRUE, 
         PMF = TRUE, 
         useFull = FALSE, 
@@ -86,14 +153,14 @@ You can either run DoubletDecon_ with the wrapper script we have provided or you
 
 
 
-      doublets <- fread(paste0(out, "/Final_doublets_groups_DoubletDecon_results.txt"))
+      doublets <- read.table(paste0(out, "/Final_doublets_groups_DoubletDecon_results.txt"))
       doublets$Barcode <- gsub("\\.", "-",rownames(doublets))
       doublets$DoubletDecon_DropletType <- "doublet"
       doublets$V1 <- NULL
       doublets$V2 <- NULL
 
 
-      singlets <- fread(paste0(out, "/Final_nondoublets_groups_DoubletDecon_results.txt"))
+      singlets <- read.table(paste0(out, "/Final_nondoublets_groups_DoubletDecon_results.txt"))
       singlets$Barcode <- gsub("\\.", "-",rownames(singlets))
       singlets$DoubletDecon_DropletType <- "singlet"
       singlets$V1 <- NULL
@@ -101,10 +168,56 @@ You can either run DoubletDecon_ with the wrapper script we have provided or you
 
       doublets_singlets <- rbind(singlets,doublets)
 
-      fwrite(doublets_singlets, paste0(out, "/DoubletDecon_doublets_singlets.tsv", sep = "\t"))
+      fwrite(doublets_singlets, paste0(out, "/DoubletDecon_doublets_singlets.tsv"), sep = "\t", append = FALSE)
 
 
-      ### Make a summaruy of the number of singlets and doublets
+      ### Make a summary of the number of singlets and doublets
       summary <- as.data.frame(table(doublets_singlets$DoubletDecon_DropletType))
       colnames(summary) <- c("Classification", "Droplet N")
-      write_delim(summary, paste0(out,"/DoubletDecon_doublet_summary.tsv"), "\t")
+      fwrite(summary, paste0(out,"/DoubletDecon_doublet_summary.tsv"), sep = "\t", append = FALSE)
+
+
+
+DoubletDecon Results and Interpretation
+----------------------------------------
+After running the DoubletDecon_, you will have multiple files in the ``$OUTDIR``.  
+DoubletDecon_ puts most of the results in multiple separate files. 
+However, the wrapper script and the example code has some steps to combine these results together into a single file, which will likely be the most informative output.
+
+- ``DoubletDecon_doublet_summary.tsv``
+  
+  - A sumamry of the number of singlets and doublets predicted by DoubletDecon_.
+
+    +----------------+-----------+
+    |Classification  | Droplet N |
+    +================+===========+
+    |doublet         | 1510      |
+    +----------------+-----------+
+    |singlet         | 19470     |
+    +----------------+-----------+
+
+
+- ``DoubletDecon_doublets_singlets.tsv``
+
+  - The per-barcode singlet and doublet classification from DoubletDecon_.
+
+    +-------------------------+--------------------------+
+    | Barcode                 | DoubletDecon_DropletType |
+    +=========================+==========================+
+    | AAACCTGAGCAGCGTA-1      | singlet                  |
+    +-------------------------+--------------------------+
+    | AAACCTGAGCGATGAC-1      | singlet                  |
+    +-------------------------+--------------------------+
+    | AAACCTGAGCGTAGTG-1      | singlet                  |
+    +-------------------------+--------------------------+
+    | AAACCTGAGGCTCATT-1      | singlet                  |
+    +-------------------------+--------------------------+
+    | AAACCTGAGTAGCCGA-1      | singlet                  |
+    +-------------------------+--------------------------+
+    | ...                     | ...                      |
+    +-------------------------+--------------------------+
+
+
+Citation
+--------
+If you used this workflow for analysis, please reference our paper (REFERENCE) as well as `DoubletDecon <https://www.sciencedirect.com/science/article/pii/S2211124719312860>`__.

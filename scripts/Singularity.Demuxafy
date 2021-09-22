@@ -15,106 +15,106 @@ From: continuumio/miniconda3
     #!/bin/bash
     eval "$(command conda 'shell.bash' 'hook' 2> /dev/null)"
     export PATH=/opt/conda/bin/:$PATH
-    apt update
-    yes | apt upgrade
-    yes | apt-get install build-essential
-    apt-get install -y --no-install-recommends apt-utils
-    apt-get install -y gcc-7 g++-7 gfortran-7 libgfortran-7-dev
-    update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 60 --slave /usr/bin/g++ g++ /usr/bin/g++-7
-    update-alternatives --config gcc
-    gcc --version
-    yes | apt-get install wget
-    yes | apt-get install curl
-    apt install -y dirmngr --install-recommends
-    apt install -y software-properties-common
-    apt install -y apt-transport-https
-    add-apt-repository 'deb http://deb.debian.org/debian buster-backports main'
-    yes | apt-get update
-    yes | apt-get upgrade
-    apt install -y ca-certificates gnupg2
-    apt-key adv --keyserver keyserver.ubuntu.com --recv-key 'E19F5F87128899B192B1A2C2AD5F960A256A04AF'
-    add-apt-repository 'deb http://cloud.r-project.org/bin/linux/debian buster-cran40/'
-    apt-get update
-    apt install -y r-base
-    apt install -y r-base-dev
-    apt-get update
-    apt-get install -y libv8-dev
-    apt-get update
+    # apt update
+    # yes | apt upgrade
+    # yes | apt-get install build-essential
+    # apt-get install -y --no-install-recommends apt-utils
+    # apt-get install -y gcc-7 g++-7 gfortran-7 libgfortran-7-dev
+    # update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 60 --slave /usr/bin/g++ g++ /usr/bin/g++-7
+    # update-alternatives --config gcc
+    # gcc --version
+    # yes | apt-get install wget
+    # yes | apt-get install curl
+    # apt install -y dirmngr --install-recommends
+    # apt install -y software-properties-common
+    # apt install -y apt-transport-https
+    # add-apt-repository 'deb http://deb.debian.org/debian buster-backports main'
+    # yes | apt-get update
+    # yes | apt-get upgrade
+    # apt install -y ca-certificates gnupg2
+    # apt-key adv --keyserver keyserver.ubuntu.com --recv-key 'E19F5F87128899B192B1A2C2AD5F960A256A04AF'
+    # add-apt-repository 'deb http://cloud.r-project.org/bin/linux/debian buster-cran40/'
+    # apt-get update
+    # apt install -y r-base
+    # apt install -y r-base-dev
+    # apt-get update
+    # apt-get install -y libv8-dev
+    # apt-get update
 
 	### Make environment for conda and install python 3.6.8
-    yes | /opt/conda/bin/conda create -n py36 python=3.6.8
-    yes | apt-get install git
+    # yes | /opt/conda/bin/conda create -n py36 python=3.6.8
+    # yes | apt-get install git
     /opt/conda/bin/conda init bash
     eval "$(conda shell.bash hook)"
     conda activate py36
-        yes | apt-get install libncurses5-dev
-        yes | apt-get install zlib1g-dev
-        yes | apt-get install libbz2-dev
-        yes | apt-get install liblzma-dev
-        yes | apt-get install zlib1g
-        yes | apt-get install zlib1g-dev
-        apt-get install -y pkg-config
-        apt-get install -y libcurl4-openssl-dev
-        apt-get install -y graphviz
-        apt-get install -y graphviz-dev
-        apt-get install -y libxml2
-        apt-get install -y libxml2-dev
-        apt-get install -y bzip2
-        apt-get install -y libssl-dev
-        apt-get install -y devscripts
+    #     yes | apt-get install libncurses5-dev
+    #     yes | apt-get install zlib1g-dev
+    #     yes | apt-get install libbz2-dev
+    #     yes | apt-get install liblzma-dev
+    #     yes | apt-get install zlib1g
+    #     yes | apt-get install zlib1g-dev
+    #     apt-get install -y pkg-config
+    #     apt-get install -y libcurl4-openssl-dev
+    #     apt-get install -y graphviz
+    #     apt-get install -y graphviz-dev
+    #     apt-get install -y libxml2
+    #     apt-get install -y libxml2-dev
+    #     apt-get install -y bzip2
+    #     apt-get install -y libssl-dev
+    #     apt-get install -y devscripts
 
-    cd /opt
-		wget https://github.com/Kitware/CMake/releases/download/v3.14.4/cmake-3.14.4.tar.gz
-		tar -xzf cmake-3.14.4.tar.gz
-		rm cmake-3.14.4.tar.gz
-		cd  cmake-3.14.4
-		./configure
-		make
-		make install
-		cmake --version
+    # cd /opt
+	# 	wget https://github.com/Kitware/CMake/releases/download/v3.14.4/cmake-3.14.4.tar.gz
+	# 	tar -xzf cmake-3.14.4.tar.gz
+	# 	rm cmake-3.14.4.tar.gz
+	# 	cd  cmake-3.14.4
+	# 	./configure
+	# 	make
+	# 	make install
+	# 	cmake --version
 
-	### Install python dependencies + scrublet ###
-    yes | /opt/conda/envs/py36/bin/pip install pysam ##scSplit, souporcell
-    /opt/conda/envs/py36/bin/pip install pyvcf ##scSplit, souporcell
-    /opt/conda/envs/py36/bin/pip install numpy
-    /opt/conda/envs/py36/bin/pip install scipy 
-    /opt/conda/envs/py36/bin/pip install pystan==2.17.1.0 ## souporcell
-    /opt/conda/envs/py36/bin/pip install pyfaidx ## souporcell
-    /opt/conda/envs/py36/bin/pip install scikit-learn
-    /opt/conda/envs/py36/bin/pip install pandas
-    /opt/conda/envs/py36/bin/pip install matplotlib==3.2.2
-    # /opt/conda/envs/py36/bin/pip install matplotlib==3.4.3 ### try newer release to see if suitable
-    /opt/conda/envs/py36/bin/pip install scikit-image
-    /opt/conda/envs/py36/bin/pip install numba
-    /opt/conda/envs/py36/bin/pip install annoy
-    /opt/conda/envs/py36/bin/pip install umap-learn
-    /opt/conda/envs/py36/bin/pip install h5py
-    /opt/conda/envs/py36/bin/pip install xgboost
-	/opt/conda/envs/py36/bin/pip install argparse
-    /opt/conda/envs/py36/bin/pip install install Cython
+	# ### Install python dependencies + scrublet ###
+    # yes | /opt/conda/envs/py36/bin/pip install pysam ##scSplit, souporcell
+    # /opt/conda/envs/py36/bin/pip install pyvcf ##scSplit, souporcell
+    # /opt/conda/envs/py36/bin/pip install numpy
+    # /opt/conda/envs/py36/bin/pip install scipy 
+    # /opt/conda/envs/py36/bin/pip install pystan==2.17.1.0 ## souporcell
+    # /opt/conda/envs/py36/bin/pip install pyfaidx ## souporcell
+    # /opt/conda/envs/py36/bin/pip install scikit-learn
+    # /opt/conda/envs/py36/bin/pip install pandas
+    # /opt/conda/envs/py36/bin/pip install matplotlib==3.2.2
+    # # /opt/conda/envs/py36/bin/pip install matplotlib==3.4.3 ### try newer release to see if suitable
+    # /opt/conda/envs/py36/bin/pip install scikit-image
+    # /opt/conda/envs/py36/bin/pip install numba
+    # /opt/conda/envs/py36/bin/pip install annoy
+    # /opt/conda/envs/py36/bin/pip install umap-learn
+    # /opt/conda/envs/py36/bin/pip install h5py
+    # /opt/conda/envs/py36/bin/pip install xgboost
+	# /opt/conda/envs/py36/bin/pip install argparse
+    # /opt/conda/envs/py36/bin/pip install install Cython
 
-	### Install CellSNP and Vireo ###
-    pip3 install vireoSNP
-	conda config --add channels bioconda
-	conda config --add channels conda-forge
-    conda install cellsnp-lite
+	# ### Install CellSNP and Vireo ###
+    # pip3 install vireoSNP
+	# conda config --add channels bioconda
+	# conda config --add channels conda-forge
+    # conda install cellsnp-lite
 
 
-	### Install minimap 2 for souporcell ###
-    cd /opt
-    wget https://github.com/lh3/minimap2/archive/v2.7.tar.gz
-        tar -xzvf v2.7.tar.gz
-		rm v2.7.tar.gz
-        cd minimap2-2.7
-        make
-    	echo 'alias minimap2=/opt/minimap2-2.7/minimap2' >> $SINGULARITY_ENVIRONMENT
+	# ### Install minimap 2 for souporcell ###
+    # cd /opt
+    # wget https://github.com/lh3/minimap2/archive/v2.7.tar.gz
+    #     tar -xzvf v2.7.tar.gz
+	# 	rm v2.7.tar.gz
+    #     cd minimap2-2.7
+    #     make
+    # 	echo 'alias minimap2=/opt/minimap2-2.7/minimap2' >> $SINGULARITY_ENVIRONMENT
 
-	### Install bedtools2 for souporcell ###
-    cd /opt
-    wget https://github.com/arq5x/bedtools2/releases/download/v2.28.0/bedtools-2.28.0.tar.gz
-        tar -zxvf bedtools-2.28.0.tar.gz
-        cd bedtools2
-        make
+	# ### Install bedtools2 for souporcell ###
+    # cd /opt
+    # wget https://github.com/arq5x/bedtools2/releases/download/v2.28.0/bedtools-2.28.0.tar.gz
+    #     tar -zxvf bedtools-2.28.0.tar.gz
+    #     cd bedtools2
+    #     make
 		cd /opt
 		rm bedtools-2.28.0.tar.gz
 
@@ -183,10 +183,12 @@ From: continuumio/miniconda3
 		echo 'freebayes bcftools=/opt/freebayes/freebayes' >> $SINGULARITY_ENVIRONMENT
 
 	### Install tabixpp - required for vcflib (next) ###
-	git clone --recursive git@github.com:ekg/tabixpp.git
-	make
-	ranlib tabix.o 
-	cp tabixpp/libtabixpp.a /usr/lib64/
+	cd /opt
+		git clone --recursive https://github.com/ekg/tabixpp.git
+		cd tabixpp
+		make
+		ranlib tabix.o 
+		cp tabixpp/libtabixpp.a /usr/lib64/
 
 	### Install vcflib - I think for scSplit to parallelize if necessary? ###
     cd /opt

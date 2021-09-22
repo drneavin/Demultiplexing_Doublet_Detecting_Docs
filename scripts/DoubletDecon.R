@@ -17,7 +17,7 @@ parser$add_argument("-p", "--species", required = FALSE, type = "character", def
 parser$add_argument("-n", "--nCores", required = FALSE, type = "double", default=-1, help = "The number of unique cores you would like to use to run DoubletDecon. By default, uses one less than available detected.")
 parser$add_argument("-c", "--removeCC", required = FALSE, type = "logical", default=FALSE, help = "Whether to remove clusters enriched in cell cycle genes.")
 parser$add_argument("-m", "--pmf", required = FALSE, type = "logical", default=TRUE, help = "Whether to use unique gene expression in doublet determination.")
-parser$add_argument("-f", "--heatmap_fig", required = FALSE, type = "logical", default=FALSE, help = "Whether to generate heatmaps.")
+parser$add_argument("-f", "--heatmap", required = FALSE, type = "logical", default=FALSE, help = "Whether to generate heatmaps.")
 parser$add_argument("-t", "--centroids", required = FALSE, type = "logical", default=FALSE, help = "Whether to use centroids instead of medoids for doublet detecting.")
 parser$add_argument("-d", "--num_doubs", required = FALSE, type = "integer", default=100, help = "The nunmber of doublets to simulate for each cluster pair.")
 parser$add_argument("-5", "--only50", required = FALSE, type = "logical", default=FALSE, help = "Whether to only compute doublets as 50:50 ratio. Default is to use other ratios as well.")
@@ -31,6 +31,7 @@ library(DoubletDecon)
 library(tidyverse)
 library(Seurat)
 library(ggplot2)
+library(data.table)
 
 
 ## make sure the directory exists ###
