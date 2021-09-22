@@ -1,4 +1,186 @@
+.. _DoubletFinder-docs:
+
 DoubletFinder Tutorial
 ===========================
 
-Docs of DoubletFinder here
+.. _DoubletFinder: https://github.com/chris-mcginnis-ucsf/DoubletFinder
+
+DoubletFinder_ is a transcription-based doublet detection software that uses simulated doublets to find droplets that has a high proportion of neighbors that are doublets.
+We have provided a wrapper script that takes common arguments for DoubletFinder_ and we alsp provide an example script that you can run manually in R if you prefer.
+
+
+
+
+
+Data
+----
+This is the data that you will need to have preparede to run DoubletFinder_:
+
+.. admonition:: Required
+  :class: important
+
+  - A QC-filtered and normalized seurat object (``$SEURAT_OBJ``)
+
+    - If you run DoubletFinder_ manually, you can use any data format of interest and read in with a method that works for your data.
+
+  - Output directory (``$OUTDIR``)
+
+  - Expected number of doublets (``$DOUBLETS``)
+
+    - This can be calculated based on the number of droplets captured using our **doublet calculator**
+
+
+
+
+
+Run DoubletDecon
+----------------
+You can either run DoubletDecon_ with the wrapper script we have provided or you can run it manually if you would prefer to alter more parameters.
+
+.. tabs::
+
+  .. tab:: With Wrapper Script
+
+
+    .. code-block:: bash
+
+      singularity exec image.sif Rscript DoubletFinder.R -o $OUTDIR -s $SEURAT_OBJ -c TRUE -d $DOUBLETS
+
+    You can provide many other parameters as well which can be seen from running a help request:
+
+    .. code-block:: bash
+
+      Rscript DoubletFinder.R -h
+
+
+      usage: DoubletFinder.R [-h] -o OUT -s SEURAT_OBJECT -c SCT -d DOUBLET_NUMBER                       [-p PCS] [-n PN]a@brenner-fpoptional arguments:  -h, --help            show this help message and exit
+        -o OUT, --out OUT     The output directory where results will be saved
+        -s SEURAT_OBJECT, --seurat_object SEURAT_OBJECT
+                              A QC, normalized seurat object with
+                              classificaitons/clusters as Idents().
+        -c SCT, --sct SCT     Whether sctransform was used for normalization.
+        -d DOUBLET_NUMBER, --doublet_number DOUBLET_NUMBER
+                              Number of expected doublets based on droplets
+                              captured.
+        -p PCS, --PCs PCS     Number of PCs to use for 'doubletFinder_v3' function.
+        -n PN, --pN PN        Number of doublets to simulate as a proportion of the
+                              pool size.
+
+
+  .. tab:: Run in R
+
+    First, you will have to start R.
+    We have built R and all the required software to run DoubletFinder_ into the singularity image so you can run it directly from the image.
+
+    .. code-block:: bash
+
+      singularity exec image.sif R
+
+    That will open R in your terminal.
+    Next, you can load all the libraries and run DoubletFinder_.
+
+
+    .. code-block:: R
+
+      library(Seurat)
+      library(ggplot2)
+      library(DoubletFinder)
+      library(dplyr)
+      library(tidyr)
+      library(tidyverse)
+
+      ## Set up parameters ##
+      out <- "/path/to/doubletfinder/outdir"
+      seurat_object <- "/path/to/preprocessed/seurat_object.rds"
+      doublet_number <- 3200
+
+      ## make sure the directory exists ###
+      dir.create(out, recursive = TRUE)
+
+      ## Add max future globals size for large pools
+      options(future.globals.maxSize=(850*1024^2))
+
+      ### Read in the data
+      seurat <- readRDS(seurat_object)
+
+
+      ## pK Identification (no ground-truth) ---------------------------------------------------------------------------------------
+      sweep.res.list <- paramSweep_v3(seurat, PCs = 1:10, sct = TRUE)
+      sweep.stats <- summarizeSweep(sweep.res.list, GT = FALSE)
+      bcmvn <- find.pK(sweep.stats)
+      plot <- ggplot(bcmvn, aes(pK, BCmetric)) +
+          geom_point()
+      ggsave(plot, filename = paste0(out,"/pKvBCmetric.png"))
+
+      ## Homotypic Doublet Proportion Estimate -------------------------------------------------------------------------------------
+      annotations <- Idents(seurat)
+      homotypic.prop <- modelHomotypic(annotations)
+      nExp_poi <- doublet_number
+      print(paste0("Expected number of doublets: ", doublet_number))
+      nExp_poi.adj <- round(doublet_number*(1-homotypic.prop))
+
+      ## Run DoubletFinder with varying classification stringencies ----------------------------------------------------------------
+      seurat <- doubletFinder_v3(seurat, PCs = 1:10, pN = 10, pK = as.numeric(as.character(bcmvn$pK[which(bcmvn$BCmetric == max(bcmvn$BCmetric))])), nExp = nExp_poi.adj, reuse.pANN = FALSE, sct = TRUE)
+      doublets <- as.data.frame(cbind(colnames(seurat), seurat@meta.data[,grepl(paste0("pANN_0.25_",as.numeric(as.character(bcmvn$pK[which(bcmvn$BCmetric == max(bcmvn$BCmetric))]))), colnames(seurat@meta.data))], seurat@meta.data[,grepl(paste0("DF.classifications_0.25_",as.numeric(as.character(bcmvn$pK[which(bcmvn$BCmetric == max(bcmvn$BCmetric))]))), colnames(seurat@meta.data))]))
+      colnames(doublets) <-  c("Barcode","DoubletFinder_score","DoubletFinder_DropletType")
+      doublets$DoubletFinder_DropletType <- gsub("Singlet","singlet",doublets$DoubletFinder_DropletType) %>% gsub("Doublet","doublet",.)
+
+      write_delim(doublets, path = paste0(out,"/DoubletFinder_doublets_singlets.tsv"), delim = "\t")
+
+      ### Calculate number of doublets and singlets ###
+      summary <- as.data.frame(table(doublets$DoubletFinder_DropletType))
+      colnames(summary) <- c("Classification", "Droplet N")
+      write_delim(summary, paste0(out,"/DoubletFinder_doublet_summary.tsv"), "\t")
+
+
+
+DoubletFinder Results and Interpretation
+----------------------------------------
+After running the DoubletFinder_, you will have multiple files in the ``$OUTDIR``.
+We have found these to be the most helpful:
+
+- ``DoubletFinder_doublet_summary.tsv``
+
+  - A sumamry of the number of singlets and doublets predicted by DoubletFinder_.
+
+    +----------------+-----------+
+    | Classification | Droplet N |
+    +================+===========+
+    | doublet        | 3014      |
+    +----------------+-----------+
+    | singlet        | 16395     |
+    +----------------+-----------+
+
+- ``DoubletFinder_doublets_singlets.tsv``
+
+  - The per-barcode singlet and doublet classification from DoubletFinder_.
+
+    +------------------------+-------------------------+-------------------------+
+    | Barcode                | DoubletFinder_score     |DoubletFinder_DropletType|
+    +========================+=========================+=========================+
+    | AAACCTGAGATAGCAT-1     | 0.206401766004415       |singlet                  |
+    +------------------------+-------------------------+-------------------------+
+    | AAACCTGAGCAGCGTA-1     | 0.144039735099338       |singlet                  |
+    +------------------------+-------------------------+-------------------------+
+    | AAACCTGAGCGATGAC-1     | 0.191501103752759       |singlet                  |
+    +------------------------+-------------------------+-------------------------+
+    | AAACCTGAGCGTAGTG-1     | 0.212472406181015       |singlet                  |
+    +------------------------+-------------------------+-------------------------+
+    | AAACCTGAGGAGTTTA-1     | 0.242273730684327       |singlet                  |
+    +------------------------+-------------------------+-------------------------+
+    | AAACCTGAGGCTCATT-1     | 0.211368653421634       |singlet                  |
+    +------------------------+-------------------------+-------------------------+
+    | AAACCTGAGGGCACTA-1     | 0.626379690949227       |doublet                  |
+    +------------------------+-------------------------+-------------------------+
+    | ...                    | ...                     |...                      |
+    +------------------------+-------------------------+-------------------------+
+
+- ``pKvBCmetric.png``
+
+  - This is the metric that DoubletFinder_ uses to call doublets and singlets. Typically the ``pK`` value at the maximum ``BC`` value is the best doublet calling threshold.
+  
+    .. figure:: _figures/pKvBCmetric.png
+
+Citation
+--------
+If you used this workflow for analysis, please reference our paper (REFERENCE) as well as `DoubletFinder <https://www.sciencedirect.com/science/article/pii/S2405471219300730>`__.

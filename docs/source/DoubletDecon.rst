@@ -41,13 +41,13 @@ You can either run DoubletDecon_ with the wrapper script we have provided or you
       You can estimate that number with our **doublet calculator**
       The *rhop* paramenter can be set with ``-r`` or ``--rhop`` in the command below.
 
-    .. code-block::
+    .. code-block:: bash
 
       singularity exec image.sif Rscript DoubletDecon.R -o $OUTDIR -s $SEURAT_OBJ
 
     You can provide many other parameters as well which can be seen from running a help request:
 
-    .. code-block::
+    .. code-block:: bash
 
       singularity exec image Rscrpt DoubletDecon.R -h
 
@@ -100,14 +100,14 @@ You can either run DoubletDecon_ with the wrapper script we have provided or you
     First, you will have to start R.
     We have built R and all the required software to run DoubletDecon_ into the singularity image so you can run it directly from the image.
 
-    .. code-block::
+    .. code-block:: bash
 
       singularity exec image.sif R
 
     That will open R in your terminal.
     Next, you can load all the libraries and run DoubletDecon_.
 
-    .. code-block::
+    .. code-block:: R
 
       library(DoubletDecon)
       library(tidyverse)
@@ -116,7 +116,7 @@ You can either run DoubletDecon_ with the wrapper script we have provided or you
       library(data.table)
 
       ## Set up variables ##
-      out <- 
+      out <- "/path/to/doubletdecon/outdir"
       seurat_object <- "/path/to/preprocessed/seurat_object.rds"
 
 

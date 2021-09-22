@@ -37,7 +37,7 @@ seurat <- readRDS(args$seurat_object)
 
 
 ## pK Identification (no ground-truth) ---------------------------------------------------------------------------------------
-sweep.res.list <- paramSweep_v3(seurat, PCs = 1:10, sct = TRUE)
+sweep.res.list <- paramSweep_v3(seurat, PCs = 1:10, sct = args$sct)
 sweep.stats <- summarizeSweep(sweep.res.list, GT = FALSE)
 bcmvn <- find.pK(sweep.stats)
 plot <- ggplot(bcmvn, aes(pK, BCmetric)) +
