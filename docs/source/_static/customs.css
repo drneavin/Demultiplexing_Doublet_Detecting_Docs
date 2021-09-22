@@ -1,1 +1,7 @@
-.wy-side-nav-search{ background-color:	#953553 }
+.rst-content .required .admonition-title {
+	background: #3dbc9c
+ }
+ 
+ .rst-content .required {
+	background: #dbfaf4
+ }

@@ -1,9 +1,11 @@
+.. _scSplit-docs:
+
 scSplit Tutorial
 ===========================
 
 .. _scSplit: https://github.com/jon-xu/scSplit
 
-ScSplit_ is a reference-free demultiplexing software. If you have reference SNP genotypes, it would be better to use a demultiplexing software that can handle reference SNP genotypes (Demuxlet_, Souporcell_ or Vireo_)
+ScSplit_ is a reference-free demultiplexing software. If you have reference SNP genotypes, it would be better to use a demultiplexing software that can handle reference SNP genotypes (:ref:`Demuxlet <Demuxlet-docs>`, :ref:`Souporcell <Souporcell-docs>` or :ref:`Vireo<Vireo-docs>`)
 
 Data
 ----
@@ -31,6 +33,8 @@ This is the data that you will ned to have prepared to run scSplit_:
     - Filter for common SNPs (> 5% minor allele frequency) and SNPs overlapping genes
 
   - Number of samples in pool (``$N``)
+
+  - Output directory (``$OUTDIR``)
 
 Run ScSplit
 -----------
@@ -64,9 +68,23 @@ The prepared SNV genotypes and bam file can then be used to demultiplex and call
     singularity exec image.sif scSplit run -r $OUTDIR/ref_filtered.csv -a $OUTDIR/alt_filtered.csv -n $N -o $OUTDIR
     singularity exec image.sif scSplit genotype -r $OUTDIR/ref_filtered.csv -a $OUTDIR/alt_filtered.csv -p $OUTDIR/scSplit_P_s_c.csv -o $OUTDIR
 
+
+ScSplit Summary
+^^^^^^^^^^^^^^^
+We have provided a script that will provide a summary of the number of droplets classified as doublets, ambiguous and assigned to each cluster by scSplit_. You can run this to get a fast and easy summary of your results with:
+
+.. code-block:: bash
+
+  singularity exec image.sif bash scSplit_summary.sh $OUTDIR scSplit_doublets_singlets.csv
+
+.. admonition:: Note
+
+  If you named your final file something else, you can change the name of the file in the command above (scSplit_doublets_singlets.csv) to whatever filename you used
+
+
 Correlating Cluster to Donor Reference SNP Genotypes (optional)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-If you have reference SNP genotypes for some or all of the donors in your pool, you can identify which cluster is best correlated with each donor in your reference SNP genotypes. We have provided a script that will do this and provide a heatmap correlation figure and the predicted individual that should be assigned for each cluster. You can either run it with the script by providing the reference SNP genotypes ($VCF), the cluster SNP genotypes ($OUTDIR/scSplit.vcf) and the output directory ($OUTDIR) You can run this script with:
+If you have reference SNP genotypes for some or all of the donors in your pool, you can identify which cluster is best correlated with each donor in your reference SNP genotypes. We have provided a script that will do this and provide a heatmap correlation figure and the predicted individual that should be assigned for each cluster. You can either run it with the script by providing the reference SNP genotypes (``$VCF``), the cluster SNP genotypes (``$OUTDIR/scSplit.vcf``) and the output directory (``$OUTDIR``) You can run this script with:
 
 .. admonition:: Note
 
@@ -345,23 +363,9 @@ If you have reference SNP genotypes for some or all of the donors in your pool, 
 
 
 
-
-ScSplit Summary
-^^^^^^^^^^^^^^^
-We have provided a script that will provide a summary of the number of droplets classified as doublets, ambiguous and assigned to each cluster by scSplit. You can run this to get a fast and easy summary of your results with:
-
-.. code-block:: bash
-
-  singularity exec image.sif bash scSplit_summary.sh $OUTDIR scSplit_doublets_singlets.csv
-
-.. admonition:: Note
-
-  If you named your final file something else, you can change the name of the file in the command above (scSplit_doublets_singlets.csv) to whatever filename you used
-
-
 ScSplit Results and Interpretation
 ----------------------------------
-After running the scSplit steps and summarizing the results, you will have a number of files from some of the intermediary steps. Theses are the files that most users will find the most informative:
+After running the scSplit_ steps and summarizing the results, you will have a number of files from some of the intermediary steps. Theses are the files that most users will find the most informative:
 
   - ``scSplit_doublets_singlets.csv``
 
@@ -393,7 +397,7 @@ After running the scSplit steps and summarizing the results, you will have a num
 
   - ``scSplit_summary.tsv``
 
-    - Summary of the number of doublets and singlets classified by scSplit
+    - Summary of the number of doublets and singlets classified by scSplit_.
 
       +----------------+--------------+
       | Classification | Assignment N |
@@ -431,7 +435,7 @@ After running the scSplit steps and summarizing the results, you will have a num
 
     - To check if these numbers are consistent with the expected doublet rate in your dataset, you can use our expected doublet calculator
 
-If you ran the Assign_Indiv_by_Geno.R script, you will also have the following files:
+If you ran the ``Assign_Indiv_by_Geno.R`` script, you will also have the following files:
 
   - ``Genotype_ID_key.txt``
 

@@ -32,7 +32,6 @@ In addition to demultiplexing softwares, there are also doublet detecting softwa
    
    Background
    Installation
-   Quickstart
 
 
 .. toctree::
@@ -40,6 +39,7 @@ In addition to demultiplexing softwares, there are also doublet detecting softwa
    :caption: Demultiplexing Tutorials
    :hidden:
 
+   DemultiplexingSoftwares
    Demuxlet
    Freemuxlet
    scSplit
