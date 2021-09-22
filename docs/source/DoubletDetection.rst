@@ -22,7 +22,14 @@ This is the data that you will need to have preparede to run DoubletDetection_:
   
     - DoubletDetection expects counts to be in the cellranger output format (directory containint ``barcodes.tsv``, ``genes.tsv`` and ``matrix.mtx`` **or** ``barcodes.tsv.gz``, ``features.tsv.gz`` and ``matrix.mtx.gz``)
 
-	- If you don't have your data in this format, you can run DoubletDetection_ manually in python and load the data in using a method of your choosing.
+	  - If you don't have your data in this format, you can run DoubletDetection_ manually in python and load the data in using a method of your choosing.
+
+.. admonition:: Optional
+
+  - Output directory (``$OUTDIR``)
+
+    - If you don't provide an ``$OUTDIR``, the results will be written to the present working directory.
+
 
 Run DoubletDetection
 ---------------------
@@ -34,7 +41,7 @@ You can either run DoubletDetection_ with the wrapper script we have provided or
 
     .. code-block:: bash
 
-      singularity exec image.sif python DoubletDetection
+      singularity exec image.sif python DoubletDetection.py
 
 	  To see all the parameters that this wrapper script will accept, run:
 
@@ -163,6 +170,8 @@ You can either run DoubletDetection_ with the wrapper script we have provided or
 
 DoubletDetection Results and Interpretation
 -------------------------------------------
+After running the DoubletDetection_, you will have multiple files in the ``$OUTDIR``.
+We have found these to be the most helpful:
 
 - ``DoubletDetection_summary.tsv``
 
@@ -195,7 +204,7 @@ DoubletDetection Results and Interpretation
     +------------------------+-----------------------------+
     | AAACCTGAGGCTCATT-1     | singlet                     |
     +------------------------+-----------------------------+
-    | AAACCTGAGGGCACTA-1     | doublet                     |
+    | AAACCTGAGGGCACTA-1     | singlet                     |
     +------------------------+-----------------------------+
     | ...                    | ...                         |
     +------------------------+-----------------------------+

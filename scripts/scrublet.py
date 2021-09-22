@@ -28,7 +28,7 @@ import numba
 import numba.typed
 
 # Get path of mods directory from current script directory
-mods_path = "/opt/WG1-pipeline-QC/Demultiplexing/mods"
+mods_path = "/opt/Demultiplexing_Doublet_Detecting_Docs/mods"
 sys.path.append(mods_path)
 import read10x
 
