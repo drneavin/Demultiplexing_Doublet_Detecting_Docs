@@ -146,8 +146,8 @@ If you have reference SNP genotypes for some or all of the donors in your pool, 
       ########## Set up paths and variables ##########
 
       reference_vcf <- "/path/to/reference.vcf"
-      cluster_vcf <- "/path/to/scSplit/out/freemuxletOUT.clust1.vcf.gz"
-      outdir <- "/path/to/scSplit/out/"
+      cluster_vcf <- "/path/to/freemuxlet/out/freemuxletOUT.clust1.vcf.gz"
+      outdir <- "/path/to/freemuxlet/out/"
 
 
       ########## Set up functions ##########
@@ -365,7 +365,7 @@ Freemuxlet Results and Interpretation
 After running the Freemuxlet_ steps and summarizing the results, you will have a number of files from some of the intermediary steps. 
 Theses are the files that most users will find the most informative:
 
-  - ``Freemuxlet_summary.tsv``
+  - ``freemuxlet_summary.tsv``
 
     - Summary of the droplets asignmened to each donor, doublets or unassigned
      
@@ -496,4 +496,4 @@ If you ran the ``Assign_Indiv_by_Geno.R`` script, you will also have the followi
 
 Citation
 --------
-If you used this workflow for analysis, please reference our paper (REFERENCE) as well as `scSplit <https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1852-7>`__.
+If you used this workflow for analysis, please reference our paper (REFERENCE) as well as `Freemuxlet <https://github.com/statgen/popscle>`__.

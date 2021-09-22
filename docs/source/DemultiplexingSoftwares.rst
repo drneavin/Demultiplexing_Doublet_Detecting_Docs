@@ -5,8 +5,8 @@ Demulxeting softwares
 
 There are five demultiplexing softwares that have different capabilities and advantages depending on your dataset.
 
-	+------------------------------------+----------------------------------+---------------------------------+
-	| Software                           | Requires Reference SNP Genotypes | Can Use Reference SNP Genotypes |
+	+------------------------------------+----------------------------------+---------------------------------+-----------------------+
+	| Software                           | Requires Reference SNP Genotypes | Can Use Reference SNP Genotypes | Estimates Ambient RNA |
 	+------------------------------------+----------------------------------+---------------------------------+
 	|:ref:`Demuxlet <Demuxlet-docs>`     | :heavy_check_mark:               | :heavy_check_mark:              |
 	+------------------------------------+----------------------------------+---------------------------------+

@@ -1,3 +1,5 @@
+.. _Vireo-docs:
+
 Vireo Tutorial
 ===========================
 
