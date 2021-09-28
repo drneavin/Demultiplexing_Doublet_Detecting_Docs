@@ -7,7 +7,9 @@ import numpy
 import sys
 import os
 
-sys.path.append('/directflow/SCCGGroupShare/projects/DrewNeavin/Demultiplex_Benchmark/scripts/ONEK1K/hg38/refSNVs/sceQTL-Gen-Demultiplex/mods') 
+# Get path of mods directory from current script directory
+mods_path = "/opt/Demultiplexing_Doublet_Detecting_Docs/mods"
+sys.path.append(mods_path)
 import read10x
 
 ##### Parse the variables passed to python #####
