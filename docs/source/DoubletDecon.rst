@@ -43,7 +43,7 @@ You can either run DoubletDecon_ with the wrapper script we have provided or you
 
     .. code-block:: bash
 
-      singularity exec image.sif Rscript DoubletDecon.R -o $OUTDIR -s $SEURAT_OBJ
+      singularity exec Demuxafy.sif Rscript DoubletDecon.R -o $OUTDIR -s $SEURAT_OBJ
 
     You can provide many other parameters as well which can be seen from running a help request:
 
@@ -102,7 +102,7 @@ You can either run DoubletDecon_ with the wrapper script we have provided or you
 
     .. code-block:: bash
 
-      singularity exec image.sif R
+      singularity exec Demuxafy.sif R
 
     That will open R in your terminal.
     Next, you can load all the libraries and run DoubletDecon_.
@@ -197,6 +197,7 @@ However, the wrapper script and the example code has some steps to combine these
     |singlet         | 19470     |
     +----------------+-----------+
 
+    - To check whether the numbe of doublets identified by DoubletDecon_ is consistent with the expected doublet rate expected based on the number of droplets that you captured, you can use our `Expected Doublet Estimation Calculator <test.html>`__.
 
 - ``DoubletDecon_doublets_singlets.tsv``
 

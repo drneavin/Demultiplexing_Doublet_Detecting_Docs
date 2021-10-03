@@ -40,13 +40,13 @@ Run solo
 
 .. code-block:: bash
 
-  singularity exec image.sif solo -o $OUTDIR -e $N_DOUB $JSON $COUNTS
+  singularity exec Demuxafy.sif solo -o $OUTDIR -e $N_DOUB $JSON $COUNTS
 
 Solo_ also has additional paramters that can be seen with:
 
 .. code-block:: bash
 
-  singularity exec image.sif solo -h 
+  singularity exec Demuxafy.sif solo -h 
 
   usage: solo [-h] -j MODEL_JSON_FILE -d DATA_PATH
             [--set-reproducible-seed REPRODUCIBLE_SEED]
@@ -95,7 +95,7 @@ You can run this to get a fast and easy summary of your results with:
 
 .. code-block:: bash
 
-  singularity exec image.sif python solo_summary.py -b $BARCODES -s $OUTDIR
+  singularity exec Demuxafy.sif python solo_summary.py -b $BARCODES -s $OUTDIR
 
 
 Solo Results and Interpretation
@@ -115,6 +115,8 @@ However, the wrapper script and the example code has some steps to combine these
   +-----------------+-----------+
   | doublet         | 3521      |
   +-----------------+-----------+
+
+    - To check whether the numbe of doublets identified by solo_ is consistent with the expected doublet rate expected based on the number of droplets that you captured, you can use our `Expected Doublet Estimation Calculator <test.html>`__.
 
 - ``solo_results.tsv``
 

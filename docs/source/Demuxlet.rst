@@ -47,7 +47,7 @@ First we will need to identify the number of reads from each allele at each SNP 
 
 .. code-block:: bash
 
-  singularity exec image.sif popscle dsc-pileup --sam $BAM --vcf $VCF --group-list $BARCODES --out $OUTDIR
+  singularity exec Demuxafy.sif popscle dsc-pileup --sam $BAM --vcf $VCF --group-list $BARCODES --out $OUTDIR
 
 
 
@@ -63,7 +63,7 @@ Once you have run ``popscle pileup``, you can demultiplex your samples:
 
     .. code-block:: bash
 
-      singularity exec image.sif popscle demuxlet --plp $OUTDIR/pileup --vcf $VCF --field --group-list $BARCODES --geno-error-coeff 1.0 --geno-error-offset 0.05 --out $OUTDIR/demuxlet --sm-list $IND
+      singularity exec Demuxafy.sif popscle demuxlet --plp $OUTDIR/pileup --vcf $VCF --field --group-list $BARCODES --geno-error-coeff 1.0 --geno-error-offset 0.05 --out $OUTDIR/demuxlet --sm-list $IND
 
   .. tab:: Without ``$IND`` file
 
@@ -72,7 +72,7 @@ Once you have run ``popscle pileup``, you can demultiplex your samples:
 
     .. code-block:: bash
 
-      singularity exec image.sif popscle demuxlet --plp $OUTDIR/pileup --vcf $VCF --field --group-list $BARCODES --geno-error-coeff 1.0 --geno-error-offset 0.05 --out $OUTDIR/demuxlet
+      singularity exec Demuxafy.sif popscle demuxlet --plp $OUTDIR/pileup --vcf $VCF --field --group-list $BARCODES --geno-error-coeff 1.0 --geno-error-offset 0.05 --out $OUTDIR/demuxlet
 
 
 Demuxlet Summary
@@ -82,7 +82,7 @@ You can run this to get a fast and easy summary of your results with:
 
 .. code-block:: bash
 
-  singularity exec image.sif bash Demuxlet_summary.sh $OUTDIR
+  singularity exec Demuxafy.sif bash Demuxlet_summary.sh $OUTDIR
 
 
 
@@ -93,7 +93,7 @@ Theses are the files that most users will find the most informative:
 
   - ``Demuxlet_summary.tsv``
 
-    - Summary of the droplets asignmened to each donor, doublets or unassigned
+    - Summary of the droplets asignmened to each donor, doublets or unassigned.
      
       +-----------------+--------------+
       | Classification  | Assignment N |
@@ -128,6 +128,8 @@ Theses are the files that most users will find the most informative:
       +-----------------+--------------+
       | doublet         | 3053         |
       +-----------------+--------------+
+
+    - To check whether the number of predicted doublets is in line with the expected number, you can use our `Doublet Estimation Calculator <test.html>`__
 
   - ``demuxlet.best``
 

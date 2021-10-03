@@ -17,7 +17,7 @@ This is the data that you will need to have preparede to run scDblFinder_:
 .. admonition:: Required
   :class: important
 
-  - A counts matrix ($COUNTS)
+  - A counts matrix (``$COUNTS``)
   
     - DoubletDetection expects counts to be in the cellranger output format (directory containint ``barcodes.tsv``, ``genes.tsv`` and ``matrix.mtx`` **or** ``barcodes.tsv.gz``, ``features.tsv.gz`` and ``matrix.mtx.gz``)
 
@@ -40,7 +40,7 @@ You can either run scDblFinder_ with the wrapper script we have provided or you 
 
     .. code-block:: bash
 
-		  singularity exec image.sif Rscript scDblFinder.R -o $OUTDIR -t $COUNTS
+		  singularity exec Demuxafy.sif Rscript scDblFinder.R -o $OUTDIR -t $COUNTS
 
 
   .. tab:: Run in R
@@ -50,7 +50,7 @@ You can either run scDblFinder_ with the wrapper script we have provided or you 
 
     .. code-block:: bash
 
-      singularity exec image.sif R
+      singularity exec Demuxafy.sif R
 
 
     That will open R in your terminal.
@@ -115,6 +115,7 @@ After running the scDblFinder_ with the wrapper script or manually you should ha
     |singlet         | 17659     |
     +----------------+-----------+
 
+    - To check whether the numbe of doublets identified by scDblFinder_ is consistent with the expected doublet rate expected based on the number of droplets that you captured, you can use our `Expected Doublet Estimation Calculator <test.html>`__.
 
 - ``scDblFinder_doublets_singlets.tsv``
 

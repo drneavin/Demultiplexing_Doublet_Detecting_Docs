@@ -1,0 +1,67 @@
+<!Doctype Html>
+<Html>
+<Head>
+<link rel="stylesheet" href="myStyle.css">
+<Title>
+Doublets|Singlets
+</Title>
+</Head>
+<Body>
+<h1>Calculate Singlets and Doublets</h1>
+<h4>Technical artifacts in data when two (or more) cells are mistaken as a single cell are known as “doublets”. Inflation in rate of doublets is a major
+bottleneck, limiting cell throughput and leading to incorrect biological inferences.
+Multiplexing multiple different samples together is a highly useful method to increase single cell RNA-seq capture throughput. As more cells captured, the percent of doublets increases.
+<br><br>
+You can use this calculator to help estimate the expected percent of droplets that are doublets and the numbers of doublets and singlets based on the number of droplets captured.
+This can be helpful to help with experimental planning and for post-capture quality control processing.
+
+
+</h4><br>
+<div class="container">
+<div class="leftdiv">
+<img align="right" src="img1.jpg" alt="Doublet Ratre" width="450" height="400"> <br> <br>
+</div>
+<div class="rightdiv">
+<label>Droplets captured:</label> <input type="number" id="droplets" size="50" onfocus="this.value=''" placeholder="Enter droplets here">
+<br> <br>
+<button onclick="myFunction()">Calculate</button>  <br><br>
+<label>Number of Droplets captured:</label> <input id="numDroplets" placeholder="Droplets" readonly><br><br>
+<label>Number of Doublets:</label> <input id="doublets" placeholder="Doublets" readonly><br><br>
+<label>Number of Singlets:</label><input id="singlets" placeholder="Singlets" readonly>
+</div>
+</div><br><br>
+<div class="references">
+<p>
+<h3>  Please let us know if there are additional features that you think will help make this tool useful.
+</h3>
+<h3>References:</h3>
+https://kb.10xgenomics.com/hc/en-us/articles/360001378811-What-is-the-maximum-number-of-cells-that-can-be-profiled-<br>
+</p>
+</div>
+<script>
+function myFunction() {
+  var n = parseInt(document.getElementById("droplets").value);
+  if (document.getElementById("droplets").value== "")
+  {
+  	alert("Please enter a valid value");
+  	document.getElementById("numDroplets").value = "";
+  	document.getElementById("doublets").value = "";
+  	document.getElementById("singlets").value = "";
+  	return false;
+  }
+  document.getElementById("numDroplets").value = n;
+
+  var numDoublets = (((Math.pow(n, 2))*0.008)/1000).toFixed(3)
+  var prcntDoublets = ((numDoublets*100)/n).toFixed(3)
+  var numPrcntDoublets = Number(numDoublets) + ' (' + Number(prcntDoublets) + '%)'
+  document.getElementById("doublets").value = numPrcntDoublets;
+
+  var numSinglets = (n - numDoublets).toFixed(3)
+  var prcntSinglets = ((numSinglets*100)/n).toFixed(3)
+  var numPrcnrSinglets = Number(numSinglets) + ' (' + Number(prcntSinglets) + '%)'
+  document.getElementById("singlets").value = numPrcnrSinglets;
+
+}
+</script>
+</Body>
+</Html>

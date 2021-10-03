@@ -13,16 +13,16 @@ We have provided a wrapper script that enables Scrublet_ to be easily run from t
 
 Data
 ----
-This is the data that you will need to have preparede to run DoubletDetection_:
+This is the data that you will need to have preparede to run Scrublet_:
 
 .. admonition:: Required
   :class: important
 
-  - A counts matrix ($COUNTS)
+  - A counts matrix (``$COUNTS``)
   
     - DoubletDetection expects counts to be in the cellranger output format (directory containint ``barcodes.tsv``, ``genes.tsv`` and ``matrix.mtx`` **or** ``barcodes.tsv.gz``, ``features.tsv.gz`` and ``matrix.mtx.gz``)
 
-	  - If you don't have your data in this format, you can run DoubletDetection_ manually in python and load the data in using a method of your choosing.
+	  - If you don't have your data in this format, you can run Scrublet_ manually in python and load the data in using a method of your choosing.
 
 .. admonition:: Optional
 
@@ -47,7 +47,7 @@ You can either run Scrublet_ with the wrapper script we have provided or you can
 
     .. code-block:: bash
 
-      singularity exec image.sif python scrublet.py
+      singularity exec Demuxafy.sif python scrublet.py
 
 	  To see all the parameters that this wrapper script will accept, run:
 
@@ -102,13 +102,13 @@ You can either run Scrublet_ with the wrapper script we have provided or you can
 
     .. code-block:: bash
 
-      singularity exec image.sif python
+      singularity exec Demuxafy.sif python
 
   
-    Now, python will open in your terminal and you can run the DoubletDetection_ code. 
+    Now, python will open in your terminal and you can run the Scrublet_ code. 
     Here is an example:
 
-    .. code-block:: ptyhon
+    .. code-block:: python
 
       import sys
       import os
@@ -197,6 +197,8 @@ We have found these to be the most helpful:
   +------------------------------+-----------+
   | singlet                      | 19131     |
   +------------------------------+-----------+
+
+    - To check whether the numbe of doublets identified by Scrublet_ is consistent with the expected doublet rate expected based on the number of droplets that you captured, you can use our `Expected Doublet Estimation Calculator <test.html>`__.
 
 - ``scrublet_results.tsv``
 

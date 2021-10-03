@@ -53,7 +53,7 @@ First we will need to identify the number of reads from each allele at each of t
 
 .. code-block:: bash
 
-  singularity exec image.sif popscle dsc-pileup --sam $BAM --vcf $VCF --group-list $BARCODES --out $OUTDIR/pileup
+  singularity exec Demuxafy.sif popscle dsc-pileup --sam $BAM --vcf $VCF --group-list $BARCODES --out $OUTDIR/pileup
 
 
 
@@ -65,7 +65,7 @@ Once you have run ``popscle pileup``, you can demultiplex your samples with Free
 
 .. code-block:: bash
 
-  singularity exec image.sif popscle freemuxlet --plp $OUTDIR/pileup --out $OUTDIR/freemuxlet --group-list $BARCODES --nsample $N
+  singularity exec Demuxafy.sif popscle freemuxlet --plp $OUTDIR/pileup --out $OUTDIR/freemuxlet --group-list $BARCODES --nsample $N
 
 
 
@@ -76,7 +76,7 @@ You can run this to get a fast and easy summary of your results with:
 
 .. code-block:: bash
 
-  singularity exec image.sif bash Freemuxlet_summary.sh $OUTDIR
+  singularity exec Demuxafy.sif bash Freemuxlet_summary.sh $OUTDIR
 
 
 
@@ -94,13 +94,13 @@ If you have reference SNP genotypes for some or all of the donors in your pool, 
 
     .. code-block:: bash
 
-      singularity exec image.sif Rscript Assign_Indiv_by_Geno.R -r $VCF -c $OUTDIR/freemuxlet.clust1.vcf.gz -o $OUTDIR
+      singularity exec Demuxafy.sif Rscript Assign_Indiv_by_Geno.R -r $VCF -c $OUTDIR/freemuxlet.clust1.vcf.gz -o $OUTDIR
 
     To see the parameter help menu, type:
 
     .. code-block:: bash
 
-      singularity exec image.sif Rscript Assign_Indiv_by_Geno.R -h
+      singularity exec Demuxafy.sif Rscript Assign_Indiv_by_Geno.R -h
 
     Which will print:
 
@@ -128,7 +128,7 @@ If you have reference SNP genotypes for some or all of the donors in your pool, 
 
     .. code-block:: R
 
-      singularity exec image.sif R
+      singularity exec Demuxafy.sif R
 
     Once, R has started, you can load the required libraries (included in the singularity image) and run the code.
 
@@ -402,6 +402,8 @@ Theses are the files that most users will find the most informative:
       +-----------------+--------------+
       | DBL             | 2767         |
       +-----------------+--------------+
+
+    - To check whether the number of doublets identified by Freemuxlet_ is aligned with the expected doublet rate, you can use our `Doublet Estimation Calculator <test.html>`__.
 
   - ``freemuxlet.clust1.samples.gz``
 

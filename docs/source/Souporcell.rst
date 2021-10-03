@@ -67,7 +67,7 @@ To run Souporcell_,
 
     .. code-block:: bash
 
-      singularity exec image.sif souporcell_pipeline.py -i $BAM -b $BARCODES -f $FASTA -t $THREADS -o $OUTDIR -k $N --common_variants $VCF
+      singularity exec Demuxafy.sif souporcell_pipeline.py -i $BAM -b $BARCODES -f $FASTA -t $THREADS -o $OUTDIR -k $N --common_variants $VCF
 
   .. tab:: With Reference SNP Genotypes
 
@@ -75,7 +75,7 @@ To run Souporcell_,
 
     .. code-block:: bash
 
-      singularity exec image.sif souporcell_pipeline.py -i $BAM -b $BARCODES -f $FASTA -t $THREADS -o $OUTDIR -k $N --known_genotypes $VCF --known_genotypes_sample_names donor1,donor2,donor3,donor4
+      singularity exec Demuxafy.sif souporcell_pipeline.py -i $BAM -b $BARCODES -f $FASTA -t $THREADS -o $OUTDIR -k $N --known_genotypes $VCF --known_genotypes_sample_names donor1,donor2,donor3,donor4
 
 
 
@@ -85,7 +85,7 @@ We have provided a script that will provide a summary of the number of droplets 
 
 .. code-block:: bash
 
-  singularity exec image.sif bash souporcell_summary.sh $OUTDIR
+  singularity exec Demuxafy.sif bash souporcell_summary.sh $OUTDIR
 
 
 
@@ -104,13 +104,13 @@ If you have reference SNP genotypes for some or all of the donors in your pool, 
 
     .. code-block:: bash
 
-      singularity exec image.sif Rscript Assign_Indiv_by_Geno.R -r $VCF -c $OUTDIR/scSplit.vcf -o $OUTDIR
+      singularity exec Demuxafy.sif Rscript Assign_Indiv_by_Geno.R -r $VCF -c $OUTDIR/scSplit.vcf -o $OUTDIR
 
     To see the parameter help menu, type:
 
     .. code-block:: bash
 
-      singularity exec image.sif Rscript Assign_Indiv_by_Geno.R -h
+      singularity exec Demuxafy.sif Rscript Assign_Indiv_by_Geno.R -h
 
     Which will print:
 
@@ -138,7 +138,7 @@ If you have reference SNP genotypes for some or all of the donors in your pool, 
 
     .. code-block:: R
 
-      singularity exec image.sif R
+      singularity exec Demuxafy.sif R
 
     Once, R has started, you can load the required libraries (included in the singularity image) and run the code.
 
@@ -412,6 +412,8 @@ Theses are the files that most users will find the most informative:
       +-----------------+--------------+
       | doublet         | 2757         |
       +-----------------+--------------+
+
+    - To check if these numbers are consistent with the expected doublet rate in your dataset, you can use our `Expected Doublet Estimation Calculator <test.html>`__.
 
   - ``clusters.tsv``
 

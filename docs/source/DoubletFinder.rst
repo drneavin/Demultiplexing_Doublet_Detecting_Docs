@@ -42,7 +42,7 @@ You can either run DoubletFinder_ with the wrapper script we have provided or yo
 
     .. code-block:: bash
 
-      singularity exec image.sif Rscript DoubletFinder.R -o $OUTDIR -s $SEURAT_OBJ -c TRUE -d $DOUBLETS
+      singularity exec Demuxafy.sif Rscript DoubletFinder.R -o $OUTDIR -s $SEURAT_OBJ -c TRUE -d $DOUBLETS
 
     You can provide many other parameters as well which can be seen from running a help request:
 
@@ -72,7 +72,7 @@ You can either run DoubletFinder_ with the wrapper script we have provided or yo
 
     .. code-block:: bash
 
-      singularity exec image.sif R
+      singularity exec Demuxafy.sif R
 
     That will open R in your terminal.
     Next, you can load all the libraries and run DoubletFinder_.
@@ -149,6 +149,8 @@ We have found these to be the most helpful:
     +----------------+-----------+
     | singlet        | 16395     |
     +----------------+-----------+
+
+    - To check whether the numbe of doublets identified by DoubletFinder_ is consistent with the expected doublet rate expected based on the number of droplets that you captured, you can use our `Expected Doublet Estimation Calculator <test.html>`__.
 
 - ``DoubletFinder_doublets_singlets.tsv``
 

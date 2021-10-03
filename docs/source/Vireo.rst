@@ -54,7 +54,7 @@ First, you need to count the number of alleles at each SNP in each droplet using
 
 .. code-block:: bash
 
-  singularity exec image.sif cellSNP-lite -s $BAM -b $BARCODES -o $OUTDIR -R $VCF -p 20 --minMAF 0.1 --minCOUNT 20
+  singularity exec Demuxafy.sif cellSNP-lite -s $BAM -b $BARCODES -o $OUTDIR -R $VCF -p 20 --minMAF 0.1 --minCOUNT 20
 
 You can alter the ``-p``, ``--minMAF`` and ``--minCOUNT`` parameters to fit your data and your needs.
 We have found these settings to work well with our data
@@ -90,7 +90,7 @@ We've provided an example command for each of these differing amounts of donor S
 
     .. code-block::
 
-      singularity exec image.sif vireo -c $OUTDIR/cellSNPpileup.vcf.gz -d $OUTDIR/donor_subset.vcf -o $OUTDIR -t $FORMAT
+      singularity exec Demuxafy.sif vireo -c $OUTDIR/cellSNPpileup.vcf.gz -d $OUTDIR/donor_subset.vcf -o $OUTDIR -t $FORMAT
 
   .. tab:: With SNP Genotype Data for Some Donors
 
@@ -112,13 +112,13 @@ We've provided an example command for each of these differing amounts of donor S
 
     .. code-block::
 
-      singularity exec image.sif vireo -c $OUTDIR/cellSNPpileup.vcf.gz -d $OUTDIR/donor_subset.vcf -o $OUTDIR/cellSNPpileup.vcf.gz -t $FIELD -N $N
+      singularity exec Demuxafy.sif vireo -c $OUTDIR/cellSNPpileup.vcf.gz -d $OUTDIR/donor_subset.vcf -o $OUTDIR/cellSNPpileup.vcf.gz -t $FIELD -N $N
 
   .. tab:: Without Donor SNP Genotype Data
 
     .. code-block::
 
-      singularity exec image.sif vireo -c $OUTDIR/cellSNPpileup.vcf.gz -o $OUTDIR -N $N
+      singularity exec Demuxafy.sif vireo -c $OUTDIR/cellSNPpileup.vcf.gz -o $OUTDIR -N $N
 
 
 
@@ -166,6 +166,9 @@ Theses are the files that most users will find the most informative:
     +------------+------+
     | unassigned | 113  |
     +------------+------+
+
+    - To check whether the numbe of doublets identified by Vireo_ is consistent with the expected doublet rate based on the number of droplets that you captured, you can use our `Expected Doublet Estimation Calculator <test.html>`__.
+
 
 - ``donor_ids.tsv``
 

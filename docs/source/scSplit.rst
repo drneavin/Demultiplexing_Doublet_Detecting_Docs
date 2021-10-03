@@ -45,10 +45,10 @@ First, you will need to prepare the bam file so that it only contains high quali
 
   .. code-block:: bash
 
-    singularity exec image.sif samtools view -b -S -q 10 -F 3844 $BAM > $OUTDIR/filtered_bam.bam
-    singularity exec image.sif samtools rmdup $OUTDIR/filtered_bam.bam $OUTDIR/filtered_bam_dedup.bam
-    singularity exec image.sif samtools sort -o $OUTDIR/filtered_bam_dedup_sorted.bam $OUTDIR/filtered_bam_dedup.bam
-    singularity exec image.sif samtools index $OUTDIR/filtered_bam_dedup_sorted.bam
+    singularity exec Demuxafy.sif samtools view -b -S -q 10 -F 3844 $BAM > $OUTDIR/filtered_bam.bam
+    singularity exec Demuxafy.sif samtools rmdup $OUTDIR/filtered_bam.bam $OUTDIR/filtered_bam_dedup.bam
+    singularity exec Demuxafy.sif samtools sort -o $OUTDIR/filtered_bam_dedup_sorted.bam $OUTDIR/filtered_bam_dedup.bam
+    singularity exec Demuxafy.sif samtools index $OUTDIR/filtered_bam_dedup_sorted.bam
 
 Call Sample SNVs
 ^^^^^^^^^^^^^^^^
@@ -56,8 +56,8 @@ Next, you will need to identify SNV genotypes in the pooled bam.
 
   .. code-block:: bash
 
-    singularity exec image.sif freebayes -f $FASTA -iXu -C 2 -q 1 $OUTDIR/filtered_bam_dedup_sorted.bam > $OUTDIR/freebayes_var.vcf
-    singularity exec image.sif vcftools --gzvcf $OUTDIR/freebayes_var.vcf --minQ 30 --recode --recode-INFO-all --out $OUTDIR/freebayes_var_qual30
+    singularity exec Demuxafy.sif freebayes -f $FASTA -iXu -C 2 -q 1 $OUTDIR/filtered_bam_dedup_sorted.bam > $OUTDIR/freebayes_var.vcf
+    singularity exec Demuxafy.sif vcftools --gzvcf $OUTDIR/freebayes_var.vcf --minQ 30 --recode --recode-INFO-all --out $OUTDIR/freebayes_var_qual30
 
 Demultiplex with scSplit
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -65,9 +65,9 @@ The prepared SNV genotypes and bam file can then be used to demultiplex and call
 
   .. code-block:: bash
 
-    singularity exec image.sif scSplit count -c $VCF -v $OUTDIR/freebayes_var_qual30.recode.vcf -i $OUTDIR/filtered_bam_dedup_sorted.bam -b $BARCODES -r $OUTDIR/ref_filtered.csv -a $OUTDIR/alt_filtered.csv -o $OUTDIR
-    singularity exec image.sif scSplit run -r $OUTDIR/ref_filtered.csv -a $OUTDIR/alt_filtered.csv -n $N -o $OUTDIR
-    singularity exec image.sif scSplit genotype -r $OUTDIR/ref_filtered.csv -a $OUTDIR/alt_filtered.csv -p $OUTDIR/scSplit_P_s_c.csv -o $OUTDIR
+    singularity exec Demuxafy.sif scSplit count -c $VCF -v $OUTDIR/freebayes_var_qual30.recode.vcf -i $OUTDIR/filtered_bam_dedup_sorted.bam -b $BARCODES -r $OUTDIR/ref_filtered.csv -a $OUTDIR/alt_filtered.csv -o $OUTDIR
+    singularity exec Demuxafy.sif scSplit run -r $OUTDIR/ref_filtered.csv -a $OUTDIR/alt_filtered.csv -n $N -o $OUTDIR
+    singularity exec Demuxafy.sif scSplit genotype -r $OUTDIR/ref_filtered.csv -a $OUTDIR/alt_filtered.csv -p $OUTDIR/scSplit_P_s_c.csv -o $OUTDIR
 
 
 ScSplit Summary
@@ -76,7 +76,7 @@ We have provided a script that will provide a summary of the number of droplets 
 
 .. code-block:: bash
 
-  singularity exec image.sif bash scSplit_summary.sh $OUTDIR scSplit_doublets_singlets.csv
+  singularity exec Demuxafy.sif bash scSplit_summary.sh $OUTDIR scSplit_doublets_singlets.csv
 
 .. admonition:: Note
 
@@ -97,13 +97,13 @@ If you have reference SNP genotypes for some or all of the donors in your pool, 
 
     .. code-block:: bash
 
-      singularity exec image.sif Rscript Assign_Indiv_by_Geno.R -r $VCF -c $OUTDIR/scSplit.vcf -o $OUTDIR
+      singularity exec Demuxafy.sif Rscript Assign_Indiv_by_Geno.R -r $VCF -c $OUTDIR/scSplit.vcf -o $OUTDIR
 
     To see the parameter help menu, type:
 
     .. code-block:: bash
 
-      singularity exec image.sif Rscript Assign_Indiv_by_Geno.R -h
+      singularity exec Demuxafy.sif Rscript Assign_Indiv_by_Geno.R -h
 
     Which will print:
 
@@ -131,7 +131,7 @@ If you have reference SNP genotypes for some or all of the donors in your pool, 
 
     .. code-block:: R
 
-      singularity exec image.sif R
+      singularity exec Demuxafy.sif R
 
     Once, R has started, you can load the required libraries (included in the singularity image) and run the code.
 
@@ -434,7 +434,7 @@ After running the scSplit_ steps and summarizing the results, you will have a nu
       | SNG-9          | 1282         |
       +----------------+--------------+
 
-    - To check if these numbers are consistent with the expected doublet rate in your dataset, you can use our expected doublet calculator
+    - To check if these numbers are consistent with the expected doublet rate in your dataset, you can use our `Doublet Estimation Calculator <test.html>`__.
 
 If you ran the ``Assign_Indiv_by_Geno.R`` script, you will also have the following files:
 

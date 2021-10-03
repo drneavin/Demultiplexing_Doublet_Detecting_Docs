@@ -6,7 +6,9 @@ Scds Tutorial
 .. _scds: https://github.com/kostkalab/scds
 
 scds_ is a transcription-based doublet detection software that uses two different methods to detect doublets - cxds and bcds.
-We typically use the combined score of these two methods together but they can be use separately as well.
+The cxds method uses marker genes that are not co-expressed to identify droplets that are likely doublets.
+bcds simulates doublet by adding droplet transcriptomes together and then uses variable genes to identify the probability a droplet is a doublet with a binary classification algorithm.
+We typically use the combined score of these two methods but they can be use separately as well.
 We have provided a wrapper script that takes common arguments for scds_ and we alsp provide an example script that you can run manually in R if you prefer.
 
 
@@ -18,7 +20,7 @@ This is the data that you will need to have preparede to run scds_:
 .. admonition:: Required
   :class: important
 
-  - A counts matrix ($COUNTS)
+  - A counts matrix (``$COUNTS``)
   
     - DoubletDetection expects counts to be in the cellranger output format (directory containing ``barcodes.tsv``, ``genes.tsv`` and ``matrix.mtx`` **or** ``barcodes.tsv.gz``, ``features.tsv.gz`` and ``matrix.mtx.gz``)
 
@@ -42,7 +44,7 @@ You can either run scds_ with the wrapper script we have provided or you can run
 
     .. code-block:: bash
 
-		  singularity exec image.sif Rscript scds.R -o $OUTDIR -t $COUNTS
+		  singularity exec Demuxafy.sif Rscript scds.R -o $OUTDIR -t $COUNTS
 
 
   .. tab:: Run in R
@@ -52,7 +54,7 @@ You can either run scds_ with the wrapper script we have provided or you can run
 
     .. code-block:: bash
 
-      singularity exec image.sif R
+      singularity exec Demuxafy.sif R
 
     That will open R in your terminal.
     Next, you can load all the libraries and run scds_.
@@ -129,6 +131,7 @@ After running the scds_ with the wrapper script or manually you should have two 
     |singlet         | 18211     |
     +----------------+-----------+
 
+    - To check whether the numbe of doublets identified by scds_ is consistent with the expected doublet rate expected based on the number of droplets that you captured, you can use our `Expected Doublet Estimation Calculator <test.html>`__.
 
 - ``scds_doublets_singlets.tsv``
 

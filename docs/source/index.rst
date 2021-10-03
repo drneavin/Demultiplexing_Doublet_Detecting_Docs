@@ -32,6 +32,10 @@ In addition to demultiplexing softwares, there are also doublet detecting softwa
    
    Background
    Installation
+   DataPrep
+   SoftwareSelections
+   Doublet Estimation Calculator <test.html#http://>
+
 
 
 .. toctree::
@@ -48,10 +52,11 @@ In addition to demultiplexing softwares, there are also doublet detecting softwa
 
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Doublet Detecting Tutorials
    :hidden:
 
+   DoubletDetectingSoftwares
    DoubletDecon
    DoubletDetection
    DoubletFinder
@@ -61,6 +66,9 @@ In addition to demultiplexing softwares, there are also doublet detecting softwa
    Solo
 
 
+- `Doublet Estimation Calculator`__ for testing
+
+__ test.html
 
 .. Reference
 .. ==================

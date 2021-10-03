@@ -18,7 +18,7 @@ This is the data that you will need to have preparede to run DoubletDetection_:
 .. admonition:: Required
   :class: important
 
-  - A counts matrix ($COUNTS)
+  - A counts matrix (``$COUNTS``)
   
     - DoubletDetection expects counts to be in the cellranger output format (directory containint ``barcodes.tsv``, ``genes.tsv`` and ``matrix.mtx`` **or** ``barcodes.tsv.gz``, ``features.tsv.gz`` and ``matrix.mtx.gz``)
 
@@ -41,7 +41,7 @@ You can either run DoubletDetection_ with the wrapper script we have provided or
 
     .. code-block:: bash
 
-      singularity exec image.sif python DoubletDetection.py
+      singularity exec Demuxafy.sif python DoubletDetection.py
 
 	  To see all the parameters that this wrapper script will accept, run:
 
@@ -89,12 +89,12 @@ You can either run DoubletDetection_ with the wrapper script we have provided or
 
     .. code-block:: bash
 
-      singularity exec image.sif python
+      singularity exec Demuxafy.sif python
 
     Now, python will open in your terminal and you can run the DoubletDetection_ code. 
     Here is an example:
 
-    .. code-block:: ptyhon
+    .. code-block:: python
 
       import os
       import numpy as np
@@ -184,6 +184,8 @@ We have found these to be the most helpful:
   +------------------------------+-----------+
   | singlet                      | 18388     |
   +------------------------------+-----------+
+
+    - To check whether the numbe of doublets identified by DoubletDetection_ is consistent with the expected doublet rate expected based on the number of droplets that you captured, you can use our `Expected Doublet Estimation Calculator <test.html>`__.
 
 - ``DoubletDetection_doublets_singlets.tsv``
 
