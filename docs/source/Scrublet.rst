@@ -26,9 +26,9 @@ This is the data that you will need to have preparede to run Scrublet_:
 
 .. admonition:: Optional
 
-  - Output directory (``$OUTDIR``)
+  - Output directory (``$SCRUBLET_OUTDIR``)
 
-    - If you don't provide an ``$OUTDIR``, the results will be written to the present working directory.
+    - If you don't provide an ``$SCRUBLET_OUTDIR``, the results will be written to the present working directory.
 
 
 
@@ -183,7 +183,7 @@ You can either run Scrublet_ with the wrapper script we have provided or you can
 
 DoubletDetection Results and Interpretation
 -------------------------------------------
-After running the Scrublet_, you will have multiple files in the ``$OUTDIR``.
+After running the Scrublet_, you will have multiple files in the ``$SCRUBLET_OUTDIR``.
 We have found these to be the most helpful:
 
 - ``scrublet_summary.tsv``

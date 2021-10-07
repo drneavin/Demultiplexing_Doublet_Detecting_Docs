@@ -34,7 +34,7 @@ This is the data that you will ned to have prepared to run scSplit_:
 
   - Number of samples in pool (``$N``)
 
-  - Output directory (``$OUTDIR``)
+  - Output directory (``$SCSPLIT_OUTDIR``)
 
 
 Run ScSplit
@@ -45,10 +45,10 @@ First, you will need to prepare the bam file so that it only contains high quali
 
   .. code-block:: bash
 
-    singularity exec Demuxafy.sif samtools view -b -S -q 10 -F 3844 $BAM > $OUTDIR/filtered_bam.bam
-    singularity exec Demuxafy.sif samtools rmdup $OUTDIR/filtered_bam.bam $OUTDIR/filtered_bam_dedup.bam
-    singularity exec Demuxafy.sif samtools sort -o $OUTDIR/filtered_bam_dedup_sorted.bam $OUTDIR/filtered_bam_dedup.bam
-    singularity exec Demuxafy.sif samtools index $OUTDIR/filtered_bam_dedup_sorted.bam
+    singularity exec Demuxafy.sif samtools view -b -S -q 10 -F 3844 $BAM > $SCSPLIT_OUTDIR/filtered_bam.bam
+    singularity exec Demuxafy.sif samtools rmdup $SCSPLIT_OUTDIR/filtered_bam.bam $SCSPLIT_OUTDIR/filtered_bam_dedup.bam
+    singularity exec Demuxafy.sif samtools sort -o $SCSPLIT_OUTDIR/filtered_bam_dedup_sorted.bam $SCSPLIT_OUTDIR/filtered_bam_dedup.bam
+    singularity exec Demuxafy.sif samtools index $SCSPLIT_OUTDIR/filtered_bam_dedup_sorted.bam
 
 Call Sample SNVs
 ^^^^^^^^^^^^^^^^
@@ -56,8 +56,8 @@ Next, you will need to identify SNV genotypes in the pooled bam.
 
   .. code-block:: bash
 
-    singularity exec Demuxafy.sif freebayes -f $FASTA -iXu -C 2 -q 1 $OUTDIR/filtered_bam_dedup_sorted.bam > $OUTDIR/freebayes_var.vcf
-    singularity exec Demuxafy.sif vcftools --gzvcf $OUTDIR/freebayes_var.vcf --minQ 30 --recode --recode-INFO-all --out $OUTDIR/freebayes_var_qual30
+    singularity exec Demuxafy.sif freebayes -f $FASTA -iXu -C 2 -q 1 $SCSPLIT_OUTDIR/filtered_bam_dedup_sorted.bam > $SCSPLIT_OUTDIR/freebayes_var.vcf
+    singularity exec Demuxafy.sif vcftools --gzvcf $SCSPLIT_OUTDIR/freebayes_var.vcf --minQ 30 --recode --recode-INFO-all --out $SCSPLIT_OUTDIR/freebayes_var_qual30
 
 Demultiplex with scSplit
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -65,9 +65,9 @@ The prepared SNV genotypes and bam file can then be used to demultiplex and call
 
   .. code-block:: bash
 
-    singularity exec Demuxafy.sif scSplit count -c $VCF -v $OUTDIR/freebayes_var_qual30.recode.vcf -i $OUTDIR/filtered_bam_dedup_sorted.bam -b $BARCODES -r $OUTDIR/ref_filtered.csv -a $OUTDIR/alt_filtered.csv -o $OUTDIR
-    singularity exec Demuxafy.sif scSplit run -r $OUTDIR/ref_filtered.csv -a $OUTDIR/alt_filtered.csv -n $N -o $OUTDIR
-    singularity exec Demuxafy.sif scSplit genotype -r $OUTDIR/ref_filtered.csv -a $OUTDIR/alt_filtered.csv -p $OUTDIR/scSplit_P_s_c.csv -o $OUTDIR
+    singularity exec Demuxafy.sif scSplit count -c $VCF -v $SCSPLIT_OUTDIR/freebayes_var_qual30.recode.vcf -i $SCSPLIT_OUTDIR/filtered_bam_dedup_sorted.bam -b $BARCODES -r $SCSPLIT_OUTDIR/ref_filtered.csv -a $SCSPLIT_OUTDIR/alt_filtered.csv -o $SCSPLIT_OUTDIR
+    singularity exec Demuxafy.sif scSplit run -r $SCSPLIT_OUTDIR/ref_filtered.csv -a $SCSPLIT_OUTDIR/alt_filtered.csv -n $N -o $SCSPLIT_OUTDIR
+    singularity exec Demuxafy.sif scSplit genotype -r $SCSPLIT_OUTDIR/ref_filtered.csv -a $SCSPLIT_OUTDIR/alt_filtered.csv -p $SCSPLIT_OUTDIR/scSplit_P_s_c.csv -o $SCSPLIT_OUTDIR
 
 
 ScSplit Summary
@@ -76,7 +76,7 @@ We have provided a script that will provide a summary of the number of droplets 
 
 .. code-block:: bash
 
-  singularity exec Demuxafy.sif bash scSplit_summary.sh $OUTDIR scSplit_doublets_singlets.csv
+  singularity exec Demuxafy.sif bash scSplit_summary.sh $SCSPLIT_OUTDIR scSplit_doublets_singlets.csv
 
 .. admonition:: Note
 
@@ -85,7 +85,7 @@ We have provided a script that will provide a summary of the number of droplets 
 
 Correlating Cluster to Donor Reference SNP Genotypes (optional)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-If you have reference SNP genotypes for some or all of the donors in your pool, you can identify which cluster is best correlated with each donor in your reference SNP genotypes. We have provided a script that will do this and provide a heatmap correlation figure and the predicted individual that should be assigned for each cluster. You can either run it with the script by providing the reference SNP genotypes (``$VCF``), the cluster SNP genotypes (``$OUTDIR/scSplit.vcf``) and the output directory (``$OUTDIR``) You can run this script with:
+If you have reference SNP genotypes for some or all of the donors in your pool, you can identify which cluster is best correlated with each donor in your reference SNP genotypes. We have provided a script that will do this and provide a heatmap correlation figure and the predicted individual that should be assigned for each cluster. You can either run it with the script by providing the reference SNP genotypes (``$VCF``), the cluster SNP genotypes (``$SCSPLIT_OUTDIR/scSplit.vcf``) and the output directory (``$SCSPLIT_OUTDIR``) You can run this script with:
 
 .. admonition:: Note
 
@@ -97,7 +97,7 @@ If you have reference SNP genotypes for some or all of the donors in your pool, 
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif Rscript Assign_Indiv_by_Geno.R -r $VCF -c $OUTDIR/scSplit.vcf -o $OUTDIR
+      singularity exec Demuxafy.sif Rscript Assign_Indiv_by_Geno.R -r $VCF -c $SCSPLIT_OUTDIR/scSplit.vcf -o $SCSPLIT_OUTDIR
 
     To see the parameter help menu, type:
 

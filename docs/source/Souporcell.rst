@@ -49,7 +49,7 @@ This is the data that you will need to have preparede to run Souporcell_:
   
     - that your reads were aligned to (or at least the same genome)
 
-  - Output directory (``$OUTDIR``)
+  - Output directory (``$SOUPORCELL_OUTDIR``)
 
 
 
@@ -67,7 +67,7 @@ To run Souporcell_,
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif souporcell_pipeline.py -i $BAM -b $BARCODES -f $FASTA -t $THREADS -o $OUTDIR -k $N --common_variants $VCF
+      singularity exec Demuxafy.sif souporcell_pipeline.py -i $BAM -b $BARCODES -f $FASTA -t $THREADS -o $SOUPORCELL_OUTDIR -k $N --common_variants $VCF
 
   .. tab:: With Reference SNP Genotypes
 
@@ -75,7 +75,7 @@ To run Souporcell_,
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif souporcell_pipeline.py -i $BAM -b $BARCODES -f $FASTA -t $THREADS -o $OUTDIR -k $N --known_genotypes $VCF --known_genotypes_sample_names donor1,donor2,donor3,donor4
+      singularity exec Demuxafy.sif souporcell_pipeline.py -i $BAM -b $BARCODES -f $FASTA -t $THREADS -o $SOUPORCELL_OUTDIR -k $N --known_genotypes $VCF --known_genotypes_sample_names donor1,donor2,donor3,donor4
 
 
 
@@ -85,14 +85,14 @@ We have provided a script that will provide a summary of the number of droplets 
 
 .. code-block:: bash
 
-  singularity exec Demuxafy.sif bash souporcell_summary.sh $OUTDIR
+  singularity exec Demuxafy.sif bash souporcell_summary.sh $SOUPORCELL_OUTDIR
 
 
 
 
 Correlating Cluster to Donor Reference SNP Genotypes (optional)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-If you have reference SNP genotypes for some or all of the donors in your pool, you can identify which cluster is best correlated with each donor in your reference SNP genotypes. We have provided a script that will do this and provide a heatmap correlation figure and the predicted individual that should be assigned for each cluster. You can either run it with the script by providing the reference SNP genotypes (``$VCF``), the cluster SNP genotypes (``$OUTDIR/scSplit.vcf``) and the output directory (``$OUTDIR``) You can run this script with:
+If you have reference SNP genotypes for some or all of the donors in your pool, you can identify which cluster is best correlated with each donor in your reference SNP genotypes. We have provided a script that will do this and provide a heatmap correlation figure and the predicted individual that should be assigned for each cluster. You can either run it with the script by providing the reference SNP genotypes (``$VCF``), the cluster SNP genotypes (``$SOUPORCELL_OUTDIR/scSplit.vcf``) and the output directory (``$SOUPORCELL_OUTDIR``) You can run this script with:
 
 .. admonition:: Note
 
@@ -104,7 +104,7 @@ If you have reference SNP genotypes for some or all of the donors in your pool, 
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif Rscript Assign_Indiv_by_Geno.R -r $VCF -c $OUTDIR/scSplit.vcf -o $OUTDIR
+      singularity exec Demuxafy.sif Rscript Assign_Indiv_by_Geno.R -r $VCF -c $SOUPORCELL_OUTDIR/scSplit.vcf -o $SOUPORCELL_OUTDIR
 
     To see the parameter help menu, type:
 

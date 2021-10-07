@@ -23,9 +23,9 @@ This is the data that you will need to have preparede to run scDblFinder_:
 
 	  - If you don't have your data in this format, you can run scDblFinder_ manually in python and load the data in using a method of your choosing.
 
-  - Output directory (``$OUTDIR``)
+  - Output directory (``$SCDBLFINDER_OUTDIR``)
 
-    - If you don't provide an ``$OUTDIR``, the results will be written to the present working directory.
+    - If you don't provide an ``$SCDBLFINDER_OUTDIR``, the results will be written to the present working directory.
 
 
 
@@ -40,7 +40,7 @@ You can either run scDblFinder_ with the wrapper script we have provided or you 
 
     .. code-block:: bash
 
-		  singularity exec Demuxafy.sif Rscript scDblFinder.R -o $OUTDIR -t $COUNTS
+		  singularity exec Demuxafy.sif Rscript scDblFinder.R -o $SCDBLFINDER_OUTDIR -t $COUNTS
 
 
   .. tab:: Run in R
@@ -101,7 +101,7 @@ You can either run scDblFinder_ with the wrapper script we have provided or you 
 
 scDblFinder Results and Interpretation
 ----------------------------------------
-After running the scDblFinder_ with the wrapper script or manually you should have two files in the ``$OUTDIR``:
+After running the scDblFinder_ with the wrapper script or manually you should have two files in the ``$SCDBLFINDER_OUTDIR``:
 
 - ``scDblFinder_doublet_summary.tsv``
 

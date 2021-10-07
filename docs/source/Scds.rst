@@ -26,9 +26,9 @@ This is the data that you will need to have preparede to run scds_:
 
 	  - If you don't have your data in this format, you can run scds_ manually in python and load the data in using a method of your choosing.
 
-  - Output directory (``$OUTDIR``)
+  - Output directory (``$SCDS_OUTDIR``)
 
-    - If you don't provide an ``$OUTDIR``, the results will be written to the present working directory.
+    - If you don't provide an ``$SCDS_OUTDIR``, the results will be written to the present working directory.
 
 
 
@@ -44,7 +44,7 @@ You can either run scds_ with the wrapper script we have provided or you can run
 
     .. code-block:: bash
 
-		  singularity exec Demuxafy.sif Rscript scds.R -o $OUTDIR -t $COUNTS
+		  singularity exec Demuxafy.sif Rscript scds.R -o $SCDS_OUTDIR -t $COUNTS
 
 
   .. tab:: Run in R
@@ -117,7 +117,7 @@ You can either run scds_ with the wrapper script we have provided or you can run
 
 scds Results and Interpretation
 ----------------------------------------
-After running the scds_ with the wrapper script or manually you should have two files in the ``$OUTDIR``:
+After running the scds_ with the wrapper script or manually you should have two files in the ``$SCDS_OUTDIR``:
 
 - ``scds_doublet_summary.tsv``
 

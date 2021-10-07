@@ -27,7 +27,7 @@ This is the data that you will need to have preparede to run Demuxlet_:
 
     - Aligned single cell reads
 
-  - Output directory (``$OUTDIR``)
+  - Output directory (``$DEMUXLET_OUTDIR``)
 
 
 .. admonition:: Optional
@@ -47,7 +47,7 @@ First we will need to identify the number of reads from each allele at each SNP 
 
 .. code-block:: bash
 
-  singularity exec Demuxafy.sif popscle dsc-pileup --sam $BAM --vcf $VCF --group-list $BARCODES --out $OUTDIR
+  singularity exec Demuxafy.sif popscle dsc-pileup --sam $BAM --vcf $VCF --group-list $BARCODES --out $DEMUXLET_OUTDIR/popscle
 
 
 
@@ -57,32 +57,32 @@ Once you have run ``popscle pileup``, you can demultiplex your samples:
 
 .. tabs::
 
-  .. tab:: With ``$IND`` file
+  .. tab:: With ``$INDS`` file
     
-    The ``$IND`` file allows demuxlet to only consider the individual in this pool
+    The ``$INDS`` file allows demuxlet to only consider the individual in this pool
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif popscle demuxlet --plp $OUTDIR/pileup --vcf $VCF --field --group-list $BARCODES --geno-error-coeff 1.0 --geno-error-offset 0.05 --out $OUTDIR/demuxlet --sm-list $IND
+      singularity exec Demuxafy.sif popscle demuxlet --plp $DEMUXLET_OUTDIR/pileup --vcf $VCF --field --group-list $BARCODES --geno-error-coeff 1.0 --geno-error-offset 0.05 --out $DEMUXLET_OUTDIR/demuxlet --sm-list $IND
 
-  .. tab:: Without ``$IND`` file
+  .. tab:: Without ``$INDS`` file
 
     This will use all the individuals in your reference SNP genotype ``$VCF``. 
-    If your ``$VCF`` only has the individuals multiplexed in your pool, then the ``$IND`` file is not required.
+    If your ``$VCF`` only has the individuals multiplexed in your pool, then the ``$INDS`` file is not required.
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif popscle demuxlet --plp $OUTDIR/pileup --vcf $VCF --field --group-list $BARCODES --geno-error-coeff 1.0 --geno-error-offset 0.05 --out $OUTDIR/demuxlet
+      singularity exec Demuxafy.sif popscle demuxlet --plp $DEMUXLET_OUTDIR/pileup --vcf $VCF --field --group-list $BARCODES --geno-error-coeff 1.0 --geno-error-offset 0.05 --out $DEMUXLET_OUTDIR/demuxlet
 
 
 Demuxlet Summary
 ^^^^^^^^^^^^^^^^
-We have provided a script that will summarize the number of droplets classified as doublets, ambiguous and assigned to each donor by Demuxlet_ and write it to the ``$OUTDIR``. 
+We have provided a script that will summarize the number of droplets classified as doublets, ambiguous and assigned to each donor by Demuxlet_ and write it to the ``$DEMUXLET_OUTDIR``. 
 You can run this to get a fast and easy summary of your results with:
 
 .. code-block:: bash
 
-  singularity exec Demuxafy.sif bash Demuxlet_summary.sh $OUTDIR
+  singularity exec Demuxafy.sif bash Demuxlet_summary.sh $DEMUXLET_OUTDIR
 
 
 

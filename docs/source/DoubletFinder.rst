@@ -21,7 +21,7 @@ This is the data that you will need to have preparede to run DoubletFinder_:
 
     - If you run DoubletFinder_ manually, you can use any data format of interest and read in with a method that works for your data.
 
-  - Output directory (``$OUTDIR``)
+  - Output directory (``$DOUBLETFINDER_OUTDIR``)
 
   - Expected number of doublets (``$DOUBLETS``)
 
@@ -42,7 +42,7 @@ You can either run DoubletFinder_ with the wrapper script we have provided or yo
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif Rscript DoubletFinder.R -o $OUTDIR -s $SEURAT_OBJ -c TRUE -d $DOUBLETS
+      singularity exec Demuxafy.sif Rscript DoubletFinder.R -o $DOUBLETFINDER_OUTDIR -s $SEURAT_OBJ -c TRUE -d $DOUBLETS
 
     You can provide many other parameters as well which can be seen from running a help request:
 
@@ -51,7 +51,8 @@ You can either run DoubletFinder_ with the wrapper script we have provided or yo
       Rscript DoubletFinder.R -h
 
 
-      usage: DoubletFinder.R [-h] -o OUT -s SEURAT_OBJECT -c SCT -d DOUBLET_NUMBER                       [-p PCS] [-n PN]a@brenner-fpoptional arguments:  -h, --help            show this help message and exit
+      usage: DoubletFinder.R [-h] -o OUT -s SEURAT_OBJECT -c SCT -d DOUBLET_NUMBER [-p PCS] [-n PN]a@brenner-fpoptional arguments:  
+	  	-h, --help            show this help message and exit
         -o OUT, --out OUT     The output directory where results will be saved
         -s SEURAT_OBJECT, --seurat_object SEURAT_OBJECT
                               A QC, normalized seurat object with
@@ -135,7 +136,7 @@ You can either run DoubletFinder_ with the wrapper script we have provided or yo
 
 DoubletFinder Results and Interpretation
 ----------------------------------------
-After running the DoubletFinder_, you will have multiple files in the ``$OUTDIR``.
+After running the DoubletFinder_, you will have multiple files in the ``$DOUBLETFINDER_OUTDIR``.
 We have found these to be the most helpful:
 
 - ``DoubletFinder_doublet_summary.tsv``
@@ -182,6 +183,7 @@ We have found these to be the most helpful:
   
     .. figure:: _figures/pKvBCmetric.png
 
+  - If you do not have a clear ``BC`` maximum, see responses from the DoubletFinder_ developer `here <https://github.com/chris-mcginnis-ucsf/DoubletFinder/issues/62>`__ and `here <https://github.com/chris-mcginnis-ucsf/DoubletFinder/issues/71>`__ for possible solutions.
 
 Citation
 --------

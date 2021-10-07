@@ -18,7 +18,7 @@ This is the data that you will need to have preparede to run solo_:
 
 	- Parameter json file (``$JSON``)
   
-    - Solo_ has provided an `example file <_download_files/solo_model.json>` that we have found to work well for most of our data.
+    - Solo_ has provided an :download:`example file <_download_files/solo_model.json>` that we have found to work well for most of our data.
 
   - Counts (``$COUNTS``)
 
@@ -26,7 +26,7 @@ This is the data that you will need to have preparede to run solo_:
 
   - Barcode files (``barcodes.tsv``)
 
-  - Output directory (``$OUTDIR``)
+  - Output directory (``$SOLO_OUTDIR``)
 
 
 .. admonition:: Optional
@@ -40,7 +40,7 @@ Run solo
 
 .. code-block:: bash
 
-  singularity exec Demuxafy.sif solo -o $OUTDIR -e $N_DOUB $JSON $COUNTS
+  singularity exec Demuxafy.sif solo -o $SOLO_OUTDIR -e $N_DOUB $JSON $COUNTS
 
 Solo_ also has additional paramters that can be seen with:
 
@@ -89,18 +89,18 @@ Solo_ also has additional paramters that can be seen with:
 
 Solo Summary
 ^^^^^^^^^^^^^^^^
-We have provided a script that will summarize the number of droplets classified as doublets and singlets by solo_ and write it to the ``$OUTDIR``.
+We have provided a script that will summarize the number of droplets classified as doublets and singlets by solo_ and write it to the ``$SOLO_OUTDIR``.
 This script also combines some of the solo_ outputs into a single file that can be more easily used for downstream analyses. 
 You can run this to get a fast and easy summary of your results with:
 
 .. code-block:: bash
 
-  singularity exec Demuxafy.sif python solo_summary.py -b $BARCODES -s $OUTDIR
+  singularity exec Demuxafy.sif python solo_summary.py -b $BARCODES -s $SOLO_OUTDIR
 
 
 Solo Results and Interpretation
 ----------------------------------------
-After running the solo_, you will have multiple files in the ``$OUTDIR``.  
+After running the solo_, you will have multiple files in the ``$SOLO_OUTDIR``.  
 solo_ puts most of the results in multiple separate files. 
 However, the wrapper script and the example code has some steps to combine these results together into a single file, which will likely be the most informative output.
 

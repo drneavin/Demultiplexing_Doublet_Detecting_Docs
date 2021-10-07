@@ -35,7 +35,7 @@ In addition to demultiplexing softwares, there are also doublet detecting softwa
    DataPrep
    SoftwareSelections
    Doublet Estimation Calculator <test.html#http://>
-
+   OtherSingleCellData
 
 
 .. toctree::

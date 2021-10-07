@@ -19,27 +19,41 @@ The demultiplexing and transcriptome-based doublet detecting softwares have diff
 
 .. NOTE::
 
-  The SNP genotype data can be for multiplexed donors in the pool **OR** it can be publicly available common SNP genotypes which can be downloaded from 1000G (`hg19 <http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/>`__ or `hg38 <http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/supporting/GRCh38_positions/>`__ or from HRC (`hg19 <http://www.haplotype-reference-consortium.org/site>`__.
-
+  The SNP genotype data can be for multiplexed donors in the pool **OR** it can be publicly available common SNP genotypes which can be downloaded from 1000G (`hg19 <http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/>`__ or `hg38 <http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/supporting/GRCh38_positions/>`__) or from HRC (`hg19 <http://www.haplotype-reference-consortium.org/site>`__).
 
 There isn't any pre-processing that's needed for the single cell count data.
 For the demultiplexing softwares, you should filter the SNP genotypes that you will use.
+
+
+SNP Genotype Pre-processing
+---------------------------
 It is best to filter the SNP genotypes for common SNPs (generally > 1% or > 5% minor allele frequency) that overlap exons.
 Here we provide an example of how to do this filtering. 
-We built the required softwares into the singularity image so you can run the filtering with the image.
+We built the required softwares into the singularity image so you can run these filtering steps with the image.
 
 .. NOTE::
   
   We have found it best to impute reference SNP genotypes so there are more SNP locations available. 
   If you are using reference SNP genotypes for the donors in your pool, please be sure to impute before filtering.
 
-First, filter the imputed reference SNP genotypes or the publicly available SNP genotypes for common SNPs - here we use 5% minor allele frequency.
+Filter for Common SNPs
+^^^^^^^^^^^^^^^^^^^^^^
+First, filter the SNP genotypes for common SNPs - here we use 5% minor allele frequency.
 
 .. code-block:: bash
 
   singularity exec Demuxafy.sif bcftools filter --include 'MAF>=0.05' -Oz --output $OUTDIR/common_maf0.05.vcf.gz $VCF
 
+Where ``$OUTDIR`` is the output directory where you want to save the results and ``$VCF`` is the path to the SNP genotype vcf file.
+
+Filter for SNPs overlapping Exons
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Next, filter for the SNPs that overlap exons.
+
+.. NOTE::
+
+  You can get an exon bed using the `UCSC table browser <https://genome.ucsc.edu/cgi-bin/hgTables>`__ (see instructions `here <https://www.biostars.org/p/93011/>`__) and we have also provided bed files for :download:`hg19 <../../references/hg19exonsUCSC.bed>` and :download:`hg38 <../../references/hg38exonsUCSC.bed>`
+
 
 .. code-block:: bash
 
@@ -53,9 +67,10 @@ Next, filter for the SNPs that overlap exons.
     --out $OUTDIR/common_maf0.05_exon_filtered
 
 
+
 Test Dataset
 ------------
-In addition, we have provided test data that you can use to ensure the singularity image is working correctly.
+In addition, we have provided test data that you can use.
 
 .. admonition:: Information
   :class: important

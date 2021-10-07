@@ -1,4 +1,4 @@
-Installation & Preparation
+Installation
 ==========================
 Installation should be pretty painless (we hope).
 We have  provided all the softwares in a singularity image which provides continuity across different computing platforms (see `HPCNG Singluarity <https://singularity.hpcng.org/>`__ and `Sylabs io <https://sylabs.io/singularity/>`__ for more information on singularity images).
