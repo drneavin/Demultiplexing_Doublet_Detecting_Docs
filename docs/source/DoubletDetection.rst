@@ -26,9 +26,9 @@ This is the data that you will need to have preparede to run DoubletDetection_:
 
 .. admonition:: Optional
 
-  - Output directory (``$OUTDIR``)
+  - Output directory (``$DOUBLETDETECTION_OUTDIR``)
 
-    - If you don't provide an ``$OUTDIR``, the results will be written to the present working directory.
+    - If you don't provide an ``$DOUBLETDETECTION_OUTDIR``, the results will be written to the present working directory.
 
 
 Run DoubletDetection
@@ -170,7 +170,7 @@ You can either run DoubletDetection_ with the wrapper script we have provided or
 
 DoubletDetection Results and Interpretation
 -------------------------------------------
-After running the DoubletDetection_, you will have multiple files in the ``$OUTDIR``.
+After running the DoubletDetection_, you will have multiple files in the ``$DOUBLETDETECTION_OUTDIR``.
 We have found these to be the most helpful:
 
 - ``DoubletDetection_summary.tsv``

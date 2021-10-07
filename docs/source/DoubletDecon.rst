@@ -21,7 +21,7 @@ This is the data that you will need to have preparede to run DoubletDecon_:
 
     - If you run DoubletDecon_ manually, you can use any data format of interest and read in with a method that works for your data.
 
-  - Output directory (``$OUTDIR``)
+  - Output directory (``$DOUBLETDECON_OUTDIR``)
 
 
 
@@ -43,7 +43,7 @@ You can either run DoubletDecon_ with the wrapper script we have provided or you
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif Rscript DoubletDecon.R -o $OUTDIR -s $SEURAT_OBJ
+      singularity exec Demuxafy.sif Rscript DoubletDecon.R -o $DOUBLETDECON_OUTDIR -s $SEURAT_OBJ
 
     You can provide many other parameters as well which can be seen from running a help request:
 
@@ -181,7 +181,7 @@ You can either run DoubletDecon_ with the wrapper script we have provided or you
 
 DoubletDecon Results and Interpretation
 ----------------------------------------
-After running the DoubletDecon_, you will have multiple files in the ``$OUTDIR``.  
+After running the DoubletDecon_, you will have multiple files in the ``$DOUBLETDECON_OUTDIR``.  
 DoubletDecon_ puts most of the results in multiple separate files. 
 However, the wrapper script and the example code has some steps to combine these results together into a single file, which will likely be the most informative output.
 
