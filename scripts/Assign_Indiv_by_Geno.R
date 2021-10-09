@@ -75,6 +75,7 @@ if (!all(colSums(is.na(cluster_geno_tidy)) == nrow(cluster_geno_tidy))){
 if (is.na(format_clust)){
 	cluster_geno_tidy <- as_tibble(extract.gt(element = "GT",cluster_geno, IDtoRowNames = F))
 	if (!all(colSums(is.na(cluster_geno_tidy)) == nrow(cluster_geno_tidy))){
+		message("Found GT genotype format in cluster vcf. Will use that metric for cluster correlation.")
 		format_clust = "GT"
 
 		if (any(grepl("\\|",cluster_geno_tidy[1,]))){
@@ -128,6 +129,7 @@ if (!all(colSums(is.na(ref_geno_tidy)) == nrow(ref_geno_tidy))){
 if (is.na(format_ref)){
 	ref_geno_tidy <- as_tibble(extract.gt(element = "GT",ref_geno, IDtoRowNames = F))
 	if (!all(colSums(is.na(ref_geno_tidy)) == nrow(ref_geno_tidy))){
+		message("Found GT genotype format in reference vcf. Will use that metric for cluster correlation.")
 		format_ref = "GT"
 
 		if (any(grepl("\\|",ref_geno_tidy[1,]))){
@@ -168,14 +170,21 @@ if (is.na(format_ref)){
 ### Get SNP IDs that will match between reference and cluster ###
 ## Account for possibility that the ref or alt might be missing
 if ((all(is.na(cluster_geno@fix[,'REF'])) & all(is.na(cluster_geno@fix[,'ALT']))) | (all(is.na(ref_geno@fix[,'REF'])) & all(is.na(ref_geno@fix[,'ALT'])))){
+	message("The REF and ALT categories are not provided for the reference and/or the cluster vcf. Will use just the chromosome and position to match SNPs.")
 	cluster_geno_tidy$ID <- paste0(cluster_geno@fix[,'CHROM'],":", cluster_geno@fix[,'POS'])
 	ref_geno_tidy$ID <- paste0(ref_geno@fix[,'CHROM'],":", ref_geno@fix[,'POS'])
 } else if (all(is.na(cluster_geno@fix[,'REF'])) | all(is.na(ref_geno@fix[,'REF']))){
+	message("The REF categories are not provided for the reference and/or the cluster vcf. Will use the chromosome, position and ALT to match SNPs.")
 	cluster_geno_tidy$ID <- paste0(cluster_geno@fix[,'CHROM'],":", cluster_geno@fix[,'POS'],"_", cluster_geno@fix[,'REF'])
 	ref_geno_tidy$ID <- paste0(ref_geno@fix[,'CHROM'],":", ref_geno@fix[,'POS'],"_", ref_geno@fix[,'REF'])
 } else if (all(is.na(cluster_geno@fix[,'ALT'])) | all(is.na(ref_geno@fix[,'ALT']))){
+	message("The ALT categories are not provided for the reference and/or the cluster vcf. Will use the chromosome, position and REF to match SNPs.")
 	cluster_geno_tidy$ID <- paste0(cluster_geno@fix[,'CHROM'],":", cluster_geno@fix[,'POS'],"_", cluster_geno@fix[,'ALT'])
 	ref_geno_tidy$ID <- paste0(ref_geno@fix[,'CHROM'],":", ref_geno@fix[,'POS'],"_", ref_geno@fix[,'ALT'])
+} else {
+	message("Found REF and ALT in both cluster and reference genotype vcfs. Will use chromosome, position, REF and ALT to match SNPs.")
+		cluster_geno_tidy$ID <- paste0(cluster_geno@fix[,'CHROM'],":", cluster_geno@fix[,'POS'],"_", cluster_geno@fix[,'REF'],"_", cluster_geno@fix[,'ALT'])
+	ref_geno_tidy$ID <- paste0(ref_geno@fix[,'CHROM'],":", ref_geno@fix[,'POS'],"_", ref_geno@fix[,'REF'],"_", ref_geno@fix[,'ALT'])
 }
 
 
@@ -203,7 +212,7 @@ cluster <- data.frame("Cluster" = rownames(pearson_correlations))
 pearson_correlations_out <- cbind(cluster, pearson_correlations)
 
 ########## Save the correlation dataframes ##########
-write_delim(pearson_correlations_out, path = paste0(args$outdir,"/ref_clust_pearson_correlations.tsv"), delim = "\t" )
+write_delim(pearson_correlations_out, file = paste0(args$outdir,"/ref_clust_pearson_correlations.tsv"), delim = "\t" )
 
 
 ########## Create correlation figures ##########
@@ -229,6 +238,6 @@ for (id in key$Genotype_ID){
     }
 }
 
-write_delim(key, path =paste0(args$outdir,"/Genotype_ID_key.txt"), delim = "\t")
+write_delim(key, file =paste0(args$outdir,"/Genotype_ID_key.txt"), delim = "\t")
 
 

@@ -21,6 +21,10 @@ This is the data that you will need to have preparede to run Demuxlet_:
 
     - Filter for common SNPs (> 5% minor allele frequency) and SNPs overlapping genes
 
+  - Genotype field in ``$VCF`` (``$FIELD``)
+
+    - This is ``GP`` by default but could also be ``GT`` others
+
   - Barcode file (``$BARCODES``)
 
   - Bam file (``$BAM``)
@@ -49,6 +53,17 @@ First we will need to identify the number of reads from each allele at each SNP 
 
   singularity exec Demuxafy.sif popscle dsc-pileup --sam $BAM --vcf $VCF --group-list $BARCODES --out $DEMUXLET_OUTDIR/popscle
 
+If the pileup is successfull, you will have these files in your ``$DEMUXLET_OUTDIR``:
+
+.. code-block:: bash
+
+  .
+  ├── pileup.cel.gz
+  ├── pileup.plp.gz
+  ├── pileup.umi.gz
+  └── pileup.var.gz
+
+Additional details about outputs are available below in the :ref:`Demuxlet Results and Interpretation <demuxlet-results>`.
 
 
 Popscle Demuxlet
@@ -63,7 +78,7 @@ Once you have run ``popscle pileup``, you can demultiplex your samples:
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif popscle demuxlet --plp $DEMUXLET_OUTDIR/pileup --vcf $VCF --field --group-list $BARCODES --geno-error-coeff 1.0 --geno-error-offset 0.05 --out $DEMUXLET_OUTDIR/demuxlet --sm-list $IND
+      singularity exec Demuxafy.sif popscle demuxlet --plp $DEMUXLET_OUTDIR/pileup --vcf $VCF --field $FIELD --group-list $BARCODES --geno-error-coeff 1.0 --geno-error-offset 0.05 --out $DEMUXLET_OUTDIR/demuxlet --sm-list $INDS
 
   .. tab:: Without ``$INDS`` file
 
@@ -72,7 +87,16 @@ Once you have run ``popscle pileup``, you can demultiplex your samples:
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif popscle demuxlet --plp $DEMUXLET_OUTDIR/pileup --vcf $VCF --field --group-list $BARCODES --geno-error-coeff 1.0 --geno-error-offset 0.05 --out $DEMUXLET_OUTDIR/demuxlet
+      singularity exec Demuxafy.sif popscle demuxlet --plp $DEMUXLET_OUTDIR/pileup --vcf $VCF --field $FIELD --group-list $BARCODES --geno-error-coeff 1.0 --geno-error-offset 0.05 --out $DEMUXLET_OUTDIR/demuxlet
+
+If demuxlet is successfull, you will have these new files in your ``$DEMUXLET_OUTDIR``:
+
+.. code-block:: bash
+
+  .
+  └── demuxlet.best
+
+Additional details about outputs are available below in the :ref:`Demuxlet Results and Interpretation <demuxlet-results>`.
 
 
 Demuxlet Summary
@@ -84,7 +108,19 @@ You can run this to get a fast and easy summary of your results with:
 
   singularity exec Demuxafy.sif bash Demuxlet_summary.sh $DEMUXLET_OUTDIR
 
+If the demuxlet summary is successfull, you will have this new file in your ``$DEMUXLET_OUTDIR``:
 
+.. code-block:: bash
+
+  .
+  └── Demuxlet_summary.tsv
+
+Additional details about outputs are available below in the :ref:`Demuxlet Results and Interpretation <demuxlet-results>`.
+
+
+
+
+.. _demuxlet-results:
 
 Demuxlet Results and Interpretation
 -----------------------------------

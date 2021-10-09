@@ -18,7 +18,7 @@ This is the data that you will need to have preparede to run DoubletDetection_:
 .. admonition:: Required
   :class: important
 
-  - A counts matrix (``$COUNTS``)
+  - A counts matrix (``$MATRIX``)
   
     - DoubletDetection expects counts to be in the cellranger output format (directory containint ``barcodes.tsv``, ``genes.tsv`` and ``matrix.mtx`` **or** ``barcodes.tsv.gz``, ``features.tsv.gz`` and ``matrix.mtx.gz``)
 
@@ -41,11 +41,11 @@ You can either run DoubletDetection_ with the wrapper script we have provided or
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif python DoubletDetection.py
+      singularity exec Demuxafy.sif python DoubletDetection.py -m $MATRIX -o $DOUBLETDETECTION_OUTDIR
 
-	  To see all the parameters that this wrapper script will accept, run:
+    To see all the parameters that this wrapper script will accept, run:
 
-	  ..code-block:: bash
+    .. code-block:: bash
 
       python DoubletDetection.py -h
 
@@ -117,21 +117,20 @@ You can either run DoubletDetection_ with the wrapper script we have provided or
       outdir = "/path/to/doublet/detection/outdir"
 
 
-      os.mkdirs(outdir)
+      if not os.path.isdir(outdir):
+      	os.mkdir(outdir)
 
 
       ### Read in data ###
       raw_counts = read10x.import_cellranger_mtx(counts_matrix)
 
-      if barcodes is None:
-          if os.path.exists(os.path.join(tenX, "/barcodes.tsv.gz")):
-              barcodes_df = read10x.read_barcodes(os.path.join(tenX ,"/barcodes.tsv.gz"))
-          elif os.path.exists(os.path.join(tenX, "/barcodes.tsv")):
-              barcodes_df = read10x.read_barcodes(os.path.join(tenX ,"/barcodes.tsv"))
-          else:
-              print("No barcode file in provided counts matrix directory")
-      else:
-          barcodes_df = read10x.read_barcodes("/path/to/counts/barcodes.tsv")
+      try:
+        barcodes_df = read10x.read_barcodes(counts_matrix + "/barcodes.tsv.gz")
+      except:
+        try:
+          barcodes_df = read10x.read_barcodes(counts_matrix + "/barcodes.tsv")
+        except:
+          print("No barcode file in provided counts matrix directory. Please double check the directory or provide the full path to the barcode file to use.")
 
       print('Counts matrix shape: {} rows, {} columns'.format(raw_counts.shape[0], raw_counts.shape[1]))
 
@@ -140,7 +139,7 @@ You can either run DoubletDetection_ with the wrapper script we have provided or
       raw_counts = raw_counts[:, ~zero_genes]
       print('Counts matrix shape after removing unexpressed genes: {} rows, {} columns'.format(raw_counts.shape[0], raw_counts.shape[1]))
 
-      clf = doubletdetection.BoostClassifier(n_iters=50, use_phenograph=pheno, standard_scaling=standard_scaling, verbose = True)
+      clf = doubletdetection.BoostClassifier(n_iters=50, use_phenograph=True, standard_scaling=False, verbose = True)
       doublets = clf.fit(raw_counts).predict(p_thresh=1e-16, voter_thresh=50)
 
       results = pd.Series(doublets, name="DoubletDetection_DropletType")
@@ -170,7 +169,16 @@ You can either run DoubletDetection_ with the wrapper script we have provided or
 
 DoubletDetection Results and Interpretation
 -------------------------------------------
-After running the DoubletDetection_, you will have multiple files in the ``$DOUBLETDETECTION_OUTDIR``.
+After running the DoubletDetection_, you will have multiple files in the ``$DOUBLETDETECTION_OUTDIR``:
+
+.. code-block:: bash
+
+  .
+  ├── convergence_test.pdf
+  ├── DoubletDetection_doublets_singlets.tsv
+  ├── DoubletDetection_summary.tsv
+  └── threshold_test.pdf
+
 We have found these to be the most helpful:
 
 - ``DoubletDetection_summary.tsv``

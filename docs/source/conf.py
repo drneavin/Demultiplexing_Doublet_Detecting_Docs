@@ -21,7 +21,7 @@ import shutil
 
 # -- Project information -----------------------------------------------------
 
-project = 'Demultiplexing & Doublet Detection Workflow'
+project = 'Demuxafy'
 copyright = '2021, Drew Neavin'
 author = 'Drew Neavin'
 

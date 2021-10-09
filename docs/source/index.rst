@@ -6,7 +6,7 @@
 
 
 
-Demultiplexing & Doublet Detection Workflow
+Demuxafy
 =======================================================================
 .. sidebar:: Number and Percent Doublets per Number Droplets Captured
 
@@ -36,6 +36,7 @@ In addition to demultiplexing softwares, there are also doublet detecting softwa
    SoftwareSelections
    Doublet Estimation Calculator <test.html#http://>
    OtherSingleCellData
+   Singularity
 
 
 .. toctree::
@@ -66,9 +67,6 @@ In addition to demultiplexing softwares, there are also doublet detecting softwa
    Solo
 
 
-- `Doublet Estimation Calculator`__ for testing
-
-__ test.html
 
 .. Reference
 .. ==================

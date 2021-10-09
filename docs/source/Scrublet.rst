@@ -18,7 +18,7 @@ This is the data that you will need to have preparede to run Scrublet_:
 .. admonition:: Required
   :class: important
 
-  - A counts matrix (``$COUNTS``)
+  - A counts matrix (``$MATRIX``)
   
     - DoubletDetection expects counts to be in the cellranger output format (directory containint ``barcodes.tsv``, ``genes.tsv`` and ``matrix.mtx`` **or** ``barcodes.tsv.gz``, ``features.tsv.gz`` and ``matrix.mtx.gz``)
 
@@ -39,7 +39,7 @@ You can either run Scrublet_ with the wrapper script we have provided or you can
 .. admonition:: Note
 
   It is a good idea to try multiple different percentile variable numbers. We typically try, 80, 85, 90 and 95. 
-  Then we choose the one that has the best defined bimodal distribution based on the ``doublet_score_histogram.png`` (see results explanation for details).
+  Then we choose the one that has the best defined bimodal distribution based on the ``doublet_score_histogram.png`` (see :ref:`Scrublet Results and Interpretation <scrublet-results>` for details).
 
 .. tabs::
 
@@ -47,53 +47,53 @@ You can either run Scrublet_ with the wrapper script we have provided or you can
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif python scrublet.py
+      singularity exec Demuxafy.sif python Scrublet.py -m $MATRIX -o $SCRUBLET_OUTDIR
 
-	  To see all the parameters that this wrapper script will accept, run:
+    To see all the parameters that this wrapper script will accept, run:
 
-	  ..code-block:: bash
+    .. code-block:: bash
 
-			python scrublet.py -h
+      singularity exec Demuxafy.sif python Scrublet.py -h
 
 
-			usage: scrublet.py [-h] -m COUNTS_MATRIX [-b BARCODES] [-r SIM_DOUBLET_RATIO]
-							[-c MIN_COUNTS] [-e MIN_CELLS]
-							[-v MIN_GENE_VARIABILITY_PCTL] [-p N_PRIN_COMPS]
-							[-t SCRUBLET_DOUBLET_THRESHOLD] [-o OUTDIR]
+      usage: scrublet.py [-h] -m COUNTS_MATRIX [-b BARCODES] [-r SIM_DOUBLET_RATIO]
+              [-c MIN_COUNTS] [-e MIN_CELLS]
+              [-v MIN_GENE_VARIABILITY_PCTL] [-p N_PRIN_COMPS]
+              [-t SCRUBLET_DOUBLET_THRESHOLD] [-o OUTDIR]
 
-			wrapper for scrublet for doublet detection of transcriptomic data.
+      wrapper for scrublet for doublet detection of transcriptomic data.
 
-			optional arguments:
-			-h, --help            show this help message and exit
-			-m COUNTS_MATRIX, --counts_matrix COUNTS_MATRIX
-									cell ranger counts matrix directory
-			-b BARCODES, --barcodes BARCODES
-									barcodes.tsv or barcodes.tsv.gz from cellranger
-			-r SIM_DOUBLET_RATIO, --sim_doublet_ratio SIM_DOUBLET_RATIO
-									Number of doublets to simulate relative to the number
-									of observed transcriptomes.
-			-c MIN_COUNTS, --min_counts MIN_COUNTS
-									Used for gene filtering prior to PCA. Genes expressed
-									at fewer than min_counts in fewer than min_cells are
-									excluded.
-			-e MIN_CELLS, --min_cells MIN_CELLS
-									Used for gene filtering prior to PCA. Genes expressed
-									at fewer than min_counts in fewer than are excluded.
-			-v MIN_GENE_VARIABILITY_PCTL, --min_gene_variability_pctl MIN_GENE_VARIABILITY_PCTL
-									Used for gene filtering prior to PCA. Keep the most
-									highly variable genes in the top
-									min_gene_variability_pctl percentile), as measured by
-									the v-statistic [Klein et al., Cell 2015].
-			-p N_PRIN_COMPS, --n_prin_comps N_PRIN_COMPS
-									Number of principal components used to embed the
-									transcriptomes priorto k-nearest-neighbor graph
-									construction.
-			-t SCRUBLET_DOUBLET_THRESHOLD, --scrublet_doublet_threshold SCRUBLET_DOUBLET_THRESHOLD
-									Manually Set the scrublet doublet threshold location.
-									For running a second time if scrublet incorreclty
-									places the threshold the first time
-			-o OUTDIR, --outdir OUTDIR
-									The output directory
+      optional arguments:
+      -h, --help            show this help message and exit
+      -m COUNTS_MATRIX, --counts_matrix COUNTS_MATRIX
+                  cell ranger counts matrix directory
+      -b BARCODES, --barcodes BARCODES
+                  barcodes.tsv or barcodes.tsv.gz from cellranger
+      -r SIM_DOUBLET_RATIO, --sim_doublet_ratio SIM_DOUBLET_RATIO
+                  Number of doublets to simulate relative to the number
+                  of observed transcriptomes.
+      -c MIN_COUNTS, --min_counts MIN_COUNTS
+                  Used for gene filtering prior to PCA. Genes expressed
+                  at fewer than min_counts in fewer than min_cells are
+                  excluded.
+      -e MIN_CELLS, --min_cells MIN_CELLS
+                  Used for gene filtering prior to PCA. Genes expressed
+                  at fewer than min_counts in fewer than are excluded.
+      -v MIN_GENE_VARIABILITY_PCTL, --min_gene_variability_pctl MIN_GENE_VARIABILITY_PCTL
+                  Used for gene filtering prior to PCA. Keep the most
+                  highly variable genes in the top
+                  min_gene_variability_pctl percentile), as measured by
+                  the v-statistic [Klein et al., Cell 2015].
+      -p N_PRIN_COMPS, --n_prin_comps N_PRIN_COMPS
+                  Number of principal components used to embed the
+                  transcriptomes priorto k-nearest-neighbor graph
+                  construction.
+      -t SCRUBLET_DOUBLET_THRESHOLD, --scrublet_doublet_threshold SCRUBLET_DOUBLET_THRESHOLD
+                  Manually Set the scrublet doublet threshold location.
+                  For running a second time if scrublet incorreclty
+                  places the threshold the first time
+      -o OUTDIR, --outdir OUTDIR
+                  The output directory
 
 
   .. tab:: Run in python
@@ -129,26 +129,34 @@ You can either run Scrublet_ with the wrapper script we have provided or you can
       import read10x
 
       ## Set up parameters and variables ##
-      counts_matrix = "/path/to/counts/matrix.mtx"
+      counts_matrix_dir = "/path/to/counts/matrix/dir/"
       outdir = "/path/to/doublet/detection/outdir"
 
-
-      os.mkdirs(outdir)
+      if not os.path.isdir(outdir):
+        os.mkdir(outdir)
 
 
       plt.rc('font', size=14)
       plt.rcParams['pdf.fonttype'] = 42
 
       ## Basic run with scrublet
-      counts_matrix = read10x.import_cellranger_mtx(counts_matrix)
-      barcodes_df = read10x.read_barcodes(barcodes)
+      counts_matrix = read10x.import_cellranger_mtx(counts_matrix_dir)
+
+      try:
+        barcodes_df = read10x.read_barcodes(counts_matrix_dir + "/barcodes.tsv.gz")
+      except:
+        try:
+          barcodes_df = read10x.read_barcodes(counts_matrix_dir + "/barcodes.tsv")
+        except:
+          print("No barcode file in provided counts matrix directory. Please double check the directory or provide the full path to the barcode file to use.")
+
 
 
       dbl_rate = counts_matrix.shape[0]/1000 * 0.008
       print('Counts matrix shape: {} rows, {} columns'.format(counts_matrix.shape[0], counts_matrix.shape[1]))
       scrub = scr.Scrublet(counts_matrix, expected_doublet_rate=dbl_rate, sim_doublet_ratio = 2)
       doublet_scores, predicted_doublets = scrub.scrub_doublets(min_counts=3, 
-                                                                min_cells=a3, 
+                                                                min_cells=3, 
                                                                 min_gene_variability_pctl=85, 
                                                                 n_prin_comps=30)
 
@@ -180,10 +188,20 @@ You can either run Scrublet_ with the wrapper script we have provided or you can
       summary.to_csv(os.path.join(outdir,'scrublet_summary.tsv'), sep = "\t", index = False)
 
 
+.. _scrublet-results:
 
-DoubletDetection Results and Interpretation
+Scrublet Results and Interpretation
 -------------------------------------------
-After running the Scrublet_, you will have multiple files in the ``$SCRUBLET_OUTDIR``.
+After running the Scrublet_, you will have four files in the ``$SCRUBLET_OUTDIR``:
+
+.. code-block::
+
+  .
+  ├── doublet_score_histogram.png
+  ├── scrublet_results.tsv
+  ├── scrublet_summary.tsv
+  └── UMAP.png
+
 We have found these to be the most helpful:
 
 - ``scrublet_summary.tsv``
@@ -198,7 +216,7 @@ We have found these to be the most helpful:
   | singlet                      | 19131     |
   +------------------------------+-----------+
 
-    - To check whether the numbe of doublets identified by Scrublet_ is consistent with the expected doublet rate expected based on the number of droplets that you captured, you can use our `Expected Doublet Estimation Calculator <test.html>`__.
+    - To check whether the number of doublets identified by Scrublet_ is consistent with the expected doublet rate expected based on the number of droplets that you captured, you can use our `Expected Doublet Estimation Calculator <test.html>`__.
 
 - ``scrublet_results.tsv``
 

@@ -75,8 +75,10 @@ In addition, we have provided test data that you can use.
 .. admonition:: Information
   :class: important
 
-    The test dataset includes 20,982 droplets captured of PBMCs from 14 multiplexed individuals.
+    The test dataset includes 20,982 droplets captured of PBMCs from 13 multiplexed individuals.
 
+10x Directories + Other Necessary Files
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 We have provided this dataset as the complete dataset which is pretty large (~40Gb tar.gz directory).
 Therefore, we have also provided the same dataset where the data has been significantly reduced.
 
@@ -131,6 +133,32 @@ You can download the dataset with one of the following commands:
     .. code-block:: bash
 
       Files TestData4PipelineSmall.tar.gz.md5 and downloaded_TestData4PipelineSmall.tar.gz.md5 are identical
+
+
+Seurat Object
+^^^^^^^^^^^^^^
+We have also provided a filtered, QC normalized Seurat object (needed for :ref:`DoubletFinder<doubletfinder-docs>` and :ref:`DoubletDecon<doubletdecon-docs>`)
+
+Download the rds object and the md5sum:
+
+.. code-block:: bash
+
+	wget https://www.dropbox.com/s/po4gy2j3eqohhjv/TestData_Seurat.rds
+	wget https://www.dropbox.com/s/rmix7tt9aw28n7i/TestData_Seurat.rds.md5
+
+
+After downloading the rds.object, it is best to make sure the md5sum of the ``TestData_Seurat.rds`` file matches the md5sum in the ``TestData_Seurat.rds.md5``:
+
+.. code-block:: bash
+
+	md5sum TestData_Seurat.rds > downloaded_TestData_Seurat.rds.md5
+	diff -s TestData_Seurat.rds.md5 downloaded_TestData_Seurat.rds.md5
+
+That should return the following statement indicating that the two md5sums are identical:
+
+.. code-block:: bash
+
+	Files TestData_Seurat.rds.md5 and downloaded_TestData_Seurat.rds.md5 are identical
 
 .. Note:: 
   We have used this dataset for each of the tutorials.

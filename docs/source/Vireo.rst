@@ -7,7 +7,7 @@ Vireo Tutorial
 
 Vireo is a flexible demultiplexing software that can demutliplex without any reference SNP genotypes, with reference SNP genotypes for a subset of the donors in the pool or no reference SNP genotypes.
 If you have reference SNP genotypes for **all** of the donors in your pool, you could also use :ref:`Demuxlet <Demuxlet-docs>` or :ref:`Souporcell <Souporcell-docs>`.
-If you don't have reference SNP genotypes, you could alternatively use :ref:`Freemuxlet<Freemuxlet-docs` or :ref:`ScSplit<scSplit-docs>`.
+If you don't have reference SNP genotypes, you could alternatively use :ref:`Freemuxlet<Freemuxlet-docs>` or :ref:`ScSplit<scSplit-docs>`.
 
 
 
@@ -54,10 +54,23 @@ First, you need to count the number of alleles at each SNP in each droplet using
 
 .. code-block:: bash
 
-  singularity exec Demuxafy.sif cellSNP-lite -s $BAM -b $BARCODES -o $VIREO_OUTDIR -R $VCF -p 20 --minMAF 0.1 --minCOUNT 20
+  singularity exec Demuxafy.sif cellsnp-lite -s $BAM -b $BARCODES -O $VIREO_OUTDIR -R $VCF -p 20 --minMAF 0.1 --minCOUNT 20
 
 You can alter the ``-p``, ``--minMAF`` and ``--minCOUNT`` parameters to fit your data and your needs.
 We have found these settings to work well with our data
+
+If the pileup is successfull, you will have this new file in your ``$VIREO_OUTDIR``:
+
+.. code-block:: bash
+
+	.
+	├── cellSNP.base.vcf
+	├── cellSNP.samples.tsv
+	├── cellSNP.tag.AD.mtx
+	├── cellSNP.tag.DP.mtx
+	└── cellSNP.tag.OTH.mtx
+
+Additional details about outputs are available below in the :ref:`Vireo Results and Interpretation <vireo-results>`.
 
 
 
@@ -71,7 +84,7 @@ We've provided an example command for each of these differing amounts of donor S
 
   .. tab:: With SNP Genotype Data for All Donors
 
-    You will need to provide which genotype measure format (``$FORMAT``) is provided in your donor SNP genotype file (GT, GP, or PL)
+    You will need to provide which genotype measure  (``$FIELD``) is provided in your donor SNP genotype file (GT, GP, or PL); default is PL.
 
     .. admonition:: Note
 
@@ -81,16 +94,25 @@ We've provided an example command for each of these differing amounts of donor S
       :class: important
 
       Vireo runs more efficiently when the SNPs from the donor ``$VCF`` have been filtered for the SNPs identified by ``cellSNP-lite``.
-      Therefore, it is highly recommended subset the vcf as follows first:
+      Therefore, it is highly recommended subset the vcf first:\.
+
+      If your ``$VCF`` file is bgzipped (`i.e.` ends in ``.vcf.gz``), you can use ``bcftools`` to filter your ``$VCF`` for the positions in ``$VIREO_OUTDIR/cellSNP.base.vcf``:
 
         .. code-block::
 
-          bcftools view $VCF -R $VIREO_OUTDIR/cellSNP.cells.vcf.gz -Oz -o $VIREO_OUTDIR/donor_subset.vcf
+          singularity exec Demuxafy.sif bcftools view $VCF -R $VIREO_OUTDIR/cellSNP.base.vcf -Ov -o $VIREO_OUTDIR/donor_subset.vcf
 
+      If your ``$VCF`` file is **not** bgzipped (`i.e.` ends in ``.vcf``), you can use ``bedtools`` to filter your ``$VCF`` for the positions in ``$VIREO_OUTDIR/cellSNP.base.vcf``:
+
+        .. code-block::
+
+          singularity exec Demuxafy.sif bedtools intersect -a $VCF -b $VIREO_OUTDIR/cellSNP.base.vcf -wa -header > $VIREO_OUTDIR/donor_subset.vcf
+
+    To run Vireo_ with reference SNP genotype data for your donors (ideally filtered as shown above):
 
     .. code-block::
 
-      singularity exec Demuxafy.sif vireo -c $VIREO_OUTDIR/cellSNPpileup.vcf.gz -d $VIREO_OUTDIR/donor_subset.vcf -o $VIREO_OUTDIR -t $FORMAT
+      singularity exec Demuxafy.sif vireo -c $VIREO_OUTDIR -d $VIREO_OUTDIR/donor_subset.vcf -o $VIREO_OUTDIR -t $FIELD
 
   .. tab:: With SNP Genotype Data for Some Donors
 
@@ -107,7 +129,7 @@ We've provided an example command for each of these differing amounts of donor S
 
         .. code-block::
 
-          bcftools view $VCF -R $VIREO_OUTDIR/cellSNP.cells.vcf.gz -Oz -o $VIREO_OUTDIR/donor_subset.vcf
+          singularity exec Demuxafy.sif bcftools view $VCF -R $VIREO_OUTDIR/cellSNP.base.vcf -Oz -o $VIREO_OUTDIR/donor_subset.vcf
 
 
     .. code-block::
@@ -120,7 +142,16 @@ We've provided an example command for each of these differing amounts of donor S
 
       singularity exec Demuxafy.sif vireo -c $VIREO_OUTDIR/cellSNPpileup.vcf.gz -o $VIREO_OUTDIR -N $N
 
+If Vireo_ is successfull, you will have this new file in your ``$VIREO_OUTDIR``:
 
+.. code-block:: bash
+
+
+
+Additional details about outputs are available below in the :ref:`Vireo Results and Interpretation <vireo-results>`.
+
+
+.. _vireo-results:
 
 Vireo Results and Interpretation
 -------------------------------------

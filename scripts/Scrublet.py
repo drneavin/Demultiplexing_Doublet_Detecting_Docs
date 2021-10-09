@@ -32,8 +32,8 @@ mods_path = "/opt/Demultiplexing_Doublet_Detecting_Docs/mods"
 sys.path.append(mods_path)
 import read10x
 
-
-os.mkdirs(args.outdir)
+if not os.path.isdir(args.outdir):
+    os.mkdir(args.outdir)
 
 
 plt.rc('font', size=14)
@@ -41,7 +41,20 @@ plt.rcParams['pdf.fonttype'] = 42
 
 ## Basic run with scrublet
 counts_matrix = read10x.import_cellranger_mtx(args.counts_matrix)
-barcodes_df = read10x.read_barcodes(args.barcodes)
+
+if args.barcodes is None:
+	if os.path.exists(os.path.join(args.counts_matrix, "barcodes.tsv.gz")):
+		print("Reading in barcodes file")
+		barcodes_df = read10x.read_barcodes(os.path.join(args.counts_matrix ,"barcodes.tsv.gz"))
+	elif os.path.exists(os.path.join(args.counts_matrix, "barcodes.tsv")):
+		print("Reading in barcodes file")
+		barcodes_df = read10x.read_barcodes(os.path.join(args.counts_matrix ,"barcodes.tsv"))
+	else:
+		print("No barcode file in provided counts matrix directory")
+else:
+	print("Reading in barcodes file")
+	barcodes_df = read10x.read_barcodes(args.barcodes)
+
 
 
 dbl_rate = counts_matrix.shape[0]/1000 * 0.008

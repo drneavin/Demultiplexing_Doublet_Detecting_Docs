@@ -55,7 +55,7 @@ This is the data that you will need to have preparede to run Souporcell_:
 
 Run Souporcell
 --------------
-To run Souporcell_, 
+You can run Souporcell_ with or without reference SNP genotypes - follow the instructions for each bellow:
 
 
 .. tabs::
@@ -75,7 +75,15 @@ To run Souporcell_,
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif souporcell_pipeline.py -i $BAM -b $BARCODES -f $FASTA -t $THREADS -o $SOUPORCELL_OUTDIR -k $N --known_genotypes $VCF --known_genotypes_sample_names donor1,donor2,donor3,donor4
+      singularity exec Demuxafy.sif souporcell_pipeline.py -i $BAM -b $BARCODES -f $FASTA -t $THREADS -o $SOUPORCELL_OUTDIR -k $N --known_genotypes $VCF --known_genotypes_sample_names donor1 donor ,donor3 donor4
+
+If souporcell is successfull, you will have these files in your ``$SOUPORCELL_OUTDIR``:
+
+.. code-block:: bash
+
+
+
+Additional details about outputs are available below in the :ref:`Souporcell Results and Interpretation <souporcell-results>`.
 
 
 
@@ -87,8 +95,17 @@ We have provided a script that will provide a summary of the number of droplets 
 
   singularity exec Demuxafy.sif bash souporcell_summary.sh $SOUPORCELL_OUTDIR
 
+If the souporcell summary is successfull, you will have this new file in your ``$SOUPORCELL_OUTDIR``:
+
+.. code-block:: bash
+
+  .
+  └── 
+
+Additional details about outputs are available below in the :ref:`Souporcell Results and Interpretation <souporcell-results>`.
 
 
+.. _souporcell-results:
 
 Correlating Cluster to Donor Reference SNP Genotypes (optional)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -212,6 +229,7 @@ If you have reference SNP genotypes for some or all of the donors in your pool, 
       if (is.na(format_clust)){
         cluster_geno_tidy <- as_tibble(extract.gt(element = "GT",cluster_geno, IDtoRowNames = F))
         if (!all(colSums(is.na(cluster_geno_tidy)) == nrow(cluster_geno_tidy))){
+          message("Found GT genotype format in cluster vcf. Will use that metric for cluster correlation.")
           format_clust = "GT"
 
           if (any(grepl("\\|",cluster_geno_tidy[1,]))){
@@ -265,6 +283,7 @@ If you have reference SNP genotypes for some or all of the donors in your pool, 
       if (is.na(format_ref)){
         ref_geno_tidy <- as_tibble(extract.gt(element = "GT",ref_geno, IDtoRowNames = F))
         if (!all(colSums(is.na(ref_geno_tidy)) == nrow(ref_geno_tidy))){
+          message("Found GT genotype format in reference vcf. Will use that metric for cluster correlation.")
           format_ref = "GT"
 
           if (any(grepl("\\|",ref_geno_tidy[1,]))){
@@ -305,14 +324,21 @@ If you have reference SNP genotypes for some or all of the donors in your pool, 
       ### Get SNP IDs that will match between reference and cluster ###
       ## Account for possibility that the ref or alt might be missing
       if ((all(is.na(cluster_geno@fix[,'REF'])) & all(is.na(cluster_geno@fix[,'ALT']))) | (all(is.na(ref_geno@fix[,'REF'])) & all(is.na(ref_geno@fix[,'ALT'])))){
+        message("The REF and ALT categories are not provided for the reference and/or the cluster vcf. Will use just the chromosome and position to match SNPs.")
         cluster_geno_tidy$ID <- paste0(cluster_geno@fix[,'CHROM'],":", cluster_geno@fix[,'POS'])
         ref_geno_tidy$ID <- paste0(ref_geno@fix[,'CHROM'],":", ref_geno@fix[,'POS'])
       } else if (all(is.na(cluster_geno@fix[,'REF'])) | all(is.na(ref_geno@fix[,'REF']))){
+        message("The REF categories are not provided for the reference and/or the cluster vcf. Will use the chromosome, position and ALT to match SNPs.")
         cluster_geno_tidy$ID <- paste0(cluster_geno@fix[,'CHROM'],":", cluster_geno@fix[,'POS'],"_", cluster_geno@fix[,'REF'])
         ref_geno_tidy$ID <- paste0(ref_geno@fix[,'CHROM'],":", ref_geno@fix[,'POS'],"_", ref_geno@fix[,'REF'])
       } else if (all(is.na(cluster_geno@fix[,'ALT'])) | all(is.na(ref_geno@fix[,'ALT']))){
+        message("The ALT categories are not provided for the reference and/or the cluster vcf. Will use the chromosome, position and REF to match SNPs.")
         cluster_geno_tidy$ID <- paste0(cluster_geno@fix[,'CHROM'],":", cluster_geno@fix[,'POS'],"_", cluster_geno@fix[,'ALT'])
         ref_geno_tidy$ID <- paste0(ref_geno@fix[,'CHROM'],":", ref_geno@fix[,'POS'],"_", ref_geno@fix[,'ALT'])
+      } else {
+        message("Found REF and ALT in both cluster and reference genotype vcfs. Will use chromosome, position, REF and ALT to match SNPs.")
+          cluster_geno_tidy$ID <- paste0(cluster_geno@fix[,'CHROM'],":", cluster_geno@fix[,'POS'],"_", cluster_geno@fix[,'REF'],"_", cluster_geno@fix[,'ALT'])
+        ref_geno_tidy$ID <- paste0(ref_geno@fix[,'CHROM'],":", ref_geno@fix[,'POS'],"_", ref_geno@fix[,'REF'],"_", ref_geno@fix[,'ALT'])
       }
 
 
@@ -340,7 +366,7 @@ If you have reference SNP genotypes for some or all of the donors in your pool, 
       pearson_correlations_out <- cbind(cluster, pearson_correlations)
 
       ########## Save the correlation dataframes ##########
-      write_delim(pearson_correlations_out, path = paste0(outdir,"/ref_clust_pearson_correlations.tsv"), delim = "\t" )
+      write_delim(pearson_correlations_out, file = paste0(outdir,"/ref_clust_pearson_correlations.tsv"), delim = "\t" )
 
 
       ########## Create correlation figures ##########
@@ -366,8 +392,7 @@ If you have reference SNP genotypes for some or all of the donors in your pool, 
           }
       }
 
-      write_delim(key, path =paste0(outdir,"/Genotype_ID_key.txt"), delim = "\t")
-
+      write_delim(key, file = paste0(outdir,"/Genotype_ID_key.txt"), delim = "\t")
 
 
 Souporcell Results and Interpretation

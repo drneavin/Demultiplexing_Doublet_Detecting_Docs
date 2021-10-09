@@ -20,9 +20,9 @@ This is the data that you will need to have preparede to run scds_:
 .. admonition:: Required
   :class: important
 
-  - A counts matrix (``$COUNTS``)
+  - A counts matrix (``$MATRIX``)
   
-    - DoubletDetection expects counts to be in the cellranger output format (directory containing ``barcodes.tsv``, ``genes.tsv`` and ``matrix.mtx`` **or** ``barcodes.tsv.gz``, ``features.tsv.gz`` and ``matrix.mtx.gz``)
+    - Scds_ expects counts to be in the cellranger output format (directory containing ``barcodes.tsv``, ``genes.tsv`` and ``matrix.mtx`` **or** ``barcodes.tsv.gz``, ``features.tsv.gz`` and ``matrix.mtx.gz``)
 
 	  - If you don't have your data in this format, you can run scds_ manually in python and load the data in using a method of your choosing.
 
@@ -44,7 +44,7 @@ You can either run scds_ with the wrapper script we have provided or you can run
 
     .. code-block:: bash
 
-		  singularity exec Demuxafy.sif Rscript scds.R -o $SCDS_OUTDIR -t $COUNTS
+		  singularity exec Demuxafy.sif Rscript scds.R -o $SCDS_OUTDIR -t $MATRIX
 
 
   .. tab:: Run in R
@@ -118,6 +118,12 @@ You can either run scds_ with the wrapper script we have provided or you can run
 scds Results and Interpretation
 ----------------------------------------
 After running the scds_ with the wrapper script or manually you should have two files in the ``$SCDS_OUTDIR``:
+
+.. code-block:: bash
+
+	.
+	├── scds_doublets_singlets.tsv
+	└── scds_doublet_summary.tsv
 
 - ``scds_doublet_summary.tsv``
 

@@ -136,7 +136,7 @@ You can either run DoubletDecon_ with the wrapper script we have provided or you
       results <- Main_Doublet_Decon(rawDataFile = processed$newExpressionFile, 
         groupsFile = processed$newGroupsFile, 
         filename = "DoubletDecon_results",
-        location = out,
+        location = paste0(out, "/"),
         fullDataFile = NULL, 
         removeCC = FALSE, 
         species = "hsa", 
@@ -181,9 +181,32 @@ You can either run DoubletDecon_ with the wrapper script we have provided or you
 
 DoubletDecon Results and Interpretation
 ----------------------------------------
-After running the DoubletDecon_, you will have multiple files in the ``$DOUBLETDECON_OUTDIR``.  
+After running the DoubletDecon_, you will have multiple files in the ``$DOUBLETDECON_OUTDIR``:
+
+.. code-block:: bash
+
+  .
+  ├── data_processed_DoubletDecon_results.txt
+  ├── data_processed_reclust_DoubletDecon_results.txt
+  ├── DoubletDecon_doublets_singlets.tsv
+  ├── DoubletDecon_doublet_summary.tsv
+  ├── DoubletDecon_results.log
+  ├── DRS_doublet_table_DoubletDecon_results.txt
+  ├── DRS_results_DoubletDecon_results.txt
+  ├── Final_doublets_exp_DoubletDecon_results.txt
+  ├── Final_doublets_groups_DoubletDecon_results.txt
+  ├── Final_nondoublets_exp_DoubletDecon_results.txt
+  ├── Final_nondoublets_groups_DoubletDecon_results.txt
+  ├── groups_processed_DoubletDecon_results.txt
+  ├── groups_processed_reclust_DoubletDecon_results.txt
+  ├── new_PMF_results_DoubletDecon_results.txt
+  ├── resultsreadable_synths.txt
+  └── Synth_doublet_info_DoubletDecon_results.txt
+
+
 DoubletDecon_ puts most of the results in multiple separate files. 
 However, the wrapper script and the example code has some steps to combine these results together into a single file, which will likely be the most informative output.
+These are the files that we think will be the most helpful for users:
 
 - ``DoubletDecon_doublet_summary.tsv``
   

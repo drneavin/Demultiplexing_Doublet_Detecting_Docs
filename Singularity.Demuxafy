@@ -1,8 +1,13 @@
 Bootstrap: docker
 From: continuumio/miniconda3
+
+%labels
+	Author = Drew Neavin
+	Image_version = 0.0.1
+
 %environment
-    export PATH=/opt:/usr/games:/opt/conda/envs/py37/bin:/opt/conda/bin:/opt/Demultiplexing_Doublet_Detecting_Docs/scripts:opt/Demultiplexing_Doublet_Detecting_Docs/mods:/opt/bedtools2/bin:/opt/vartrix-v1.1.3-x86_64-linux/:opt/vcflib/bin:/opt/vcflib/scripts:/opt/souporcell:/opt/souporcell/troublet/target/release:/opt/minimap2-2.7:/root/.cargo/bin:/opt/freebayes/scripts:/opt/popscle/bin/:/opt/conda/envs/py37/lib/python3.6/site-packages/scSplit/:$PATH
-    export PYTHONPATH=/opt/conda/envs/py37/lib/python3.6/site-packages/
+    export PATH=/opt:/usr/games:/opt/conda/envs/py37/bin:/opt/conda/bin:/opt/Demultiplexing_Doublet_Detecting_Docs/scripts:opt/Demultiplexing_Doublet_Detecting_Docs/mods:/opt/bedtools2/bin:/opt/vartrix-v1.1.3-x86_64-linux/:opt/vcflib/bin:/opt/vcflib/scripts:/opt/souporcell:/opt/souporcell/troublet/target/release:/opt/minimap2-2.7:/root/.cargo/bin:/opt/freebayes/scripts:/opt/popscle/bin/:/opt/conda/envs/py37/lib/python3.7/site-packages/scSplit/:$PATH
+    export PYTHONPATH=/opt/conda/envs/py37/lib/python3.7/site-packages/
     export LC_ALL=C 
 
 
@@ -10,6 +15,7 @@ From: continuumio/miniconda3
     #!/bin/bash
     eval "$(command conda 'shell.bash' 'hook' 2> /dev/null)"
     export PATH=/opt/conda/bin/:$PATH
+    export HOME=/root ## Needed for rust to behave correctly
     apt update
     yes | apt upgrade
     yes | apt-get install build-essential
@@ -107,6 +113,7 @@ From: continuumio/miniconda3
             cd /opt/souporcell/souporcell
             cargo build --release
 
+
 	### Install python dependencies  ###
     yes | conda install pytorch torchvision cudatoolkit=11.0.221 -c pytorch ## solo
 	/opt/conda/envs/py37/bin/pip install scvi-tools ## required for solo
@@ -130,7 +137,6 @@ From: continuumio/miniconda3
     /opt/conda/envs/py37/bin/pip install xgboost
 	/opt/conda/envs/py37/bin/pip install argparse
 	/opt/conda/envs/py37/bin/pip install tensorflow ## required for souporcell
-
 
 	### Install CellSNP and Vireo ###
     pip3 install vireoSNP
@@ -201,7 +207,7 @@ From: continuumio/miniconda3
 
 	### Install scSplit ###
 	/opt/conda/envs/py37/bin/pip install scSplit
-	chmod 777 /opt/conda/envs/py37/lib/python3.6/site-packages/scSplit/scSplit
+	chmod 777 /opt/conda/envs/py37/lib/python3.7/site-packages/scSplit/scSplit
 
 	### Install scrublet
     /opt/conda/envs/py37/bin/pip install scrublet
@@ -223,7 +229,7 @@ From: continuumio/miniconda3
 
 
 	### Set up louvain for solo ###
-    sed -i 's/louvain.set_rng_seed(random_state)/partition_kwargs["seed"] = random_state/g'  /opt/conda/envs/py37/lib/python3.6/site-packages/scanpy/tools/_louvain.py
+    sed -i 's/louvain.set_rng_seed(random_state)/partition_kwargs["seed"] = random_state/g'  /opt/conda/envs/py37/lib/python3.7/site-packages/scanpy/tools/_louvain.py
 
 	### Install solo ###
     cd /opt

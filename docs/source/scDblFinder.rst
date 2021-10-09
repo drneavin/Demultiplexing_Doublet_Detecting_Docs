@@ -17,7 +17,7 @@ This is the data that you will need to have preparede to run scDblFinder_:
 .. admonition:: Required
   :class: important
 
-  - A counts matrix (``$COUNTS``)
+  - A counts matrix (``$MATRIX``)
   
     - DoubletDetection expects counts to be in the cellranger output format (directory containint ``barcodes.tsv``, ``genes.tsv`` and ``matrix.mtx`` **or** ``barcodes.tsv.gz``, ``features.tsv.gz`` and ``matrix.mtx.gz``)
 
@@ -40,7 +40,7 @@ You can either run scDblFinder_ with the wrapper script we have provided or you 
 
     .. code-block:: bash
 
-		  singularity exec Demuxafy.sif Rscript scDblFinder.R -o $SCDBLFINDER_OUTDIR -t $COUNTS
+		  singularity exec Demuxafy.sif Rscript scDblFinder.R -o $SCDBLFINDER_OUTDIR -t $MATRIX
 
 
   .. tab:: Run in R
@@ -68,7 +68,8 @@ You can either run scDblFinder_ with the wrapper script we have provided or you 
       out <- "/path/to/scds/outdir/"
       tenX_matrix <- "/path/to/counts/matrix/dir/"
 
-      print("Using the following counts directory: ", tenX_matrix)
+      dir.create(out, recursive = TRUE)
+      print(paste0("Using the following counts directory: ", tenX_matrix))
 
 
 
@@ -90,7 +91,7 @@ You can either run scDblFinder_ with the wrapper script we have provided or you 
       results <- data.frame("Barcode" = rownames(colData(sce)), "scDblFinder_DropletType" = sce$scDblFinder.class, "scDblFinder_Score" = sce$scDblFinder.score)
 
 
-      write_delim(results, path = paste0(out,"scDblFinder_doublets_singlets.tsv"), delim = "\t")
+      write_delim(results, path = paste0(out,"/scDblFinder_doublets_singlets.tsv"), delim = "\t")
 
       ### Calculate number of doublets and singlets ###
       summary <- as.data.frame(table(results$scDblFinder_DropletType))
@@ -102,6 +103,14 @@ You can either run scDblFinder_ with the wrapper script we have provided or you 
 scDblFinder Results and Interpretation
 ----------------------------------------
 After running the scDblFinder_ with the wrapper script or manually you should have two files in the ``$SCDBLFINDER_OUTDIR``:
+
+.. code-block:: bash
+
+	.
+	├── scDblFinder_doublets_singlets.tsv
+	└── scDblFinder_doublet_summary.tsv
+
+Here's a more detaild description of each of those files:
 
 - ``scDblFinder_doublet_summary.tsv``
 

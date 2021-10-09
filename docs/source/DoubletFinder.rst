@@ -120,12 +120,12 @@ You can either run DoubletFinder_ with the wrapper script we have provided or yo
       nExp_poi.adj <- round(doublet_number*(1-homotypic.prop))
 
       ## Run DoubletFinder with varying classification stringencies ----------------------------------------------------------------
-      seurat <- doubletFinder_v3(seurat, PCs = 1:10, pN = 10, pK = as.numeric(as.character(bcmvn$pK[which(bcmvn$BCmetric == max(bcmvn$BCmetric))])), nExp = nExp_poi.adj, reuse.pANN = FALSE, sct = TRUE)
+      seurat <- doubletFinder_v3(seurat, PCs = 1:10, pN = 0.25, pK = as.numeric(as.character(bcmvn$pK[which(bcmvn$BCmetric == max(bcmvn$BCmetric))])), nExp = nExp_poi.adj, reuse.pANN = FALSE, sct = TRUE)
       doublets <- as.data.frame(cbind(colnames(seurat), seurat@meta.data[,grepl(paste0("pANN_0.25_",as.numeric(as.character(bcmvn$pK[which(bcmvn$BCmetric == max(bcmvn$BCmetric))]))), colnames(seurat@meta.data))], seurat@meta.data[,grepl(paste0("DF.classifications_0.25_",as.numeric(as.character(bcmvn$pK[which(bcmvn$BCmetric == max(bcmvn$BCmetric))]))), colnames(seurat@meta.data))]))
       colnames(doublets) <-  c("Barcode","DoubletFinder_score","DoubletFinder_DropletType")
       doublets$DoubletFinder_DropletType <- gsub("Singlet","singlet",doublets$DoubletFinder_DropletType) %>% gsub("Doublet","doublet",.)
 
-      write_delim(doublets, path = paste0(out,"/DoubletFinder_doublets_singlets.tsv"), delim = "\t")
+      write_delim(doublets, file = paste0(out,"/DoubletFinder_doublets_singlets.tsv"), delim = "\t")
 
       ### Calculate number of doublets and singlets ###
       summary <- as.data.frame(table(doublets$DoubletFinder_DropletType))
@@ -136,8 +136,16 @@ You can either run DoubletFinder_ with the wrapper script we have provided or yo
 
 DoubletFinder Results and Interpretation
 ----------------------------------------
-After running the DoubletFinder_, you will have multiple files in the ``$DOUBLETFINDER_OUTDIR``.
-We have found these to be the most helpful:
+After running the DoubletFinder_, you will have multiple files in the ``$DOUBLETFINDER_OUTDIR``:
+
+.. code-block:: bash
+
+	.
+	├── DoubletFinder_doublets_singlets.tsv
+	├── DoubletFinder_doublet_summary.tsv
+	└── pKvBCmetric.png
+
+Here's a more detailed description of the contents of each of those files:
 
 - ``DoubletFinder_doublet_summary.tsv``
 

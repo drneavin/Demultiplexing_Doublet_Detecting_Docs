@@ -13,7 +13,7 @@ parser$add_argument("-s", "--seurat_object", required = TRUE, type = "character"
 parser$add_argument("-c", "--sct", required = TRUE, type = "logical", help = "Whether sctransform was used for normalization.")
 parser$add_argument("-d", "--doublet_number", required = TRUE, type = "integer", help = "Number of expected doublets based on droplets captured.")
 parser$add_argument("-p", "--PCs", required = FALSE, default = 10, type = "integer", help = "Number of PCs to use for \'doubletFinder_v3\' function.")
-parser$add_argument("-n", "--pN", required = FALSE, default = 10, type = "double", help = "Number of doublets to simulate as a proportion of the pool size.")
+parser$add_argument("-n", "--pN", required = FALSE, default = 0.25, type = "double", help = "Number of doublets to simulate as a proportion of the pool size.")
 
 # get command line options, if help option encountered print help and exit,
 # otherwise if options not found on command line then set defaults, 
@@ -57,7 +57,7 @@ doublets <- as.data.frame(cbind(colnames(seurat), seurat@meta.data[,grepl(paste0
 colnames(doublets) <-  c("Barcode","DoubletFinder_score","DoubletFinder_DropletType")
 doublets$DoubletFinder_DropletType <- gsub("Singlet","singlet",doublets$DoubletFinder_DropletType) %>% gsub("Doublet","doublet",.)
 
-write_delim(doublets, path = paste0(args$out,"/DoubletFinder_doublets_singlets.tsv"), delim = "\t")
+write_delim(doublets, file = paste0(args$out,"/DoubletFinder_doublets_singlets.tsv"), delim = "\t")
 
 ### Calculate number of doublets and singlets ###
 summary <- as.data.frame(table(doublets$DoubletFinder_DropletType))
