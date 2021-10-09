@@ -16,7 +16,7 @@ This is the data that you will need to have preparede to run solo_:
 .. admonition:: Required
   :class: important
 
-	- Parameter json file (``$JSON``)
+  - Parameter json file (``$JSON``)
   
     - Solo_ has provided an :download:`example file <_download_files/solo_model.json>` that we have found to work well for most of our data.
 
@@ -40,7 +40,7 @@ Run solo
 
 .. code-block:: bash
 
-  singularity exec Demuxafy.sif solo -o $SOLO_OUTDIR -e $N_DOUB $JSON $COUNTS
+  singularity exec Demuxafy.sif solo -o $SOLO_OUTDIR -e $N_DOUB -j $JSON -d $COUNTS
 
 Solo_ also has additional paramters that can be seen with:
 
@@ -85,6 +85,34 @@ Solo_ also has additional paramters that can be seen with:
                           (default: False)
     --version             Get version of solo-sc (default: False)
 
+If solo_ runs correctly, you should have the following files and directory structure in your ``$SOLO_OUTDIR``:
+
+.. code-block::
+
+	.
+	├── classifier
+	│   ├── attr.pkl
+	│   ├── model_params.pt
+	│   └── var_names.csv
+	├── is_doublet.csv
+	├── is_doublet.npy
+	├── is_doublet_sim.npy
+	├── latent.npy
+	├── logit_scores.csv
+	├── logit_scores.npy
+	├── logit_scores_sim.npy
+	├── no_updates_softmax_scores.csv
+	├── no_updates_softmax_scores.npy
+	├── no_updates_softmax_scores_sim.npy
+	├── preds.csv
+	├── preds.npy
+	├── smoothed_preds.npy
+	├── softmax_scores.csv
+	├── softmax_scores.npy
+	└── vae
+		├── attr.pkl
+		├── model_params.pt
+		└── var_names.csv
 
 
 Solo Summary
@@ -97,10 +125,17 @@ You can run this to get a fast and easy summary of your results with:
 
   singularity exec Demuxafy.sif python solo_summary.py -b $BARCODES -s $SOLO_OUTDIR
 
+If successful, you should have two new files in your ``$SOLO_OUTDIR``:
+
+.. code-block::
+
+	.
+  ├── solo_results.tsv
+  └── solo_summary.tsv
+
 
 Solo Results and Interpretation
 ----------------------------------------
-After running the solo_, you will have multiple files in the ``$SOLO_OUTDIR``.  
 solo_ puts most of the results in multiple separate files. 
 However, the wrapper script and the example code has some steps to combine these results together into a single file, which will likely be the most informative output.
 

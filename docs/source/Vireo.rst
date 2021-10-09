@@ -1,3 +1,9 @@
+.. # define a hard line break for HTML
+.. |br| raw:: html
+
+   <br />
+
+
 .. _Vireo-docs:
 
 Vireo Tutorial
@@ -82,7 +88,7 @@ We've provided an example command for each of these differing amounts of donor S
 
 .. tabs::
 
-  .. tab:: With SNP Genotype Data for All Donors
+  .. tab:: With SNP Genotype |br| Data for All Donors
 
     You will need to provide which genotype measure  (``$FIELD``) is provided in your donor SNP genotype file (GT, GP, or PL); default is PL.
 
@@ -114,7 +120,7 @@ We've provided an example command for each of these differing amounts of donor S
 
       singularity exec Demuxafy.sif vireo -c $VIREO_OUTDIR -d $VIREO_OUTDIR/donor_subset.vcf -o $VIREO_OUTDIR -t $FIELD
 
-  .. tab:: With SNP Genotype Data for Some Donors
+  .. tab:: With SNP Genotype |br| Data for Some Donors
 
     .. admonition:: Note
 
@@ -136,7 +142,7 @@ We've provided an example command for each of these differing amounts of donor S
 
       singularity exec Demuxafy.sif vireo -c $VIREO_OUTDIR/cellSNPpileup.vcf.gz -d $VIREO_OUTDIR/donor_subset.vcf -o $VIREO_OUTDIR/cellSNPpileup.vcf.gz -t $FIELD -N $N
 
-  .. tab:: Without Donor SNP Genotype Data
+  .. tab:: Without Donor SNP |br| Genotype Data
 
     .. code-block::
 

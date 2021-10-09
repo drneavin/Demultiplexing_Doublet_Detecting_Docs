@@ -46,18 +46,18 @@ elif args.standard_scaling == 'False':
 else:
     standard_scaling = args.standard_scaling
 
-
-os.mkdir(args.outdir)
+if not os.path.isdir(args.outdir):
+    os.mkdir(args.outdir)
 
 
 ### Read in data ###
 raw_counts = read10x.import_cellranger_mtx(args.counts_matrix)
 
 if args.barcodes is None:
-    if os.path.exists(os.path.join(args.counts_matrix, "/barcodes.tsv.gz")):
-        barcodes_df = read10x.read_barcodes(os.path.join(args.counts_matrix ,"/barcodes.tsv.gz"))
-    elif os.path.exists(os.path.join(args.counts_matrix, "/barcodes.tsv")):
-        barcodes_df = read10x.read_barcodes(os.path.join(args.counts_matrix ,"/barcodes.tsv"))
+    if os.path.exists(os.path.join(args.counts_matrix, "barcodes.tsv.gz")):
+        barcodes_df = read10x.read_barcodes(os.path.join(args.counts_matrix ,"barcodes.tsv.gz"))
+    elif os.path.exists(os.path.join(args.counts_matrix, "barcodes.tsv")):
+        barcodes_df = read10x.read_barcodes(os.path.join(args.counts_matrix ,"barcodes.tsv"))
     else:
         print("No barcode file in provided counts matrix directory")
 else:

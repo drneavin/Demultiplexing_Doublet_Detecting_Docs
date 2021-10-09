@@ -7,6 +7,7 @@ Based on our experiences with this data we have some recommendations and conside
 
 
 .. _snrna:
+
 snRNA-seq
 ---------
 Demultiplexing Softwares
@@ -24,6 +25,7 @@ If you are running in to any issues or would like a discussion about use of doub
 
 
 .. _snatac:
+
 snATAC-seq
 ----------
 Demultiplexing Softwares
@@ -52,6 +54,7 @@ This has been shown previously by `SnapATAC <https://www.nature.com/articles/s41
 Combined snRNA-seq + snATAC-seq
 -------------------------------
 .. _combo-demultiplex:
+
 Demultiplexing Softwares
 ^^^^^^^^^^^^^^^^^^^^^^^^
 We have noticed a higher percentage of ambient RNA from our combined snRNA-seq + scATAC-seq experiments as compared to our scRNA-seq (we haven't tested multiplexed snRNA-seq in our hands) but similar snATAC-seq ambient DNA estimations 0as detected with :ref:`Souporcell<Souporcell-docs>`

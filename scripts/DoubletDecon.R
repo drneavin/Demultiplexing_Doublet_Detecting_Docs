@@ -65,14 +65,14 @@ results <- Main_Doublet_Decon(rawDataFile = processed$newExpressionFile,
 
 
 
-doublets <- fread(paste0(args$out, "/Final_doublets_groups_DoubletDecon_results.txt"))
+doublets <- read.table(paste0(args$out, "/Final_doublets_groups_DoubletDecon_results.txt"))
 doublets$Barcode <- gsub("\\.", "-",rownames(doublets))
 doublets$DoubletDecon_DropletType <- "doublet"
 doublets$V1 <- NULL
 doublets$V2 <- NULL
 
 
-singlets <- fread(paste0(args$out, "/Final_nondoublets_groups_DoubletDecon_results.txt"))
+singlets <- read.table(paste0(args$out, "/Final_nondoublets_groups_DoubletDecon_results.txt"))
 singlets$Barcode <- gsub("\\.", "-",rownames(singlets))
 singlets$DoubletDecon_DropletType <- "singlet"
 singlets$V1 <- NULL
@@ -80,10 +80,10 @@ singlets$V2 <- NULL
 
 doublets_singlets <- rbind(singlets,doublets)
 
-fwrite(doublets_singlets, paste0(args$out, "/DoubletDecon_doublets_singlets.tsv", sep = "\t"))
+fwrite(doublets_singlets, paste0(args$out, "/DoubletDecon_doublets_singlets.tsv"), sep = "\t", append = FALSE)
 
 
 ### Make a summaruy of the number of singlets and doublets
 summary <- as.data.frame(table(doublets_singlets$DoubletDecon_DropletType))
 colnames(summary) <- c("Classification", "Droplet N")
-write_delim(summary, paste0(args$out,"/DoubletDecon_doublet_summary.tsv"), "\t")
+fwrite(summary, paste0(args$out,"/DoubletDecon_doublet_summary.tsv"), sep = "\t", append = FALSE)

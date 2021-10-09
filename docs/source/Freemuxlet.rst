@@ -399,6 +399,16 @@ If you have reference SNP genotypes for some or all of the donors in your pool, 
       write_delim(key, file = paste0(outdir,"/Genotype_ID_key.txt"), delim = "\t")
 
 
+After correlating the reference SNP genotypes with the cluster SNP genotypes using either the script or manually, you should have three new files in your ``$FREEMUXLET_OUTDIR``:
+
+.. code-block::
+
+  .
+  ├── Genotype_ID_key.txt
+  ├── ref_clust_pearson_correlation.png
+  └── ref_clust_pearson_correlations.tsv
+
+
 .. _freemuxlet-results:
 
 Freemuxlet Results and Interpretation
