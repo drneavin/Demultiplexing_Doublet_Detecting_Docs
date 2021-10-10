@@ -28,36 +28,6 @@ author = 'Drew Neavin'
 # The full version, including alpha/beta/rc tags
 release = '0.0.1'
 
-# XXX: POSSIBLY KIND OF A HACK
-# import httpolice
-# import httpolice.inputs
-# import httpolice.reports.html
- 
-# Use hack developed by https://github.com/vfaronov/httpolice/blob/5bf58456b37d2f073094e6f39f168b41fda5ef3d/doc/conf.py#L33-L63
-# to import html generated for calculator as it's own page
-# ``test.html`` with an example HTML report.
-
- 
-# But for that to work, we need to actually build those pages first, and put
-# them into the ``html_extra_path``. I can't think of a more appropriate place
-# to trigger their build than right here. After all, Sphinx's docs do say that
-# ``conf.py`` "can execute arbitrarily complex code", so maybe it's OK.
-
-# See also: https://stackoverflow.com/q/38547509/200445
-
-# if os.path.exists('_extra'):
-#     shutil.rmtree('_extra')
-# os.mkdir('_extra')
-
-# with io.open('_extra/test.html', 'wb') as notices_file:
-#     httpolice.reports.html.list_notices(notices_file)
-
-# with io.open('_extra/showcase.html', 'wb') as showcase_file:
-#     exchanges = list(httpolice.inputs.combined_input(
-#         ['../test/combined_data/showcase.https']))
-#     for exch in exchanges:
-#         httpolice.check_exchange(exch)
-#     httpolice.html_report(exchanges, showcase_file)
 
 # -- General configuration ---------------------------------------------------
 
@@ -100,6 +70,7 @@ pygments_style = "colorful"
 #
 # html_theme = 'alabaster'
 html_theme = "sphinx_rtd_theme"
+# html_theme = "press"
 
 
 # Theme options are theme-specific and customize the look and feel of a theme
@@ -107,7 +78,7 @@ html_theme = "sphinx_rtd_theme"
 # documentation.
 #
 html_theme_options = {
-    "navigation_depth": 1,
+    "navigation_depth": 2,
     # "logo_only": True,
 }
 

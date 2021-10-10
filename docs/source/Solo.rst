@@ -89,30 +89,30 @@ If solo_ runs correctly, you should have the following files and directory struc
 
 .. code-block::
 
-	.
-	├── classifier
-	│   ├── attr.pkl
-	│   ├── model_params.pt
-	│   └── var_names.csv
-	├── is_doublet.csv
-	├── is_doublet.npy
-	├── is_doublet_sim.npy
-	├── latent.npy
-	├── logit_scores.csv
-	├── logit_scores.npy
-	├── logit_scores_sim.npy
-	├── no_updates_softmax_scores.csv
-	├── no_updates_softmax_scores.npy
-	├── no_updates_softmax_scores_sim.npy
-	├── preds.csv
-	├── preds.npy
-	├── smoothed_preds.npy
-	├── softmax_scores.csv
-	├── softmax_scores.npy
-	└── vae
-		├── attr.pkl
-		├── model_params.pt
-		└── var_names.csv
+  .
+  ├── classifier
+  │   ├── attr.pkl
+  │   ├── model_params.pt
+  │   └── var_names.csv
+  ├── is_doublet.csv
+  ├── is_doublet.npy
+  ├── is_doublet_sim.npy
+  ├── latent.npy
+  ├── logit_scores.csv
+  ├── logit_scores.npy
+  ├── logit_scores_sim.npy
+  ├── no_updates_softmax_scores.csv
+  ├── no_updates_softmax_scores.npy
+  ├── no_updates_softmax_scores_sim.npy
+  ├── preds.csv
+  ├── preds.npy
+  ├── smoothed_preds.npy
+  ├── softmax_scores.csv
+  ├── softmax_scores.npy
+  └── vae
+      ├── attr.pkl
+      ├── model_params.pt
+      └── var_names.csv
 
 
 Solo Summary
@@ -128,10 +128,34 @@ You can run this to get a fast and easy summary of your results with:
 If successful, you should have two new files in your ``$SOLO_OUTDIR``:
 
 .. code-block::
+  :emphasize-lines: 21,22
 
-	.
+  .
+  ├── classifier
+  │   ├── attr.pkl
+  │   ├── model_params.pt
+  │   └── var_names.csv
+  ├── is_doublet.csv
+  ├── is_doublet.npy
+  ├── is_doublet_sim.npy
+  ├── latent.npy
+  ├── logit_scores.csv
+  ├── logit_scores.npy
+  ├── logit_scores_sim.npy
+  ├── no_updates_softmax_scores.csv
+  ├── no_updates_softmax_scores.npy
+  ├── no_updates_softmax_scores_sim.npy
+  ├── preds.csv
+  ├── preds.npy
+  ├── smoothed_preds.npy
+  ├── softmax_scores.csv
+  ├── softmax_scores.npy
   ├── solo_results.tsv
-  └── solo_summary.tsv
+  ├── solo_summary.tsv
+  └── vae
+      ├── attr.pkl
+      ├── model_params.pt
+      └── var_names.csv
 
 
 Solo Results and Interpretation
@@ -178,6 +202,12 @@ However, the wrapper script and the example code has some steps to combine these
     +-------------------------+-------------------------+--------------------------+
     | ...                     | ...                     | ...                      |
     +-------------------------+-------------------------+--------------------------+
+
+
+Merging Results with Other Software Restults
+--------------------------------------------
+We have provided a script that will help merge and summarize the results from multiple softwares together.
+See :ref:`Combine Results <Combine-docs>`.
 
 
 Citation

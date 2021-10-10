@@ -2,7 +2,7 @@ Considerations for Other Single Cell Data Types
 ===============================================
 
 This workflow was designed for demultiplexing and detecting doublets in scRNA-seq data.
-However, additional data types are becoming more frequently used - `i.e` snRNA-seq, snATAC-seq and dual snRNA-seq + scATAC-seq.
+However, additional data types are becoming more frequently used - `i.e.` snRNA-seq, snATAC-seq and dual snRNA-seq + scATAC-seq.
 Based on our experiences with this data we have some recommendations and considerations to take into account when applying demultiplexing and doublet detecting softwares to these data types.
 
 
@@ -40,6 +40,7 @@ Regardless, since UMI tags aren't used for snATAC-seq data, demultiplexing can t
 In addtion, the following flags are required for each of the following softwares to effectively process snATAC-seq data.
 
 **Souporcell**
+
 - ``--no_umi True``
 
 Doublet Detecting Softwares
@@ -57,7 +58,7 @@ Combined snRNA-seq + snATAC-seq
 
 Demultiplexing Softwares
 ^^^^^^^^^^^^^^^^^^^^^^^^
-We have noticed a higher percentage of ambient RNA from our combined snRNA-seq + scATAC-seq experiments as compared to our scRNA-seq (we haven't tested multiplexed snRNA-seq in our hands) but similar snATAC-seq ambient DNA estimations 0as detected with :ref:`Souporcell<Souporcell-docs>`
+We have noticed a higher percentage of ambient RNA from our combined snRNA-seq + scATAC-seq experiments as compared to our scRNA-seq (we haven't tested multiplexed snRNA-seq in our hands) but similar snATAC-seq ambient DNA estimations as detected with :ref:`Souporcell<Souporcell-docs>`
 Therefore, we recommend running :ref:`Souporcell<Souporcell-docs>`, if only to estimate the ambient RNA in your multiplexed pool.
 If you are doing the demultiplexing with the snRNA-seq results, please see the :ref:`snRNA-seq Section <snrna>`.
 If you are using the snATAC-seq data for demultiplexing, please see the :ref:`snATAC-seq Section <snatac>`.
@@ -67,4 +68,4 @@ Doublet Detecting Softwares
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Doublet detecting softwares for the combined snRNA-seq + snATAC-seq should work similarly to the doublet detecting softwares for each assay separately (snRNA-seq and snATAC-seq).
 However, as noted int the :ref:`Demultiplexing Softwares Section <combo-demultiplex>` above, we have observed much higher ambient RNA percentages than for either assay run separately.
-.. Our results (**CITATION**) indicate that increased ambient RNA showed a slight decrease in the MCC and balanced accuracy. However, we did not simulate up to the level of ambient RNA percent that we have observed using this assay.
+..Our results (**CITATION**) indicate that increased ambient RNA showed a slight decrease in the MCC and balanced accuracy. However, we did not simulate up to the level of ambient RNA percent that we have observed using this assay.

@@ -80,12 +80,16 @@ Once you have run ``popscle pileup``, you can demultiplex your samples with Free
 If freemuxlet is successfull, you will have these new files in your ``$FREEMUXLET_OUTDIR``:
 
 .. code-block:: bash
+  :emphasize-lines: 2,3,4
 
   .
   ├── freemuxlet.clust1.samples.gz
   ├── freemuxlet.clust1.vcf.gz
-  └── freemuxlet.lmix
-
+  ├── freemuxlet.lmix
+  ├── pileup.cel.gz
+  ├── pileup.plp.gz
+  ├── pileup.umi.gz
+  └── pileup.var.gz
 
 Additional details about outputs are available below in the :ref:`Freemuxlet Results and Interpretation <freemuxlet-results>`.
 
@@ -103,9 +107,17 @@ You can run this to get a fast and easy summary of your results with:
 If the freemuxlet summary is successfull, you will have this new file in your ``$FREEMUXLET_OUTDIR``:
 
 .. code-block:: bash
+  :emphasize-lines: 5
 
   .
-  └── freemuxlet_summary.tsv
+  ├── freemuxlet.clust1.samples.gz
+  ├── freemuxlet.clust1.vcf.gz
+  ├── freemuxlet.lmix
+  ├── freemuxlet_summary.tsv
+  ├── pileup.cel.gz
+  ├── pileup.plp.gz
+  ├── pileup.umi.gz
+  └── pileup.var.gz
 
 
 Additional details about outputs are available below in the :ref:`Freemuxlet Results and Interpretation <freemuxlet-results>`.
@@ -402,11 +414,21 @@ If you have reference SNP genotypes for some or all of the donors in your pool, 
 After correlating the reference SNP genotypes with the cluster SNP genotypes using either the script or manually, you should have three new files in your ``$FREEMUXLET_OUTDIR``:
 
 .. code-block::
+  :emphasize-lines: 6,11,12
 
   .
+  ├── freemuxlet.clust1.samples.gz
+  ├── freemuxlet.clust1.vcf.gz
+  ├── freemuxlet.lmix
+  ├── freemuxlet_summary.tsv
   ├── Genotype_ID_key.txt
+  ├── pileup.cel.gz
+  ├── pileup.plp.gz
+  ├── pileup.umi.gz
+  ├── pileup.var.gz
   ├── ref_clust_pearson_correlation.png
   └── ref_clust_pearson_correlations.tsv
+
 
 
 .. _freemuxlet-results:
@@ -544,7 +566,10 @@ If you ran the ``Assign_Indiv_by_Geno.R`` script, you will also have the followi
       +---------+---------------------+---------------------+---------------------+---------------------+---------------------+-----+
 
 
-
+Merging Results with Other Software Restults
+--------------------------------------------
+We have provided a script that will help merge and summarize the results from multiple softwares together.
+See :ref:`Combine Results <Combine-docs>`.
 
 
 Citation

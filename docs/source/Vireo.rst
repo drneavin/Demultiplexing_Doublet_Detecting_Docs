@@ -79,6 +79,13 @@ If the pileup is successfull, you will have this new file in your ``$VIREO_OUTDI
 Additional details about outputs are available below in the :ref:`Vireo Results and Interpretation <vireo-results>`.
 
 
+Vireo expects the `cellSNP.base.vcf` input to be gzipped. 
+We have contacted the developers to update this issue, but until ``cellSNP-lite`` outputs, we will need to add one extra step to prepare for the demultiplexing step:
+
+.. code-block::
+
+	singularity exec Demuxafy.sif bgzip $VIREO_OUTDIR/cellSNP.base.vcf
+
 
 Demultiplex with Vireo
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -106,13 +113,13 @@ We've provided an example command for each of these differing amounts of donor S
 
         .. code-block::
 
-          singularity exec Demuxafy.sif bcftools view $VCF -R $VIREO_OUTDIR/cellSNP.base.vcf -Ov -o $VIREO_OUTDIR/donor_subset.vcf
+          singularity exec Demuxafy.sif bcftools view $VCF -R $VIREO_OUTDIR/cellSNP.base.vcf.gz -Ov -o $VIREO_OUTDIR/donor_subset.vcf
 
       If your ``$VCF`` file is **not** bgzipped (`i.e.` ends in ``.vcf``), you can use ``bedtools`` to filter your ``$VCF`` for the positions in ``$VIREO_OUTDIR/cellSNP.base.vcf``:
 
         .. code-block::
 
-          singularity exec Demuxafy.sif bedtools intersect -a $VCF -b $VIREO_OUTDIR/cellSNP.base.vcf -wa -header > $VIREO_OUTDIR/donor_subset.vcf
+          singularity exec Demuxafy.sif bedtools intersect -a $VCF -b $VIREO_OUTDIR/cellSNP.base.vcf.gz -wa -header > $VIREO_OUTDIR/donor_subset.vcf
 
     To run Vireo_ with reference SNP genotype data for your donors (ideally filtered as shown above):
 
@@ -148,11 +155,24 @@ We've provided an example command for each of these differing amounts of donor S
 
       singularity exec Demuxafy.sif vireo -c $VIREO_OUTDIR/cellSNPpileup.vcf.gz -o $VIREO_OUTDIR -N $N
 
-If Vireo_ is successfull, you will have this new file in your ``$VIREO_OUTDIR``:
+If Vireo_ is successfull, you will have these new files in your ``$VIREO_OUTDIR``:
 
 .. code-block:: bash
+  :emphasize-lines: 7,8,9,10,11,12,13
 
-
+  .
+  ├── cellSNP.base.vcf
+  ├── cellSNP.samples.tsv
+  ├── cellSNP.tag.AD.mtx
+  ├── cellSNP.tag.DP.mtx
+  ├── cellSNP.tag.OTH.mtx
+  ├── donor_ids.tsv
+  ├── donor_subset.vcf
+  ├── fig_GT_distance_estimated.pdf
+  ├── _log.txt
+  ├── prob_doublet.tsv.gz
+  ├── prob_singlet.tsv.gz
+  └── summary.tsv
 
 Additional details about outputs are available below in the :ref:`Vireo Results and Interpretation <vireo-results>`.
 
@@ -228,7 +248,10 @@ Theses are the files that most users will find the most informative:
     +-------------------------+---------+-----------------+-----------------+---------+--------------+------------------+
 
 
-
+Merging Results with Other Software Restults
+--------------------------------------------
+We have provided a script that will help merge and summarize the results from multiple softwares together.
+See :ref:`Combine Results <Combine-docs>`.
 
 Citation
 --------

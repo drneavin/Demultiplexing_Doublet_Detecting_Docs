@@ -66,7 +66,12 @@ In addition to demultiplexing softwares, there are also doublet detecting softwa
    Scrublet
    Solo
 
+.. toctree::
+   :maxdepth: 3
+   :caption: Combining Results
+   :hidden:
 
+   CombineResults
 
 .. Reference
 .. ==================

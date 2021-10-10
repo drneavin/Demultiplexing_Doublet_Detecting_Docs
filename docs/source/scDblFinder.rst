@@ -153,6 +153,11 @@ Here's a more detaild description of each of those files:
     +-------------------------+-------------------------+--------------------------+
 
 
+Merging Results with Other Software Restults
+--------------------------------------------
+We have provided a script that will help merge and summarize the results from multiple softwares together.
+See :ref:`Combine Results <Combine-docs>`.
+
 Citation
 --------
 If you used this workflow for analysis, please reference our paper (REFERENCE) as well as `scDblFinder <https://github.com/plger/scDblFinder>`__.

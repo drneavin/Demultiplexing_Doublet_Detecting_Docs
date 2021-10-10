@@ -256,7 +256,10 @@ We have found these to be the most helpful:
 
     - In the case of the left sample, we would rerun with different parameters to try to get a better distribution and possibly manually set the threshold to ~0.2 depending on the results. In the event that we can't achieve a clear bimodal distribution, we don't use scrublet for doublet detecting.
 
-
+Merging Results with Other Software Restults
+--------------------------------------------
+We have provided a script that will help merge and summarize the results from multiple softwares together.
+See :ref:`Combine Results <Combine-docs>`.
 
 
 Citation

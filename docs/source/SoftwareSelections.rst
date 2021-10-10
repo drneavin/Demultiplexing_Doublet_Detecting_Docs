@@ -8,3 +8,5 @@ We have also put together a **selection widget (need to make and add link)** tha
 
 **Insert decision tree figure here**.
 
+After you have run the softwares you selected, we have provided a script that will help merge and summarize the results from ethe softwares together.
+See :ref:`Combine Results <Combine-docs>`.

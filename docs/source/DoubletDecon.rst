@@ -243,6 +243,12 @@ These are the files that we think will be the most helpful for users:
     +-------------------------+--------------------------+
 
 
+Merging Results with Other Software Restults
+--------------------------------------------
+We have provided a script that will help merge and summarize the results from multiple softwares together.
+See :ref:`Combine Results <Combine-docs>`.
+
+
 Citation
 --------
 If you used this workflow for analysis, please reference our paper (REFERENCE) as well as `DoubletDecon <https://www.sciencedirect.com/science/article/pii/S2211124719312860>`__.

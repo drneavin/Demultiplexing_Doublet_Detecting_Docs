@@ -509,6 +509,11 @@ If you ran the ``Assign_Indiv_by_Geno.R`` script, you will also have the followi
       +---------+---------------------+---------------------+---------------------+---------------------+---------------------+-----+
 
 
+Merging Results with Other Software Restults
+--------------------------------------------
+We have provided a script that will help merge and summarize the results from multiple softwares together.
+See :ref:`Combine Results <Combine-docs>`.
+
 Citation
 --------
 If you used this workflow for analysis, please reference our paper (REFERENCE) as well as `scSplit <https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1852-7>`__.

@@ -92,9 +92,14 @@ Once you have run ``popscle pileup``, you can demultiplex your samples:
 If demuxlet is successfull, you will have these new files in your ``$DEMUXLET_OUTDIR``:
 
 .. code-block:: bash
+  :emphasize-lines: 2
 
   .
-  └── demuxlet.best
+  ├── demuxlet.best
+  ├── pileup.cel.gz
+  ├── pileup.plp.gz
+  ├── pileup.umi.gz
+  └── pileup.var.gz
 
 Additional details about outputs are available below in the :ref:`Demuxlet Results and Interpretation <demuxlet-results>`.
 
@@ -111,9 +116,15 @@ You can run this to get a fast and easy summary of your results with:
 If the demuxlet summary is successfull, you will have this new file in your ``$DEMUXLET_OUTDIR``:
 
 .. code-block:: bash
+  :emphasize-lines: 3
 
   .
-  └── Demuxlet_summary.tsv
+  ├── demuxlet.best
+  ├── Demuxlet_summary.tsv
+  ├── pileup.cel.gz
+  ├── pileup.plp.gz
+  ├── pileup.umi.gz
+  └── pileup.var.gz
 
 Additional details about outputs are available below in the :ref:`Demuxlet Results and Interpretation <demuxlet-results>`.
 
@@ -187,6 +198,11 @@ Theses are the files that most users will find the most informative:
       | ...     | ...                | ...      | ...       | ...          | ...                     | ...     | ...                     | ...     | ...                |  ...           | ...           | ...           | ...          | ...           | ...           | ...                     | ...                     | ...            | ...               |
       +---------+--------------------+----------+-----------+--------------+-------------------------+---------+-------------------------+---------+--------------------+----------------+---------------+---------------+--------------+---------------+---------------+-------------------------+-------------------------+----------------+-------------------+
 
+
+Merging Results with Other Software Restults
+--------------------------------------------
+We have provided a script that will help merge and summarize the results from multiple softwares together.
+See :ref:`Combine Results <Combine-docs>`.
 
 Citation
 --------

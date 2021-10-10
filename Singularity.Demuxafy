@@ -3,7 +3,7 @@ From: continuumio/miniconda3
 
 %labels
 	Author = Drew Neavin
-	Image_version = 0.0.1
+	Image_version = 0.0.2
 
 %environment
     export PATH=/opt:/usr/games:/opt/conda/envs/py37/bin:/opt/conda/bin:/opt/Demultiplexing_Doublet_Detecting_Docs/scripts:opt/Demultiplexing_Doublet_Detecting_Docs/mods:/opt/bedtools2/bin:/opt/vartrix-v1.1.3-x86_64-linux/:opt/vcflib/bin:/opt/vcflib/scripts:/opt/souporcell:/opt/souporcell/troublet/target/release:/opt/minimap2-2.7:/root/.cargo/bin:/opt/freebayes/scripts:/opt/popscle/bin/:/opt/conda/envs/py37/lib/python3.7/site-packages/scSplit/:$PATH
@@ -71,6 +71,7 @@ From: continuumio/miniconda3
 		apt-get install -y xauth
 		apt-get install -y xfonts-base
 		apt-get install -y libxt-dev
+		apt-get install -y libssl1.0.0
 
     cd /opt
 		wget https://github.com/Kitware/CMake/releases/download/v3.14.4/cmake-3.14.4.tar.gz
@@ -275,7 +276,18 @@ From: continuumio/miniconda3
     R --slave -e 'remotes::install_github("chris-mcginnis-ucsf/DoubletFinder")'
 
 
+	### Make scripts executable ###
+	chmod +x /opt/Demultiplexing_Doublet_Detecting_Docs/scripts/Assign_Indiv_by_Geno.R
+	chmod +x /opt/Demultiplexing_Doublet_Detecting_Docs/scripts/DoubletDecon.R
+	chmod +x /opt/Demultiplexing_Doublet_Detecting_Docs/scripts/DoubletDetection.py
+	chmod +x /opt/Demultiplexing_Doublet_Detecting_Docs/scripts/DoubletFinder.R
+	chmod +x /opt/Demultiplexing_Doublet_Detecting_Docs/scripts/scDblFinder.R
+	chmod +x /opt/Demultiplexing_Doublet_Detecting_Docs/scripts/scds.R
+	chmod +x /opt/Demultiplexing_Doublet_Detecting_Docs/scripts/scrublet.py
+	chmod +x /opt/Demultiplexing_Doublet_Detecting_Docs/scripts/solo_summary.py
 
+
+	### Remove unnecessary files ###
 	cd /opt
 	rm cmake-3.14.4.tar.gz
 	rm v2.7.tar.gz

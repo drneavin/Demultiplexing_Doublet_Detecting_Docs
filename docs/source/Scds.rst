@@ -166,6 +166,11 @@ After running the scds_ with the wrapper script or manually you should have two 
     +-------------------------+-------------------------+------------------+
 
 
+Merging Results with Other Software Restults
+--------------------------------------------
+We have provided a script that will help merge and summarize the results from multiple softwares together.
+See :ref:`Combine Results <Combine-docs>`.
+
 Citation
 --------
 If you used this workflow for analysis, please reference our paper (REFERENCE) as well as `scds <https://academic.oup.com/bioinformatics/article/36/4/1150/5566507>`__.

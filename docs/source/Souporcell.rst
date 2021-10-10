@@ -81,7 +81,29 @@ If souporcell is successfull, you will have these files in your ``$SOUPORCELL_OU
 
 .. code-block:: bash
 
-
+  .
+  ├── alt.mtx
+  ├── ambient_rna.txt
+  ├── cluster_genotypes.vcf
+  ├── clustering.done
+  ├── clusters.err
+  ├── clusters_tmp.tsv
+  ├── clusters.tsv
+  ├── common_variants_covered_tmp.vcf
+  ├── common_variants_covered.vcf
+  ├── consensus.done
+  ├── depth_merged.bed
+  ├── doublets.err
+  ├── fastqs.done
+  ├── minimap.err
+  ├── ref.mtx
+  ├── remapping.done
+  ├── retag.err
+  ├── retagging.done
+  ├── souporcell_minimap_tagged_sorted.bam
+  ├── troublet.done
+  ├── variants.done
+  └── vartrix.done
 
 Additional details about outputs are available below in the :ref:`Souporcell Results and Interpretation <souporcell-results>`.
 
@@ -98,9 +120,32 @@ We have provided a script that will provide a summary of the number of droplets 
 If the souporcell summary is successfull, you will have this new file in your ``$SOUPORCELL_OUTDIR``:
 
 .. code-block:: bash
+  :emphasize-lines: 21
 
   .
-  └── 
+  ├── alt.mtx
+  ├── ambient_rna.txt
+  ├── cluster_genotypes.vcf
+  ├── clustering.done
+  ├── clusters.err
+  ├── clusters_tmp.tsv
+  ├── clusters.tsv
+  ├── common_variants_covered_tmp.vcf
+  ├── common_variants_covered.vcf
+  ├── consensus.done
+  ├── depth_merged.bed
+  ├── doublets.err
+  ├── fastqs.done
+  ├── minimap.err
+  ├── ref.mtx
+  ├── remapping.done
+  ├── retag.err
+  ├── retagging.done
+  ├── souporcell_minimap_tagged_sorted.bam
+  ├── souporcell_summary.tsv
+  ├── troublet.done
+  ├── variants.done
+  └── vartrix.done
 
 Additional details about outputs are available below in the :ref:`Souporcell Results and Interpretation <souporcell-results>`.
 
@@ -395,6 +440,47 @@ If you have reference SNP genotypes for some or all of the donors in your pool, 
       write_delim(key, file = paste0(outdir,"/Genotype_ID_key.txt"), delim = "\t")
 
 
+After correlating the cluster and reference donor SNP genotypes, you should have the new results in your directory:
+
+
+If the souporcell summary is successfull, you will have this new file in your ``$SOUPORCELL_OUTDIR``:
+
+.. code-block:: bash
+  :emphasize-lines: 15,16,19,20
+
+  .
+  ├── alt.mtx
+  ├── ambient_rna.txt
+  ├── cluster_genotypes.vcf
+  ├── clustering.done
+  ├── clusters.err
+  ├── clusters_tmp.tsv
+  ├── clusters.tsv
+  ├── common_variants_covered_tmp.vcf
+  ├── common_variants_covered.vcf
+  ├── consensus.done
+  ├── depth_merged.bed
+  ├── doublets.err
+  ├── fastqs.done
+  ├── Genotype_ID_key.txt
+  ├── Individual_genotypes_subset.vcf.gz
+  ├── minimap.err
+  ├── ref.mtx
+  ├── ref_clust_pearson_correlation.png
+  ├── ref_clust_pearson_correlations.tsv
+  ├── remapping.done
+  ├── retag.err
+  ├── retagging.done
+  ├── souporcell_minimap_tagged_sorted.bam
+  ├── souporcell_summary.tsv
+  ├── troublet.done
+  ├── variants.done
+  └── vartrix.done
+
+Additional details about outputs are available below in the :ref:`Souporcell Results and Interpretation <souporcell-results>`.
+
+
+
 Souporcell Results and Interpretation
 -------------------------------------
 After running the Souporcell_ steps and summarizing the results, you will have a number of files from some of the intermediary steps. 
@@ -534,7 +620,10 @@ If you ran the ``Assign_Indiv_by_Geno.R`` script, you will also have the followi
       +---------+---------------------+---------------------+---------------------+---------------------+---------------------+-----+
 
 
-
+Merging Results with Other Software Restults
+--------------------------------------------
+We have provided a script that will help merge and summarize the results from multiple softwares together.
+See :ref:`Combine Results <Combine-docs>`.
 
 
 Citation

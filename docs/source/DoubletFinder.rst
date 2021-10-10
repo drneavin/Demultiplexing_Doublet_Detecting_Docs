@@ -193,6 +193,12 @@ Here's a more detailed description of the contents of each of those files:
 
   - If you do not have a clear ``BC`` maximum, see responses from the DoubletFinder_ developer `here <https://github.com/chris-mcginnis-ucsf/DoubletFinder/issues/62>`__ and `here <https://github.com/chris-mcginnis-ucsf/DoubletFinder/issues/71>`__ for possible solutions.
 
+
+Merging Results with Other Software Restults
+--------------------------------------------
+We have provided a script that will help merge and summarize the results from multiple softwares together.
+See :ref:`Combine Results <Combine-docs>`.
+
 Citation
 --------
 If you used this workflow for analysis, please reference our paper (REFERENCE) as well as `DoubletFinder <https://www.sciencedirect.com/science/article/pii/S2405471219300730>`__.
