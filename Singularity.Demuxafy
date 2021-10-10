@@ -239,6 +239,9 @@ From: continuumio/miniconda3
 	### Get the github repo with scripts for workflow ###
 	cd /opt
 		git clone https://github.com/drneavin/Demultiplexing_Doublet_Detecting_Docs.git
+		cd Demultiplexing_Doublet_Detecting_Docs
+		rm -rf references ### References provided on github for users to download if they wish, no need to take upspace in image with them
+		rm -rf docs ### Docs not needed in image
 		
 
 	### Needed for R libraries ###
