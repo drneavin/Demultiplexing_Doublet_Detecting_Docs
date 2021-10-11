@@ -92,5 +92,5 @@ html_static_path = ['_static']
 html_extra_path = ['_extra']
 
 html_css_files = [
-    'customs.css',
+    '_static/customs.css',
 ] 
