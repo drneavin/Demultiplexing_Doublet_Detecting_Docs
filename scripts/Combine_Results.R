@@ -105,18 +105,22 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 		if (file_test("-f", args$scSplit)){
 			results_list[["scSplit"]] <- fread(args$scSplit, sep = "\t")
 		} else {
-			try:
+			tryCatch({
 				results_list[["scSplit"]] <- fread(paste0(args$scSplit, "/scSplit_result.csv"), sep = "\t")
-			except:
+			},
+			error = function(e) {
+				message(e)
 				message("Can't read in the scSplit report either from the file you provided or to find the 'scSplit_result.csv' file in the directory you provided. Please double check your path and provide the full path to the scSplit file. Exiting.")
 				q()
+			})
 		}
 
 		### Update dataframe to just be categories of interest
-		results_list[["scSplit"]][, c("scSplit_DropletType ", "scSplit_Cluster") := tstrsplit(Cluster, "-", fixed=TRUE)]
+		results_list[["scSplit"]][, c("scSplit_DropletType", "scSplit_Cluster") := tstrsplit(Cluster, "-", fixed=TRUE)]
 		results_list[["scSplit"]]$Cluster <- NULL
-		results_list[["scSplit"]]$scSplit_DropletType  <- gsub("SNG", "singlet", results_list[["scSplit"]]$scSplit_DropletType ) %>%
+		results_list[["scSplit"]]$scSplit_DropletType  <- gsub("SNG", "singlet", results_list[["scSplit"]]$scSplit_DropletType) %>%
 															gsub("DBL", "doublet", .) 
+		results_list[["scSplit"]]$scSplit_Cluster <- ifelse(results_list[["scSplit"]]$scSplit_DropletType  == "doublet", "doublet", results_list[["scSplit"]]$scSplit_Cluster)
 
 
 	}
@@ -126,16 +130,19 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 		if (file_test("-f", args$souporcell)){
 			results_list[["souporcell"]] <- fread(args$souporcell, sep = "\t")
 		} else {
-			try:
+			tryCatch({
 				results_list[["souporcell"]] <- fread(paste0(args$souporcell, "/clusters.tsv"), sep = "\t")
-			except:
+			},
+			error = function(e) {
+				message(e)
 				message("Can't read in the souporcell report either from the file you provided or to find the 'clusters.tsv' file in the directory you provided. Please double check your path and provide the full path to the souporcell file. Exiting.")
 				q()
+			})
 		}
 
 		### Update dataframe to just be categories of interest
 		results_list[["souporcell"]] <- results_list[["souporcell"]][,c("barcode", "status","assignment")]
-		colnames(results_list[["souporcell"]]) <- c("Barcode", "Souporcell_DropletType ", "Souporcell_Cluster")
+		colnames(results_list[["souporcell"]]) <- c("Barcode", "Souporcell_DropletType", "Souporcell_Cluster")
 		results_list[["souporcell"]]$Souporcell_Cluster <- ifelse(results_list[["souporcell"]]$Souporcell_DropletType  == "doublet", "doublet", results_list[["souporcell"]]$Souporcell_Cluster)
 
 	}
@@ -278,20 +285,36 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 
 		if (!is.null(args$freemuxlet_assignments)){
 			message("Reading in freemuxlet cluster-to-indiviudal assignments.")
-			results_assignments_list[["freemuxlet"]] <- fread(args$freemuxlet_assignments, sep = "\t")
+			if (file_test("-f", args$freemuxlet_assignments)){
+				results_assignments_list[["freemuxlet"]] <- fread(args$freemuxlet_assignments, sep = "\t")
+			} else {
+				tryCatch({
+					results_assignments_list[["freemuxlet"]] <- fread(paste0(args$freemuxlet_assignments, "/Genotype_ID_key.txt"), sep = "\t")
+				},
+				error = function(e) {
+					message("Can't read in the freemuxlet cluster-to-indiviudal assignments report either from the file you provided or to find the 'Genotype_ID_key.tsv' file in the directory you provided. Please double check your path and provide the full path to the freemuxlet cluster-to-indiviudal key file. Exiting.")
+					q()
+				})
+			}
+
 
 			### Check for column names ###
-			if (!(grepl("Genotype_ID",colnames(results_assignments_list[["freemuxlet"]])) & grepl("Cluster_ID", colnames(results_assignments_list[["freemuxlet"]])))){
+			if (all(!(grepl("Genotype_ID",colnames(results_assignments_list[["freemuxlet"]]))) & !(grepl("Cluster_ID", colnames(results_assignments_list[["freemuxlet"]]))))){
 				message("Didn't find 'Genotype_ID' and 'Cluster_ID' in the columns of your freemuxlet cluster-to-indiviudal assignments file. Will use first column as the individual ID and the second column will be the cluster ID.")
 			}
 			colnames(results_assignments_list[["freemuxlet"]])[1:2] <- c("Freemuxlet_Individual_Assignment", "Freemuxlet_Cluster")
+			results_assignments_list[["freemuxlet"]]$Freemuxlet_Cluster <- as.character(results_assignments_list[["freemuxlet"]]$Freemuxlet_Cluster)
 
 			### remove "CLUST" from assignments ###
 			results_assignments_list[["freemuxlet"]]$Freemuxlet_Cluster <- gsub("CLUST", "", results_assignments_list[["freemuxlet"]]$Freemuxlet_Cluster)
+			results_assignments_list[["freemuxlet"]]$Correlation <- NULL
 
 			### Join
 			message("Adding assignments to freeuxlet dataframe")
 			results_list[["freemuxlet"]] <- results_assignments_list[["freemuxlet"]][results_list[["freemuxlet"]], on="Freemuxlet_Cluster"]  
+
+			results_list[["freemuxlet"]]$Freemuxlet_Individual_Assignment <- ifelse(results_list[["freemuxlet"]]$Freemuxlet_DropletType == "doublet", "doublet", results_list[["freemuxlet"]]$Freemuxlet_Individual_Assignment)
+
 
 			### check for excessive NA after joining ###
 			if (length(which(is.na(results_list[["freemuxlet"]]$Freemuxlet_Individual_Assignment)))/nrow(results_list[["freemuxlet"]]) >= 0.5){
@@ -301,17 +324,34 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 
 		if (!is.null(args$scSplit_assignments)){
 			message("Reading in scSplit_assignments cluster-to-indiviudal assignments.")
-			results_assignments_list[["scSplit"]] <- fread(args$scSplit_assignments, sep = "\t")
+			if (file_test("-f", args$scSplit_assignments)){
+				results_assignments_list[["scSplit"]] <- fread(args$scSplit_assignments, sep = "\t")
+			} else {
+				tryCatch({
+					results_assignments_list[["scSplit"]] <- fread(paste0(args$scSplit_assignments, "/Genotype_ID_key.txt"), sep = "\t")
+				},
+				error = function(e) {
+					message("Can't read in the scSplit cluster-to-indiviudal assignments report either from the file you provided or to find the 'Genotype_ID_key.tsv' file in the directory you provided. Please double check your path and provide the full path to the scSplit cluster-to-indiviudal key file. Exiting.")
+					q()
+				})
+			}
+
 
 			### Check for column names ###
-			if (!(grepl("Genotype_ID",colnames(results_assignments_list[["scSplit"]])) & grepl("Cluster_ID", colnames(results_assignments_list[["scSplit"]])))){
+			if (all(!(grepl("Genotype_ID",colnames(results_assignments_list[["scSplit"]]))) & !(grepl("Cluster_ID", colnames(results_assignments_list[["scSplit"]]))))){
 				message("Didn't find 'Genotype_ID' and 'Cluster_ID' in the columns of your scSplit cluster-to-indiviudal assignments. Will use first column as the individual ID and the second column will be the cluster ID.")
 			}
-			colnames(results_assignments_list[["scSplit"]])[1:2] <- c("Freemuxlet_Individual_Assignment", "scSplit_Cluster")
+			colnames(results_assignments_list[["scSplit"]])[1:2] <- c("scSplit_Individual_Assignment", "scSplit_Cluster")
+			results_assignments_list[["scSplit"]]$scSplit_Cluster <- as.character(results_assignments_list[["scSplit"]]$scSplit_Cluster)
+
+			results_assignments_list[["scSplit"]]$Correlation <- NULL
+
 
 			### Join
 			message("Adding assignments to scSplit dataframe")
 			results_list[["scSplit"]] <- results_assignments_list[["scSplit"]][results_list[["scSplit"]], on="scSplit_Cluster"]  
+
+			results_list[["scSplit"]]$scSplit_Individual_Assignment <- ifelse(results_list[["scSplit"]]$scSplit_DropletType == "doublet", "doublet", results_list[["scSplit"]]$scSplit_Individual_Assignment)
 
 			### check for excessive NA after joining ###
 			if (length(which(is.na(results_list[["scSplit"]]$Freemuxlet_Individual_Assignment)))/nrow(results_list[["scSplit"]]) >= 0.5){
@@ -321,23 +361,39 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 
 		if (!is.null(args$souporcell_assignments)){
 			message("Reading in souporcell_assignments cluster-to-indiviudal assignments.")
-			results_assignments_list[["souporcell"]] <- fread(args$souporcell_assignments, sep = "\t")
+			if (file_test("-f", args$souporcell_assignments)){
+				results_assignments_list[["souporcell"]] <- fread(args$souporcell_assignments, sep = "\t")
+			} else {
+				tryCatch({
+					results_assignments_list[["souporcell"]] <- fread(paste0(args$souporcell_assignments, "/Genotype_ID_key.txt"), sep = "\t")
+				},
+				error = function(e) {
+					message("Can't read in the souporcell cluster-to-indiviudal assignments report either from the file you provided or to find the 'Genotype_ID_key.tsv' file in the directory you provided. Please double check your path and provide the full path to the souporcell cluster-to-indiviudal key file. Exiting.")
+					q()
+				})
+			}
 
 
 			### Check for column names ###
-			if (!(grepl("Genotype_ID",colnames(results_assignments_list[["souporcell"]])) & grepl("Cluster_ID", colnames(results_assignments_list[["souporcell"]])))){
+			if (all(!(grepl("Genotype_ID",colnames(results_assignments_list[["souporcell"]]))) & !(grepl("Cluster_ID", colnames(results_assignments_list[["souporcell"]]))))){
 				message("Didn't find 'Genotype_ID' and 'Cluster_ID' in the columns of your souporcell cluster-to-indiviudal assignments. Will use first column as the individual ID and the second column will be the cluster ID.")
 			}
-			colnames(results_assignments_list[["souporcell"]])[1:2] <- c("Sreemuxlet_Individual_Assignment", "Souporcell_Cluster")
+			colnames(results_assignments_list[["souporcell"]])[1:2] <- c("Souporcell_Individual_Assignment", "Souporcell_Cluster")
+			results_assignments_list[["souporcell"]]$Souporcell_Cluster <- as.character(results_assignments_list[["souporcell"]]$Souporcell_Cluster)
+			results_assignments_list[["souporcell"]]$Correlation <- NULL
+
 
 			### Join
 			message("Adding assignments to souporcell dataframe")
 			results_list[["souporcell"]] <- results_assignments_list[["souporcell"]][results_list[["souporcell"]], on="Souporcell_Cluster"]  
 
+			results_list[["souporcell"]]$Souporcell_Individual_Assignment <- ifelse(results_list[["souporcell"]]$Souporcell_DropletType == "doublet", "doublet", results_list[["souporcell"]]$Souporcell_Individual_Assignment)
+
 			### check for excessive NA after joining ###
 			if (length(which(is.na(results_list[["souporcell"]]$Freemuxlet_Individual_Assignment)))/nrow(results_list[["souporcell"]]) >= 0.5){
 				message("WARNING: There are more than 50% NA assignments after joining the cluster-to-individual assignments for souporcell. Please double check you files if this is unexpected.")
 			}
+			print(results_list[["souporcell"]] )
 		}
 
 	}
