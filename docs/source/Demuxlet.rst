@@ -21,6 +21,8 @@ This is the data that you will need to have preparede to run Demuxlet_:
 
     - Filter for common SNPs (> 5% minor allele frequency) and SNPs overlapping genes
 
+    - Demuxlet_ is very sensitive to missing data in a vcf so please make sure you only have complete cases in your refernce donor SNP genotype file
+
   - Genotype field in ``$VCF`` (``$FIELD``)
 
     - This is ``GP`` by default but could also be ``GT`` others

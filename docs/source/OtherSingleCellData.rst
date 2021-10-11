@@ -32,7 +32,7 @@ Demultiplexing Softwares
 ^^^^^^^^^^^^^^^^^^^^^^^^
 Demultiplexing snATAC-seq data can be done with the current demultiplexing softwares. 
 However, we note that it is much more memory and time consumptive than scRNA-seq.
-Additionally, the SNPs should be filtered by SNPs overlapping peak locations instead of exon or gene locations.
+Additionally, the SNPs should be filtered by SNPs overlapping **peak locations** instead of exon or gene locations.
 You may even want to filter the SNPs further if you still have many after filtering on minor allele frequency and peak location.
 We typically aim for ~250,000 SNP.
 Regardless, since UMI tags aren't used for snATAC-seq data, demultiplexing can take a lot of memory and time.

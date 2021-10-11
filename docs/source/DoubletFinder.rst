@@ -42,13 +42,13 @@ You can either run DoubletFinder_ with the wrapper script we have provided or yo
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif Rscript DoubletFinder.R -o $DOUBLETFINDER_OUTDIR -s $SEURAT_OBJ -c TRUE -d $DOUBLETS
+      singularity exec Demuxafy.sif DoubletFinder.R -o $DOUBLETFINDER_OUTDIR -s $SEURAT_OBJ -c TRUE -d $DOUBLETS
 
     You can provide many other parameters as well which can be seen from running a help request:
 
     .. code-block:: bash
 
-      Rscript DoubletFinder.R -h
+      singularity exec Demuxafy.sif DoubletFinder.R -h
 
 
       usage: DoubletFinder.R [-h] -o OUT -s SEURAT_OBJECT -c SCT -d DOUBLET_NUMBER [-p PCS] [-n PN]a@brenner-fpoptional arguments:  

@@ -21,7 +21,7 @@ This is the data that you will need to have preparede to run scDblFinder_:
   
     - DoubletDetection expects counts to be in the cellranger output format (directory containint ``barcodes.tsv``, ``genes.tsv`` and ``matrix.mtx`` **or** ``barcodes.tsv.gz``, ``features.tsv.gz`` and ``matrix.mtx.gz``)
 
-	  - If you don't have your data in this format, you can run scDblFinder_ manually in python and load the data in using a method of your choosing.
+	  - If you don't have your data in this format, you can run scDblFinder_ manually in R and load the data in using a method of your choosing.
 
   - Output directory (``$SCDBLFINDER_OUTDIR``)
 
@@ -40,7 +40,7 @@ You can either run scDblFinder_ with the wrapper script we have provided or you 
 
     .. code-block:: bash
 
-		  singularity exec Demuxafy.sif Rscript scDblFinder.R -o $SCDBLFINDER_OUTDIR -t $MATRIX
+		  singularity exec Demuxafy.sif scDblFinder.R -o $SCDBLFINDER_OUTDIR -t $MATRIX
 
 
   .. tab:: Run in R

@@ -43,13 +43,13 @@ You can either run DoubletDecon_ with the wrapper script we have provided or you
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif Rscript DoubletDecon.R -o $DOUBLETDECON_OUTDIR -s $SEURAT_OBJ
+      singularity exec Demuxafy.sif DoubletDecon.R -o $DOUBLETDECON_OUTDIR -s $SEURAT_OBJ
 
     You can provide many other parameters as well which can be seen from running a help request:
 
     .. code-block:: bash
 
-      singularity exec image Rscrpt DoubletDecon.R -h
+      singularity exec image DoubletDecon.R -h
 
       usage: DoubletDecon.R [-h] -o OUT -s SEURAT_OBJECT [-g NUM_GENES] [-r RHOP]
                       [-p SPECIES] [-n NCORES] [-c REMOVECC] [-m PMF]

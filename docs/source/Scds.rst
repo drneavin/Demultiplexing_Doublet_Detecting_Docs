@@ -24,7 +24,7 @@ This is the data that you will need to have preparede to run scds_:
   
     - Scds_ expects counts to be in the cellranger output format (directory containing ``barcodes.tsv``, ``genes.tsv`` and ``matrix.mtx`` **or** ``barcodes.tsv.gz``, ``features.tsv.gz`` and ``matrix.mtx.gz``)
 
-	  - If you don't have your data in this format, you can run scds_ manually in python and load the data in using a method of your choosing.
+	  - If you don't have your data in this format, you can run scds_ manually in R and load the data in using a method of your choosing.
 
   - Output directory (``$SCDS_OUTDIR``)
 
@@ -44,7 +44,7 @@ You can either run scds_ with the wrapper script we have provided or you can run
 
     .. code-block:: bash
 
-		  singularity exec Demuxafy.sif Rscript scds.R -o $SCDS_OUTDIR -t $MATRIX
+		  singularity exec Demuxafy.sif scds.R -o $SCDS_OUTDIR -t $MATRIX
 
 
   .. tab:: Run in R
@@ -76,6 +76,7 @@ You can either run scds_ with the wrapper script we have provided or you can run
       ## Read in data
       counts <- Read10X(as.character(tenX_matrix), gene.column = 1)
 
+      ## Account for possibility that not just single cell data
       if (is.list(counts)){
         sce <- SingleCellExperiment(list(counts=counts[[grep("Gene", names(counts))]]))
       } else {
