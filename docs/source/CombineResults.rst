@@ -30,7 +30,7 @@ To see each of the options, simply run:
 
 .. code-block:: bash
 
-  singularity exec Demuxafy.sif Rscript Combine_Results.R -h
+  singularity exec Demuxafy.sif Combine_Results.R -h
 
 Providing the possible parameter options:
 
@@ -98,9 +98,9 @@ Providing the possible parameter options:
 
 An example command that combines :ref:`Demuxlet <Demuxlet-docs>` results, :ref:`Souporcell <Souporcell-docs>` results, :ref:`Solo <Solo-docs>` results and :ref:`Scds <scds-docs>` results would look like this:
 
-.. code-block::
+.. code-block:: bash
 
-  singularity exec Demuxafy.sif Rscript Combine_Results.R \
+  singularity exec Demuxafy.sif Combine_Results.R \
     -o $OUTDIR/combined_results.tsv \
     --demuxlet $DEMUXLET_OUTDIR \
     --souporcell $DEMUXLET_OUTDIR \
