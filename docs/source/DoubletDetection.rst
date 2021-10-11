@@ -41,13 +41,13 @@ You can either run DoubletDetection_ with the wrapper script we have provided or
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif python DoubletDetection.py -m $MATRIX -o $DOUBLETDETECTION_OUTDIR
+      singularity exec Demuxafy.sif DoubletDetection.py -m $MATRIX -o $DOUBLETDETECTION_OUTDIR
 
     To see all the parameters that this wrapper script will accept, run:
 
     .. code-block:: bash
 
-      python DoubletDetection.py -h
+      singularity exec Demuxafy.sif DoubletDetection.py -h
 
 
       usage: DoubletDetection.py [-h] -m COUNTS_MATRIX [-b BARCODES] [-o OUTDIR]

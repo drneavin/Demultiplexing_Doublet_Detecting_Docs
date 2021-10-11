@@ -196,7 +196,7 @@ ref_geno_tidy <- ref_geno_tidy[colSums(!is.na(ref_geno_tidy)) > 0]
 
 ########## Get a unique list of SNPs that is in both the reference and cluster genotypes ##########
 locations  <- inner_join(ref_geno_tidy[,"ID"],cluster_geno_tidy[,"ID"])
-locations <- locations[!(locations$ID %in% locations[duplicated(locations),"ID"]),]
+locations <- locations[!(locations$ID %in% locations[duplicated(locations),]$ID),]
 
 ########## Keep just the SNPs that overlap ##########
 ref_geno_tidy <- left_join(locations, ref_geno_tidy)

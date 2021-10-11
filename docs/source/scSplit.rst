@@ -50,6 +50,18 @@ First, you will need to prepare the bam file so that it only contains high quali
   singularity exec Demuxafy.sif samtools sort -o $SCSPLIT_OUTDIR/filtered_bam_dedup_sorted.bam $SCSPLIT_OUTDIR/filtered_bam_dedup.bam
   singularity exec Demuxafy.sif samtools index $SCSPLIT_OUTDIR/filtered_bam_dedup_sorted.bam
 
+After running these bam preparation steps, you will have the following files in your ``$SCSPLIT_OUTDIR``:
+
+.. code-block::
+
+  .
+  ├── filtered_bam.bam
+  ├── filtered_bam_dedup.bam
+  ├── filtered_bam_dedup_sorted.bam
+  └── filtered_bam_dedup_sorted.bam.bai
+
+
+
 Call Sample SNVs
 ^^^^^^^^^^^^^^^^
 Next, you will need to identify SNV genotypes in the pooled bam.
@@ -58,6 +70,21 @@ Next, you will need to identify SNV genotypes in the pooled bam.
 
   singularity exec Demuxafy.sif freebayes -f $FASTA -iXu -C 2 -q 1 $SCSPLIT_OUTDIR/filtered_bam_dedup_sorted.bam > $SCSPLIT_OUTDIR/freebayes_var.vcf
   singularity exec Demuxafy.sif vcftools --gzvcf $SCSPLIT_OUTDIR/freebayes_var.vcf --minQ 30 --recode --recode-INFO-all --out $SCSPLIT_OUTDIR/freebayes_var_qual30
+
+After running these SNV calling steps, you will have the following new files in your ``$SCSPLIT_OUTDIR``:
+
+.. code-block::
+  :emphasize-lines: 5,6,7
+
+  .
+  ├── filtered_bam.bam
+  ├── filtered_bam_dedup.bam
+  ├── filtered_bam_dedup_sorted.bam
+  ├── filtered_bam_dedup_sorted.bam.bai
+  ├── freebayes_var_qual30.log
+  ├── freebayes_var_qual30.recode.vcf
+  └── freebayes_var.vcf
+
 
 Demultiplex with scSplit
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -69,18 +96,87 @@ The prepared SNV genotypes and bam file can then be used to demultiplex and call
   singularity exec Demuxafy.sif scSplit run -r $SCSPLIT_OUTDIR/ref_filtered.csv -a $SCSPLIT_OUTDIR/alt_filtered.csv -n $N -o $SCSPLIT_OUTDIR
   singularity exec Demuxafy.sif scSplit genotype -r $SCSPLIT_OUTDIR/ref_filtered.csv -a $SCSPLIT_OUTDIR/alt_filtered.csv -p $SCSPLIT_OUTDIR/scSplit_P_s_c.csv -o $SCSPLIT_OUTDIR
 
+After running these demultiplexing steps, you will have the following new results:
+
+.. code-block::
+  :emphasize-lines: 1,9,10,11,12,13,14,15,16
+  
+  .
+  ├── alt_filtered.csv
+  ├── filtered_bam.bam
+  ├── filtered_bam_dedup.bam
+  ├── filtered_bam_dedup_sorted.bam
+  ├── filtered_bam_dedup_sorted.bam.bai
+  ├── freebayes_var_qual30.log
+  ├── freebayes_var_qual30.recode.vcf
+  ├── freebayes_var.vcf
+  ├── ref_filtered.csv
+  ├── scSplit_dist_matrix.csv
+  ├── scSplit_dist_variants.txt
+  ├── scSplit.log
+  ├── scSplit_PA_matrix.csv
+  ├── scSplit_P_s_c.csv
+  ├── scSplit_result.csv
+  └── scSplit.vcf
+
+Additional details about outputs are available below in the :ref:`Demuxlet Results and Interpretation <demuxlet-results>`.
+
 
 ScSplit Summary
 ^^^^^^^^^^^^^^^
-We have provided a script that will provide a summary of the number of droplets classified as doublets, ambiguous and assigned to each cluster by scSplit_. You can run this to get a fast and easy summary of your results with:
+We have provided a script that will provide a summary of the number of droplets classified as doublets, ambiguous and assigned to each cluster by scSplit_. 
+You can run this to get a fast and easy summary of your results.
+Just pass the scSplit_ result file:
 
 .. code-block:: bash
 
-  singularity exec Demuxafy.sif bash scSplit_summary.sh $SCSPLIT_OUTDIR scSplit_doublets_singlets.csv
+  singularity exec Demuxafy.sif bash scSplit_summary.sh $SCSPLIT_OUTDIR/scSplit_result.csv
+
+which will return the following summary:
+
+  +-----------------+--------------+
+  | Classification  | Assignment N |
+  +=================+==============+
+  | DBL             | 1055         |
+  +-----------------+--------------+
+  | SNG-0           | 1116         |
+  +-----------------+--------------+
+  | SNG-10          | 1654         |
+  +-----------------+--------------+
+  | SNG-11          | 1207         |
+  +-----------------+--------------+
+  | SNG-12          | 1564         |
+  +-----------------+--------------+
+  | SNG-13          | 1428         |
+  +-----------------+--------------+
+  | SNG-14          | 1640         |
+  +-----------------+--------------+
+  | SNG-2           | 514          |
+  +-----------------+--------------+
+  | SNG-3           | 1314         |
+  +-----------------+--------------+
+  | SNG-4           | 1587         |
+  +-----------------+--------------+
+  | SNG-5           | 1774         |
+  +-----------------+--------------+
+  | SNG-6           | 1484         |
+  +-----------------+--------------+
+  | SNG-7           | 1662         |
+  +-----------------+--------------+
+  | SNG-8           | 1578         |
+  +-----------------+--------------+
+  | SNG-9           | 1282         |
+  +-----------------+--------------+
+
+You can save the summary to file pointing it to the desired output file:
+
+.. code-block:: bash
+
+  singularity exec Demuxafy.sif bash scSplit_summary.sh $SCSPLIT_OUTDIR/scSplit_result.csv > $SCSPLIT_OUTDIR/scSplit_summary.tsv
 
 .. admonition:: Note
 
-  If you named your final file something else, you can change the name of the file in the command above (scSplit_doublets_singlets.csv) to whatever filename you used
+  To check if these numbers are consistent with the expected doublet rate in your dataset, you can use our `Doublet Estimation Calculator <test.html>`__.
 
 
 Correlating Cluster to Donor Reference SNP Genotypes (optional)
@@ -97,13 +193,13 @@ If you have reference SNP genotypes for some or all of the donors in your pool, 
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif Rscript Assign_Indiv_by_Geno.R -r $VCF -c $SCSPLIT_OUTDIR/scSplit.vcf -o $SCSPLIT_OUTDIR
+      singularity exec Demuxafy.sif Assign_Indiv_by_Geno.R -r $VCF -c $SCSPLIT_OUTDIR/scSplit.vcf -o $SCSPLIT_OUTDIR
 
     To see the parameter help menu, type:
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif Rscript Assign_Indiv_by_Geno.R -h
+      singularity exec Demuxafy.sif Assign_Indiv_by_Geno.R -h
 
     Which will print:
 
@@ -326,7 +422,7 @@ If you have reference SNP genotypes for some or all of the donors in your pool, 
 
       ########## Get a unique list of SNPs that is in both the reference and cluster genotypes ##########
       locations  <- inner_join(ref_geno_tidy[,"ID"],cluster_geno_tidy[,"ID"])
-      locations <- locations[!(locations$ID %in% locations[duplicated(locations),"ID"]),]
+      locations <- locations[!(locations$ID %in% locations[duplicated(locations),]$ID),]
 
       ########## Keep just the SNPs that overlap ##########
       ref_geno_tidy <- left_join(locations, ref_geno_tidy)
@@ -403,46 +499,6 @@ After running the scSplit_ steps and summarizing the results, you will have a nu
       +--------------------+----------+
       | ...                | ...      |
       +--------------------+----------+
-
-  - ``scSplit_summary.tsv``
-
-    - Summary of the number of doublets and singlets classified by scSplit_.
-
-      +----------------+--------------+
-      | Classification | Assignment N |
-      +================+==============+
-      | DBL            | 1055         |
-      +----------------+--------------+
-      | SNG-0          | 1116         |
-      +----------------+--------------+
-      | SNG-10         | 1654         |
-      +----------------+--------------+
-      | SNG-11         | 1207         |
-      +----------------+--------------+
-      | SNG-12         | 1564         |
-      +----------------+--------------+
-      | SNG-13         | 1428         |
-      +----------------+--------------+
-      | SNG-14         | 1640         |
-      +----------------+--------------+
-      | SNG-2          | 514          |
-      +----------------+--------------+
-      | SNG-3          | 1314         |
-      +----------------+--------------+
-      | SNG-4          | 1587         |
-      +----------------+--------------+
-      | SNG-5          | 1774         |
-      +----------------+--------------+
-      | SNG-6          | 1484         |
-      +----------------+--------------+
-      | SNG-7          | 1662         |
-      +----------------+--------------+
-      | SNG-8          | 1578         |
-      +----------------+--------------+
-      | SNG-9          | 1282         |
-      +----------------+--------------+
-
-    - To check if these numbers are consistent with the expected doublet rate in your dataset, you can use our `Doublet Estimation Calculator <test.html>`__.
 
 If you ran the ``Assign_Indiv_by_Geno.R`` script, you will also have the following files:
 

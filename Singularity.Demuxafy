@@ -42,12 +42,18 @@ From: continuumio/miniconda3
     apt-get install -y libv8-dev
     apt-get update
 
-	## Make environment for conda and install python 3.7
-    yes | /opt/conda/bin/conda create -n py37 python=3.7
+	add-apt-repository 'deb http://security.debian.org/debian-security jessie/updates main'
+	apt-get update -y && apt-get install -y --no-install-recommends libssl1.0.0
+
+	## Make environment for conda and install python 3.6
+    yes | /opt/conda/bin/conda create -n py36 python=3.6 # I think 3.6 is needed for pystan to work properly
     yes | apt-get install git
     /opt/conda/bin/conda init bash
     eval "$(conda shell.bash hook)"
-    conda activate py37
+    conda activate py36
+
+	conda install -c bioconda openssl=1.0
+
         yes | apt-get install libncurses5-dev
         yes | apt-get install zlib1g-dev
         yes | apt-get install libbz2-dev
@@ -71,7 +77,6 @@ From: continuumio/miniconda3
 		apt-get install -y xauth
 		apt-get install -y xfonts-base
 		apt-get install -y libxt-dev
-		apt-get install -y libssl1.0.0
 
     cd /opt
 		wget https://github.com/Kitware/CMake/releases/download/v3.14.4/cmake-3.14.4.tar.gz
@@ -239,10 +244,9 @@ From: continuumio/miniconda3
 	### Get the github repo with scripts for workflow ###
 	cd /opt
 		git clone https://github.com/drneavin/Demultiplexing_Doublet_Detecting_Docs.git
-		cd Demultiplexing_Doublet_Detecting_Docs
-		rm -rf references ### References provided on github for users to download if they wish, no need to take upspace in image with them
-		rm -rf docs ### Docs not needed in image
-		
+                cd Demultiplexing_Doublet_Detecting_Docs
+                rm -rf references ## Only hosting on  github for people to download if they want, no need to take up extra space in the image
+                rm -rf docs ## doc files, dont need in image		
 
 	### Needed for R libraries ###
     cp /opt/conda/lib/libstdc++.so.6.0.28 /usr/lib/x86_64-linux-gnu/
@@ -280,14 +284,14 @@ From: continuumio/miniconda3
 
 
 	### Make scripts executable ###
-	chmod +x /opt/Demultiplexing_Doublet_Detecting_Docs/scripts/Assign_Indiv_by_Geno.R
-	chmod +x /opt/Demultiplexing_Doublet_Detecting_Docs/scripts/DoubletDecon.R
-	chmod +x /opt/Demultiplexing_Doublet_Detecting_Docs/scripts/DoubletDetection.py
-	chmod +x /opt/Demultiplexing_Doublet_Detecting_Docs/scripts/DoubletFinder.R
-	chmod +x /opt/Demultiplexing_Doublet_Detecting_Docs/scripts/scDblFinder.R
-	chmod +x /opt/Demultiplexing_Doublet_Detecting_Docs/scripts/scds.R
-	chmod +x /opt/Demultiplexing_Doublet_Detecting_Docs/scripts/scrublet.py
-	chmod +x /opt/Demultiplexing_Doublet_Detecting_Docs/scripts/solo_summary.py
+	chmod 777 /opt/Demultiplexing_Doublet_Detecting_Docs/scripts/Assign_Indiv_by_Geno.R
+	chmod 777 /opt/Demultiplexing_Doublet_Detecting_Docs/scripts/DoubletDecon.R
+	chmod 777 /opt/Demultiplexing_Doublet_Detecting_Docs/scripts/DoubletDetection.py
+	chmod 777 /opt/Demultiplexing_Doublet_Detecting_Docs/scripts/DoubletFinder.R
+	chmod 777 /opt/Demultiplexing_Doublet_Detecting_Docs/scripts/scDblFinder.R
+	chmod 777 /opt/Demultiplexing_Doublet_Detecting_Docs/scripts/scds.R
+	chmod 777 /opt/Demultiplexing_Doublet_Detecting_Docs/scripts/Scrublet.py
+	chmod 777 /opt/Demultiplexing_Doublet_Detecting_Docs/scripts/solo_summary.py
 
 
 	### Remove unnecessary files ###
@@ -301,6 +305,4 @@ From: continuumio/miniconda3
 	rm bcftools-1.13.tar.bz2
 	rm vcftools-0.1.16.tar.gz
 	rm parallel-latest.tar.bz2
-
-
 

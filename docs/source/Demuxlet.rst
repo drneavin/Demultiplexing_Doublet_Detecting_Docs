@@ -109,27 +109,59 @@ Additional details about outputs are available below in the :ref:`Demuxlet Resul
 Demuxlet Summary
 ^^^^^^^^^^^^^^^^
 We have provided a script that will summarize the number of droplets classified as doublets, ambiguous and assigned to each donor by Demuxlet_ and write it to the ``$DEMUXLET_OUTDIR``. 
-You can run this to get a fast and easy summary of your results with:
+You can run this to get a fast and easy summary of your results by providing the path to your result file:
 
 .. code-block:: bash
 
-  singularity exec Demuxafy.sif bash Demuxlet_summary.sh $DEMUXLET_OUTDIR
+  singularity exec Demuxafy.sif bash Demuxlet_summary.sh $DEMUXLET_OUTDIR/demuxlet.best
 
-If the demuxlet summary is successfull, you will have this new file in your ``$DEMUXLET_OUTDIR``:
+
+which will return:
+
+  +-----------------+--------------+
+  | Classification  | Assignment N |
+  +=================+==============+
+  | 113_113         | 1334         |
+  +-----------------+--------------+
+  | 349_350         | 1458         |
+  +-----------------+--------------+
+  | 352_353         | 1607         |
+  +-----------------+--------------+
+  | 39_39           | 1297         |
+  +-----------------+--------------+
+  | 40_40           | 1078         |
+  +-----------------+--------------+
+  | 41_41           | 1127         |
+  +-----------------+--------------+
+  | 42_42           | 1419         |
+  +-----------------+--------------+
+  | 43_43           | 1553         |
+  +-----------------+--------------+
+  | 465_466         | 1094         |
+  +-----------------+--------------+
+  | 596_597         | 1255         |
+  +-----------------+--------------+
+  | 597_598         | 1517         |
+  +-----------------+--------------+
+  | 632_633         | 868          |
+  +-----------------+--------------+
+  | 633_634         | 960          |
+  +-----------------+--------------+
+  | 660_661         | 1362         |
+  +-----------------+--------------+
+  | doublet         | 3053         |
+  +-----------------+--------------+
+
+or you can write it straight to a file:
 
 .. code-block:: bash
-  :emphasize-lines: 3
 
-  .
-  ├── demuxlet.best
-  ├── Demuxlet_summary.tsv
-  ├── pileup.cel.gz
-  ├── pileup.plp.gz
-  ├── pileup.umi.gz
-  └── pileup.var.gz
+  singularity exec Demuxafy.sif bash Demuxlet_summary.sh $FREEMUXLET_OUTDIR/demuxlet.best > $DEMUXLET_OUTDIR/demuxlet_summary.tsv
 
-Additional details about outputs are available below in the :ref:`Demuxlet Results and Interpretation <demuxlet-results>`.
 
+.. admonition:: Note
+
+  To check if these numbers are consistent with the expected doublet rate in your dataset, you can use our `Doublet Estimation Calculator <test.html>`__.
 
 
 
@@ -139,46 +171,6 @@ Demuxlet Results and Interpretation
 -----------------------------------
 After running the Demuxlet_ steps and summarizing the results, you will have a number of files from some of the intermediary steps. 
 Theses are the files that most users will find the most informative:
-
-  - ``Demuxlet_summary.tsv``
-
-    - Summary of the droplets asignmened to each donor, doublets or unassigned.
-     
-      +-----------------+--------------+
-      | Classification  | Assignment N |
-      +=================+==============+
-      | 349_350         | 1458         |
-      +-----------------+--------------+
-      | 113_113         | 1334         |
-      +-----------------+--------------+
-      | 352_353         | 1607         |
-      +-----------------+--------------+
-      | 39_39           | 1297         |
-      +-----------------+--------------+
-      | 40_40           | 1078         |
-      +-----------------+--------------+
-      | 41_41           | 1127         |
-      +-----------------+--------------+
-      | 42_42           | 1419         |
-      +-----------------+--------------+
-      | 43_43           | 1553         |
-      +-----------------+--------------+
-      | 465_466         | 1094         |
-      +-----------------+--------------+
-      | 596_597         | 1255         |
-      +-----------------+--------------+
-      | 597_598         | 1517         |
-      +-----------------+--------------+
-      | 633_634         | 960          |
-      +-----------------+--------------+
-      | 632_633         | 868          |
-      +-----------------+--------------+
-      | 660_661         | 1362         |
-      +-----------------+--------------+
-      | doublet         | 3053         |
-      +-----------------+--------------+
-
-    - To check whether the number of predicted doublets is in line with the expected number, you can use our `Doublet Estimation Calculator <test.html>`__
 
   - ``demuxlet.best``
 

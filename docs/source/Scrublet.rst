@@ -47,13 +47,13 @@ You can either run Scrublet_ with the wrapper script we have provided or you can
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif python Scrublet.py -m $MATRIX -o $SCRUBLET_OUTDIR
+      singularity exec Demuxafy.sif Scrublet.py -m $MATRIX -o $SCRUBLET_OUTDIR
 
     To see all the parameters that this wrapper script will accept, run:
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif python Scrublet.py -h
+      singularity exec Demuxafy.sif Scrublet.py -h
 
 
       usage: scrublet.py [-h] -m COUNTS_MATRIX [-b BARCODES] [-r SIM_DOUBLET_RATIO]

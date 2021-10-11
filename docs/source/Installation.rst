@@ -9,8 +9,8 @@ Just download the singluarity image with:
 
   .. code-block:: bash
 
-    wget https://www.dropbox.com/s/kvxprniwzp1iboh/Demuxafy.sif
-    wget https://www.dropbox.com/s/2x1emcgzmnngat8/Demuxafy.sif.md5
+    wget https://www.dropbox.com/s/ca5f8s6uslxn68x/Demuxafy.sif
+    wget https://www.dropbox.com/s/kmr6zmhkcoa2pfd/Demuxafy.sif.md5
 
 
 
@@ -105,19 +105,3 @@ If everything was downloaded correctly, that command should report:
 
 
               
-
-
-.. +-------------------+---------------------------+----------------------+--------------------------------------------+
-.. | Group             | Example                   | Letter               | Notes                                      |
-.. +===================+===========================+======================+============================================+
-.. |  Big Block 1      | one                       |                      | Notes on entry                             |
-.. |                   +---------------------------+----------------------+--------------------------------------------+
-.. |                   | two                       | 1.0.8.2              |                                            |
-.. +-------------------+---------------------------+----------------------+--------------------------------------------+
-.. | Big Block 2       | three                     |                      |                                            |
-.. |                   +---------------------------+----------------------+--------------------------------------------+
-.. |                   | four                      |                      |                                            |
-.. +-------------------+---------------------------+----------------------+--------------------------------------------+
-
-
-

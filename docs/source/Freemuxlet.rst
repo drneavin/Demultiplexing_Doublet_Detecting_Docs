@@ -98,29 +98,59 @@ Additional details about outputs are available below in the :ref:`Freemuxlet Res
 Freemuxlet Summary
 ^^^^^^^^^^^^^^^^^^
 We have provided a script that will summarize the number of droplets classified as doublets, ambiguous and assigned to each donor by Freemuxlet_ and write it to the ``$FREEMUXLET_OUTDIR``. 
-You can run this to get a fast and easy summary of your results with:
+You can run this to get a fast and easy summary of your results by providing the result file of interest:
 
 .. code-block:: bash
 
-  singularity exec Demuxafy.sif bash Freemuxlet_summary.sh $FREEMUXLET_OUTDIR
+  singularity exec Demuxafy.sif bash Freemuxlet_summary.sh $FREEMUXLET_OUTDIR/freemuxlet.clust1.samples.gz
 
-If the freemuxlet summary is successfull, you will have this new file in your ``$FREEMUXLET_OUTDIR``:
+which will return:
+
+  +-----------------+--------------+
+  | Classification  | Assignment N |
+  +=================+==============+
+  | 0               | 1575         |
+  +-----------------+--------------+
+  | 1               | 1278         |
+  +-----------------+--------------+
+  | 10              | 972          |
+  +-----------------+--------------+
+  | 11              | 1477         |
+  +-----------------+--------------+
+  | 12              | 1630         |
+  +-----------------+--------------+
+  | 13              | 1446         |
+  +-----------------+--------------+
+  | 2               | 1101         |
+  +-----------------+--------------+
+  | 3               | 1150         |
+  +-----------------+--------------+
+  | 4               | 1356         |
+  +-----------------+--------------+
+  | 5               | 1540         |
+  +-----------------+--------------+
+  | 6               | 1110         |
+  +-----------------+--------------+
+  | 7               | 1313         |
+  +-----------------+--------------+
+  | 8               | 1383         |
+  +-----------------+--------------+
+  | 9               | 884          |
+  +-----------------+--------------+
+  | DBL             | 2767         |
+  +-----------------+--------------+
+
+or you can write it straight to a file:
 
 .. code-block:: bash
-  :emphasize-lines: 5
 
-  .
-  ├── freemuxlet.clust1.samples.gz
-  ├── freemuxlet.clust1.vcf.gz
-  ├── freemuxlet.lmix
-  ├── freemuxlet_summary.tsv
-  ├── pileup.cel.gz
-  ├── pileup.plp.gz
-  ├── pileup.umi.gz
-  └── pileup.var.gz
+  singularity exec Demuxafy.sif bash Freemuxlet_summary.sh $FREEMUXLET_OUTDIR/freemuxlet.clust1.samples.gz > $FREEMUXLET_OUTDIR/freemuxlet_summary.tsv
 
+.. .. admonition:: Note
+:: Note
 
-Additional details about outputs are available below in the :ref:`Freemuxlet Results and Interpretation <freemuxlet-results>`.
+  To check if these numbers are consistent with the expected doublet rate in your dataset, you can use our `Doublet Estimation Calculator <test.html>`__.
+
 
 
 Correlating Cluster to Donor Reference SNP Genotypes (optional)
@@ -137,13 +167,13 @@ If you have reference SNP genotypes for some or all of the donors in your pool, 
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif Rscript Assign_Indiv_by_Geno.R -r $VCF -c $FREEMUXLET_OUTDIR/freemuxlet.clust1.vcf.gz -o $FREEMUXLET_OUTDIR
+      singularity exec Demuxafy.sif Assign_Indiv_by_Geno.R -r $VCF -c $FREEMUXLET_OUTDIR/freemuxlet.clust1.vcf.gz -o $FREEMUXLET_OUTDIR
 
     To see the parameter help menu, type:
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif Rscript Assign_Indiv_by_Geno.R -h
+      singularity exec Demuxafy.sif Assign_Indiv_by_Geno.R -h
 
     Which will print:
 
@@ -366,7 +396,7 @@ If you have reference SNP genotypes for some or all of the donors in your pool, 
 
       ########## Get a unique list of SNPs that is in both the reference and cluster genotypes ##########
       locations  <- inner_join(ref_geno_tidy[,"ID"],cluster_geno_tidy[,"ID"])
-      locations <- locations[!(locations$ID %in% locations[duplicated(locations),"ID"]),]
+      locations <- locations[!(locations$ID %in% locations[duplicated(locations),]$ID),]
 
       ########## Keep just the SNPs that overlap ##########
       ref_geno_tidy <- left_join(locations, ref_geno_tidy)
@@ -438,45 +468,6 @@ Freemuxlet Results and Interpretation
 After running the Freemuxlet_ steps and summarizing the results, you will have a number of files from some of the intermediary steps. 
 Theses are the files that most users will find the most informative:
 
-  - ``freemuxlet_summary.tsv``
-
-    - Summary of the droplets asignmened to each donor, doublets or unassigned
-     
-      +-----------------+--------------+
-      | Classification  | Assignment N |
-      +=================+==============+
-      | 0               | 1575         |
-      +-----------------+--------------+
-      | 1               | 1278         |
-      +-----------------+--------------+
-      | 10              | 972          |
-      +-----------------+--------------+
-      | 11              | 1477         |
-      +-----------------+--------------+
-      | 12              | 1630         |
-      +-----------------+--------------+
-      | 13              | 1446         |
-      +-----------------+--------------+
-      | 2               | 1101         |
-      +-----------------+--------------+
-      | 3               | 1150         |
-      +-----------------+--------------+
-      | 4               | 1356         |
-      +-----------------+--------------+
-      | 5               | 1540         |
-      +-----------------+--------------+
-      | 6               | 1110         |
-      +-----------------+--------------+
-      | 7               | 1313         |
-      +-----------------+--------------+
-      | 8               | 1383         |
-      +-----------------+--------------+
-      | 9               | 884          |
-      +-----------------+--------------+
-      | DBL             | 2767         |
-      +-----------------+--------------+
-
-    - To check whether the number of doublets identified by Freemuxlet_ is aligned with the expected doublet rate, you can use our `Doublet Estimation Calculator <test.html>`__.
 
   - ``freemuxlet.clust1.samples.gz``
 

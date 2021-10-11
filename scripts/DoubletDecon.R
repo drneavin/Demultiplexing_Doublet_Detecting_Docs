@@ -35,7 +35,7 @@ library(data.table)
 
 
 ## make sure the directory exists ###
-dir.create(args$out, recursive = TRUE)
+dir.create(args$out, recursive = TRUE, showWarnings = FALSE)
 
 ## Read in Data ##
 seurat <- readRDS(args$seurat_object)

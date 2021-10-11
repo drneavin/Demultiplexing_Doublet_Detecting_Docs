@@ -75,7 +75,7 @@ You can run Souporcell_ with or without reference SNP genotypes - follow the ins
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif souporcell_pipeline.py -i $BAM -b $BARCODES -f $FASTA -t $THREADS -o $SOUPORCELL_OUTDIR -k $N --known_genotypes $VCF --known_genotypes_sample_names donor1 donor ,donor3 donor4
+      singularity exec Demuxafy.sif souporcell_pipeline.py -i $BAM -b $BARCODES -f $FASTA -t $THREADS -o $SOUPORCELL_OUTDIR -k $N --known_genotypes $VCF --known_genotypes_sample_names donor1 donor donor3 donor4
 
 If souporcell is successfull, you will have these files in your ``$SOUPORCELL_OUTDIR``:
 
@@ -111,11 +111,62 @@ Additional details about outputs are available below in the :ref:`Souporcell Res
 
 Souporcell Summary
 ^^^^^^^^^^^^^^^^^^
-We have provided a script that will provide a summary of the number of droplets classified as doublets, ambiguous and assigned to each cluster by Souporcell_. You can run this to get a fast and easy summary of your results with:
+We have provided a script that will provide a summary of the number of droplets classified as doublets, ambiguous and assigned to each cluster by Souporcell_. 
+You can run this to get a fast and easy summary of your results by providing the souporcell result file:
 
 .. code-block:: bash
 
-  singularity exec Demuxafy.sif bash souporcell_summary.sh $SOUPORCELL_OUTDIR
+  singularity exec Demuxafy.sif bash souporcell_summary.sh $SOUPORCELL_OUTDIR/clusters.tsv
+
+which should print:
+
+  +-----------------+--------------+
+  | Classification  | Assignment N |
+  +=================+==============+
+  | 0               | 1441         |
+  +-----------------+--------------+
+  | 1               | 980          |
+  +-----------------+--------------+
+  | 10              | 1285         |
+  +-----------------+--------------+
+  | 11              | 1107         |
+  +-----------------+--------------+
+  | 12              | 1315         |
+  +-----------------+--------------+
+  | 13              | 1529         |
+  +-----------------+--------------+
+  | 2               | 1629         |
+  +-----------------+--------------+
+  | 3               | 1473         |
+  +-----------------+--------------+
+  | 4               | 1381         |
+  +-----------------+--------------+
+  | 5               | 1360         |
+  +-----------------+--------------+
+  | 6               | 1157         |
+  +-----------------+--------------+
+  | 7               | 892          |
+  +-----------------+--------------+
+  | 8               | 1111         |
+  +-----------------+--------------+
+  | 9               | 1565         |
+  +-----------------+--------------+
+  | doublet         | 2757         |
+  +-----------------+--------------+
+
+or you can write the results to file:
+
+.. code-block::
+
+  singularity exec Demuxafy.sif bash souporcell_summary.sh $SOUPORCELL_OUTDIR/clusters.tsv > $SOUPORCELL_OUTDIR/souporcell_summary.tsv
+
+
+.. admonition:: Note
+
+  To check if these numbers are consistent with the expected doublet rate in your dataset, you can use our `Doublet Estimation Calculator <test.html>`__.
+
+
+
 
 If the souporcell summary is successfull, you will have this new file in your ``$SOUPORCELL_OUTDIR``:
 
@@ -154,7 +205,7 @@ Additional details about outputs are available below in the :ref:`Souporcell Res
 
 Correlating Cluster to Donor Reference SNP Genotypes (optional)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-If you have reference SNP genotypes for some or all of the donors in your pool, you can identify which cluster is best correlated with each donor in your reference SNP genotypes. We have provided a script that will do this and provide a heatmap correlation figure and the predicted individual that should be assigned for each cluster. You can either run it with the script by providing the reference SNP genotypes (``$VCF``), the cluster SNP genotypes (``$SOUPORCELL_OUTDIR/scSplit.vcf``) and the output directory (``$SOUPORCELL_OUTDIR``) You can run this script with:
+If you have reference SNP genotypes for some or all of the donors in your pool, you can identify which cluster is best correlated with each donor in your reference SNP genotypes. We have provided a script that will do this and provide a heatmap correlation figure and the predicted individual that should be assigned for each cluster. You can either run it with the script by providing the reference SNP genotypes (``$VCF``), the cluster SNP genotypes (``$SOUPORCELL_OUTDIR/cluster_genotypes.vcf``) and the output directory (``$SOUPORCELL_OUTDIR``) You can run this script with:
 
 .. admonition:: Note
 
@@ -166,13 +217,13 @@ If you have reference SNP genotypes for some or all of the donors in your pool, 
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif Rscript Assign_Indiv_by_Geno.R -r $VCF -c $SOUPORCELL_OUTDIR/scSplit.vcf -o $SOUPORCELL_OUTDIR
+      singularity exec Demuxafy.sif Assign_Indiv_by_Geno.R -r $VCF -c $SOUPORCELL_OUTDIR/cluster_genotypes.vcf -o $SOUPORCELL_OUTDIR
 
     To see the parameter help menu, type:
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif Rscript Assign_Indiv_by_Geno.R -h
+      singularity exec Demuxafy.sif Assign_Indiv_by_Geno.R -h
 
     Which will print:
 
@@ -395,7 +446,7 @@ If you have reference SNP genotypes for some or all of the donors in your pool, 
 
       ########## Get a unique list of SNPs that is in both the reference and cluster genotypes ##########
       locations  <- inner_join(ref_geno_tidy[,"ID"],cluster_geno_tidy[,"ID"])
-      locations <- locations[!(locations$ID %in% locations[duplicated(locations),"ID"]),]
+      locations <- locations[!(locations$ID %in% locations[duplicated(locations),]$ID),]
 
       ########## Keep just the SNPs that overlap ##########
       ref_geno_tidy <- left_join(locations, ref_geno_tidy)
@@ -486,43 +537,6 @@ Souporcell Results and Interpretation
 After running the Souporcell_ steps and summarizing the results, you will have a number of files from some of the intermediary steps. 
 Theses are the files that most users will find the most informative:
 
-  - ``souporcell_summary.tsv``
-
-    - Summary of the droplets asignmened to each donor, doublets or unassigned
-     
-      +-----------------+--------------+
-      | Classification  | Assignment N |
-      +=================+==============+
-      | 0               | 1441         |
-      +-----------------+--------------+
-      | 1               | 980          |
-      +-----------------+--------------+
-      | 10              | 1285         |
-      +-----------------+--------------+
-      | 11              | 1107         |
-      +-----------------+--------------+
-      | 12              | 1315         |
-      +-----------------+--------------+
-      | 13              | 1529         |
-      +-----------------+--------------+
-      | 2               | 1629         |
-      +-----------------+--------------+
-      | 3               | 1473         |
-      +-----------------+--------------+
-      | 4               | 1381         |
-      +-----------------+--------------+
-      | 5               | 1360         |
-      +-----------------+--------------+
-      | 6               | 1157         |
-      +-----------------+--------------+
-      | 7               | 892          |
-      +-----------------+--------------+
-      | 8               | 1111         |
-      +-----------------+--------------+
-      | 9               | 1565         |
-      +-----------------+--------------+
-      | doublet         | 2757         |
-      +-----------------+--------------+
 
     - To check if these numbers are consistent with the expected doublet rate in your dataset, you can use our `Expected Doublet Estimation Calculator <test.html>`__.
 

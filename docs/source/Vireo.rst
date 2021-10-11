@@ -147,13 +147,13 @@ We've provided an example command for each of these differing amounts of donor S
 
     .. code-block::
 
-      singularity exec Demuxafy.sif vireo -c $VIREO_OUTDIR/cellSNPpileup.vcf.gz -d $VIREO_OUTDIR/donor_subset.vcf -o $VIREO_OUTDIR/cellSNPpileup.vcf.gz -t $FIELD -N $N
+      singularity exec Demuxafy.sif vireo -c $VIREO_OUTDIR -d $VIREO_OUTDIR/donor_subset.vcf -o $VIREO_OUTDIR -t $FIELD -N $N
 
   .. tab:: Without Donor SNP |br| Genotype Data
 
     .. code-block::
 
-      singularity exec Demuxafy.sif vireo -c $VIREO_OUTDIR/cellSNPpileup.vcf.gz -o $VIREO_OUTDIR -N $N
+      singularity exec Demuxafy.sif vireo -c $VIREO_OUTDIR -o $VIREO_OUTDIR -N $N
 
 If Vireo_ is successfull, you will have these new files in your ``$VIREO_OUTDIR``:
 

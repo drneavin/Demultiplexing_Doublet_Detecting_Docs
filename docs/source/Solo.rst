@@ -123,7 +123,7 @@ You can run this to get a fast and easy summary of your results with:
 
 .. code-block:: bash
 
-  singularity exec Demuxafy.sif python solo_summary.py -b $BARCODES -s $SOLO_OUTDIR
+  singularity exec Demuxafy.sif solo_summary.py -b $BARCODES -s $SOLO_OUTDIR
 
 If successful, you should have two new files in your ``$SOLO_OUTDIR``:
 
