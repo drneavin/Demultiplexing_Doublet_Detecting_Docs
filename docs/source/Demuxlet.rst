@@ -51,6 +51,18 @@ Poscle Pileup
 ^^^^^^^^^^^^^
 First we will need to identify the number of reads from each allele at each SNP location:
 
+.. tabs::
+
+  .. tab:: With ``$INDS`` file
+    
+    The ``$INDS`` file allows demuxlet to only consider the individual in this pool
+
+.. code-block:: bash
+
+  singularity exec Demuxafy.sif popscle dsc-pileup --sam $BAM --vcf $VCF --group-list $BARCODES --out $DEMUXLET_OUTDIR/popscle --sm-list $INDS
+
+  .. tab:: Without ``$INDS`` file
+
 .. code-block:: bash
 
   singularity exec Demuxafy.sif popscle dsc-pileup --sam $BAM --vcf $VCF --group-list $BARCODES --out $DEMUXLET_OUTDIR/popscle

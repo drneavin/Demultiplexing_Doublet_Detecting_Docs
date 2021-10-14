@@ -99,7 +99,7 @@ The prepared SNV genotypes and bam file can then be used to demultiplex and call
 After running these demultiplexing steps, you will have the following new results:
 
 .. code-block::
-  :emphasize-lines: 1,9,10,11,12,13,14,15,16
+  :emphasize-lines: 9,10,11,12,13,14,15,16
   
   .
   ├── alt_filtered.csv
