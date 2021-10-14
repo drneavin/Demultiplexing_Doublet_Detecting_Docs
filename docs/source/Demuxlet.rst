@@ -57,15 +57,18 @@ First we will need to identify the number of reads from each allele at each SNP 
     
     The ``$INDS`` file allows demuxlet to only consider the individual in this pool
 
-  .. code-block:: bash
+    .. code-block:: bash
 
-  singularity exec Demuxafy.sif popscle dsc-pileup --sam $BAM --vcf $VCF --group-list $BARCODES --out $DEMUXLET_OUTDIR/popscle --sm-list $INDS
+    singularity exec Demuxafy.sif popscle dsc-pileup --sam $BAM --vcf $VCF --group-list $BARCODES --out $DEMUXLET_OUTDIR/popscle --sm-list $INDS
 
   .. tab:: Without ``$INDS`` file
+  
+    This will use all the individuals in your reference SNP genotype ``$VCF``. 
+    If your ``$VCF`` only has the individuals multiplexed in your pool, then the ``$INDS`` file is not required.
 
-  .. code-block:: bash
+    .. code-block:: bash
 
-    singularity exec Demuxafy.sif popscle dsc-pileup --sam $BAM --vcf $VCF --group-list $BARCODES --out $DEMUXLET_OUTDIR/popscle
+      singularity exec Demuxafy.sif popscle dsc-pileup --sam $BAM --vcf $VCF --group-list $BARCODES --out $DEMUXLET_OUTDIR/popscle
 
 If the pileup is successfull, you will have these files in your ``$DEMUXLET_OUTDIR``:
 
