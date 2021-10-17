@@ -41,18 +41,11 @@ From: continuumio/miniconda3
     apt-get update
     apt-get install -y libv8-dev
     apt-get update
+    apt install -y ncdu
+
 
 	add-apt-repository 'deb http://security.debian.org/debian-security jessie/updates main'
 	apt-get update -y && apt-get install -y --no-install-recommends libssl1.0.0
-
-	## Make environment for conda and install python 3.7
-    yes | /opt/conda/bin/conda create -n py37 python=3.7 # I think 3.6 is needed for the pinned version of pystan to work properly; trying newer version with 3.7
-    yes | apt-get install git
-    /opt/conda/bin/conda init bash
-    eval "$(conda shell.bash hook)"
-    conda activate py37
-
-	conda install -c bioconda openssl=1.0
 
         yes | apt-get install libncurses5-dev
         yes | apt-get install zlib1g-dev
@@ -102,8 +95,6 @@ From: continuumio/miniconda3
         cd bedtools2
         make
 
-
-
 	### Activate cargo
     cd /opt
     CARGO_HOME=/opt/.cargo RUSTUP_HOME=/opt/.cargo bash -c 'curl https://sh.rustup.rs -sSf | sh -s -- -y'
@@ -120,19 +111,46 @@ From: continuumio/miniconda3
             cargo build --release
 
 
+	### Update python to call for souporcell files
+	sed -i 's|#!/usr/bin/env python|#!/opt/conda/envs/py36/bin/python|g' /opt/souporcell/*.py
+	sed -i '1i #!/opt/conda/envs/py36/bin/python'  /opt/souporcell/check_modules.py
+
+	sed -i '2i import sys' /opt/souporcell/*.py
+	sed -i "3i sys.path.insert(0,'/opt/conda/envs/py36/lib/python3.6/site-packages')" /opt/souporcell/*.py
+
+
+
+
+	## Make environment fo python 3.6.8 and install souporcell dependencies
+    yes | /opt/conda/bin/conda create -n py36 python=3.6.8 # 3.6 is needed for pystan to work properly;
+    yes | apt-get install git
+    /opt/conda/bin/conda init bash
+    eval "$(conda shell.bash hook)"
+    conda activate py36
+
+	/opt/conda/envs/py36/bin/pip install setuptools==57.5.0
+	yes | /opt/conda/envs/py36/bin/pip install pysam ##scSplit, souporcell
+	/opt/conda/envs/py36/bin/pip install pyvcf ##scSplit, souporcell
+	/opt/conda/envs/py36/bin/pip install numpy
+	/opt/conda/envs/py36/bin/pip install scipy
+	/opt/conda/envs/py36/bin/pip install pystan==2.17.1.0
+	/opt/conda/envs/py36/bin/pip install pyfaidx ## souporcell
+	/opt/conda/envs/py36/bin/pip install tensorflow ## required for souporcell
+
+	## Make environment for conda and install python 3.7
+    yes | /opt/conda/bin/conda create -n py37 python=3.7.2 # I think 3.6 is needed for the pinned version of pystan to work properly; trying newer version with 3.7
+    conda activate py37
+
+
 	### Install python dependencies  ###
     yes | conda install pytorch torchvision cudatoolkit=11.0.221 -c pytorch ## solo
 	/opt/conda/envs/py37/bin/pip install scvi-tools ## required for solo
-	#/opt/conda/envs/py37/bin/pip install scvi ## required for solo
     /opt/conda/envs/py37/bin/pip install setuptools==57.5.0 ##scSplit, souporcell
     /opt/conda/envs/py37/bin/pip install install Cython
     yes | /opt/conda/envs/py37/bin/pip install pysam ##scSplit, souporcell
     /opt/conda/envs/py37/bin/pip install pyvcf ##scSplit, souporcell
     /opt/conda/envs/py37/bin/pip install numpy
     /opt/conda/envs/py37/bin/pip install scipy 
-    # /opt/conda/envs/py37/bin/pip install pystan==2.17.1.0 ## souporcell for python 3.6
-    /opt/conda/envs/py37/bin/pip install pystan ## souporcell
-    /opt/conda/envs/py37/bin/pip install pyfaidx ## souporcell
     /opt/conda/envs/py37/bin/pip install scikit-learn
     /opt/conda/envs/py37/bin/pip install pandas
     /opt/conda/envs/py37/bin/pip install matplotlib==3.2.2
@@ -143,7 +161,6 @@ From: continuumio/miniconda3
     /opt/conda/envs/py37/bin/pip install h5py
     /opt/conda/envs/py37/bin/pip install xgboost
 	/opt/conda/envs/py37/bin/pip install argparse
-	/opt/conda/envs/py37/bin/pip install tensorflow ## required for souporcell
 
 	### Install CellSNP and Vireo ###
     pip3 install vireoSNP
@@ -185,7 +202,7 @@ From: continuumio/miniconda3
 
 
 	### Install freebayes - souporcell and scSplit ###
-	conda install -c bioconda tabixpp ## For vcflib
+	# conda install -c bioconda tabixpp ## For vcflib
 	conda install -c bioconda freebayes
 
 
@@ -235,8 +252,8 @@ From: continuumio/miniconda3
 		cd /opt
 
 
-	### Set up louvain for solo ###
-    sed -i 's/louvain.set_rng_seed(random_state)/partition_kwargs["seed"] = random_state/g'  /opt/conda/envs/py37/lib/python3.7/site-packages/scanpy/tools/_louvain.py
+	# ### Set up louvain for solo ###
+    # sed -i 's/louvain.set_rng_seed(random_state)/partition_kwargs["seed"] = random_state/g'  /opt/conda/envs/py37/lib/python3.7/site-packages/scanpy/tools/_louvain.py
 
 	### Install solo ###
     cd /opt
@@ -300,3 +317,4 @@ From: continuumio/miniconda3
 	rm vcftools-0.1.16.tar.gz
 	rm parallel-latest.tar.bz2
 
+	conda clean --all 
