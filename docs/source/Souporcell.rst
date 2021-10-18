@@ -101,6 +101,7 @@ If souporcell is successfull, you will have these files in your ``$SOUPORCELL_OU
   ├── retag.err
   ├── retagging.done
   ├── souporcell_minimap_tagged_sorted.bam
+  ├── souporcell_minimap_tagged_sorted.bam.bai
   ├── troublet.done
   ├── variants.done
   └── vartrix.done

@@ -59,7 +59,7 @@ First we will need to identify the number of reads from each allele at each SNP 
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif popscle dsc-pileup --sam $BAM --vcf $VCF --group-list $BARCODES --out $DEMUXLET_OUTDIR/popscle --sm-list $INDS
+      singularity exec Demuxafy.sif popscle dsc-pileup --sam $BAM --vcf $VCF --group-list $BARCODES --out $DEMUXLET_OUTDIR/pileup --sm-list $INDS
 
   .. tab:: Without ``$INDS`` file
 
@@ -68,7 +68,7 @@ First we will need to identify the number of reads from each allele at each SNP 
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif popscle dsc-pileup --sam $BAM --vcf $VCF --group-list $BARCODES --out $DEMUXLET_OUTDIR/popscle
+      singularity exec Demuxafy.sif popscle dsc-pileup --sam $BAM --vcf $VCF --group-list $BARCODES --out $DEMUXLET_OUTDIR/pileup
 
 If the pileup is successfull, you will have these files in your ``$DEMUXLET_OUTDIR``:
 

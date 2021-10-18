@@ -2,8 +2,8 @@ Installation
 ==========================
 Installation should be pretty painless (we hope).
 We have  provided all the softwares in a singularity image which provides continuity across different computing platforms (see `HPCNG Singluarity <https://singularity.hpcng.org/>`__ and `Sylabs io <https://sylabs.io/singularity/>`__ for more information on singularity images).
-The only thing to note before you download this image is that the image is **~9Gb** so, depending on the internet speed, it will take **~20-30 min to download**.
-The good news is that you should only need to do this once.
+The only thing to note before you download this image is that the image is **~6.5Gb** so, depending on the internet speed, it will take **~15-30 min to download**.
+The good news is that you should only need to do this once unless updates are made to the scripts or image.
 
 Just download the singluarity image with:
 
@@ -55,9 +55,11 @@ If everything was downloaded correctly, that command should report:
     |                            +---------------------------+-------------------------------+
     |                            | ``scDblFinder``           | v1.6.0                        |
     |                            +---------------------------+-------------------------------+
-    |                            | ``scrublet``              | 0.2.3                         |
+    |                            | ``scds``                  | v1.9.1                        |
     |                            +---------------------------+-------------------------------+
-    |                            | ``solo``                  | 1.0                           |
+    |                            | ``scrublet``              | v0.2.3                        |
+    |                            +---------------------------+-------------------------------+
+    |                            | ``solo``                  | v1.0                          |
     +----------------------------+---------------------------+-------------------------------+
     | Supporting Softwares       | ``minimap2``              | v2.7-r654                     |
     |                            +---------------------------+-------------------------------+
@@ -81,23 +83,23 @@ If everything was downloaded correctly, that command should report:
     |                            +---------------------------+-------------------------------+
     |                            | ``vcfR``                  | v1.12.0                       |
     |                            +---------------------------+-------------------------------+
-    |                            | ``Seurat``                | 4.0.4                         |
+    |                            | ``Seurat``                | 4.0.5                          |
     |                            +---------------------------+-------------------------------+
     |                            | ``SingleCellExperiment``  | v1.14.1                       |
     +----------------------------+---------------------------+-------------------------------+
     | Python Supporting Packages | ``argparse``              | v1.4.0                        |
-    | (Python v3.7.10)           +---------------------------+-------------------------------+
-    |                            | ``numpy``                 | v1.19.5                       |
+    | (Python v3.7.2)            +---------------------------+-------------------------------+
+    |                            | ``numpy``                 | v1.20.3                       |
     |                            +---------------------------+-------------------------------+
     |                            | ``matplotlib``            | v3.2.2                        |
     |                            +---------------------------+-------------------------------+
-    |                            | ``pandas``                | v1.1.5                        |
+    |                            | ``pandas``                | v1.3.4                        |
     |                            +---------------------------+-------------------------------+
     |                            | ``PyVCF``                 | v0.6.8                        |
     |                            +---------------------------+-------------------------------+
     |                            | ``scipy``                 | v1.7.1                        |
     |                            +---------------------------+-------------------------------+
-    |                            | ``scvi-tools``            | v0.14.0                       |
+    |                            | ``scvi-tools``            | v0.14.1                       |
     |                            +---------------------------+-------------------------------+
     |                            | ``umap-learn``            | v0.5.1                        |
     +----------------------------+---------------------------+-------------------------------+

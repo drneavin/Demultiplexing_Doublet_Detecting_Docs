@@ -420,9 +420,12 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 		}
 		print(columns)
 		demultiplex_combined_results_summary <- combined_results[,.(N=.N), by = c(columns)]
+		demultiplex_combined_results_summary <- demultiplex_combined_results_summary[order(-N)]
 		fwrite(demultiplex_combined_results_summary, paste0(tools::file_path_sans_ext(args$out),"_demultiplexing_summary.tsv"), sep = "\t", append = FALSE)
 
 	}
+	combined_results_summary <- combined_results_summary[order(-N)]
+
 	fwrite(combined_results_summary, paste0(tools::file_path_sans_ext(args$out),"_summary.tsv"), sep = "\t", append = FALSE)
 	
 
