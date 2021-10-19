@@ -64,7 +64,7 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 		colnames(results_list[["demuxlet"]]) <- c("Barcode", "Demuxlet_DropletType", "Demuxlet_Individual_Assignment")
 
 		### update Demuxlet_DropletType  column SNG and DBL ###
-		results_list[["demuxlet"]]$Demuxlet_DropletType  <- gsub("SNG", "singlet", results_list[["demuxlet"]]$Demuxlet_DropletType) %>% gsub("DBL", "doublet", .) %>% gsub("AMB", "ambiguous", .)
+		results_list[["demuxlet"]]$Demuxlet_DropletType  <- gsub("SNG", "singlet", results_list[["demuxlet"]]$Demuxlet_DropletType) %>% gsub("DBL", "doublet", .) %>% gsub("AMB", "unassigned", .)
 
 		### Update Individual column to be individual or doublet or ambiguous/unassigned ###
 		results_list[["demuxlet"]]$Demuxlet_Individual_Assignment <- ifelse(results_list[["demuxlet"]]$Demuxlet_DropletType  == "doublet", "doublet",
@@ -92,7 +92,7 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 		colnames(results_list[["freemuxlet"]]) <- c("Barcode", "Freemuxlet_DropletType", "Freemuxlet_Cluster")
 
 		### update Demuxlet_DropletType  column SNG and DBL ###
-		results_list[["freemuxlet"]]$Freemuxlet_DropletType  <- gsub("SNG", "singlet", results_list[["freemuxlet"]]$Freemuxlet_DropletType ) %>% gsub("DBL", "doublet", .) %>% gsub("AMB", "ambiguous", .)
+		results_list[["freemuxlet"]]$Freemuxlet_DropletType  <- gsub("SNG", "singlet", results_list[["freemuxlet"]]$Freemuxlet_DropletType ) %>% gsub("DBL", "doublet", .) %>% gsub("AMB", "unassigned", .)
 
 		### Update Individual column to be individual or doublet or ambiguous/unassigned ###
 		results_list[["freemuxlet"]]$Freemuxlet_Cluster <- ifelse(results_list[["freemuxlet"]]$Freemuxlet_DropletType  == "doublet", "doublet",
@@ -143,7 +143,7 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 		### Update dataframe to just be categories of interest
 		results_list[["souporcell"]] <- results_list[["souporcell"]][,c("barcode", "status","assignment")]
 		colnames(results_list[["souporcell"]]) <- c("Barcode", "Souporcell_DropletType", "Souporcell_Cluster")
-		results_list[["souporcell"]]$Souporcell_Cluster <- ifelse(results_list[["souporcell"]]$Souporcell_DropletType  == "doublet", "doublet", results_list[["souporcell"]]$Souporcell_Cluster)
+		results_list[["souporcell"]]$Souporcell_Cluster <- ifelse(results_list[["souporcell"]]$Souporcell_DropletType  == "doublet", "doublet", ifelse(results_list[["souporcell"]]$Souporcell_DropletType  == "unassigned", "unassigned", results_list[["souporcell"]]$Souporcell_Cluster))
 
 	}
 
@@ -313,7 +313,7 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 			message("Adding assignments to freeuxlet dataframe")
 			results_list[["freemuxlet"]] <- results_assignments_list[["freemuxlet"]][results_list[["freemuxlet"]], on="Freemuxlet_Cluster"]  
 
-			results_list[["freemuxlet"]]$Freemuxlet_Individual_Assignment <- ifelse(results_list[["freemuxlet"]]$Freemuxlet_DropletType == "doublet", "doublet", results_list[["freemuxlet"]]$Freemuxlet_Individual_Assignment)
+			results_list[["freemuxlet"]]$Freemuxlet_Individual_Assignment <- ifelse(results_list[["freemuxlet"]]$Freemuxlet_DropletType == "doublet", "doublet", ifelse(results_list[["freemuxlet"]]$Freemuxlet_DropletType == "unassigned", "unassigned", results_list[["freemuxlet"]]$Freemuxlet_Individual_Assignment))
 
 
 			### check for excessive NA after joining ###
@@ -387,7 +387,7 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 			message("Adding assignments to souporcell dataframe")
 			results_list[["souporcell"]] <- results_assignments_list[["souporcell"]][results_list[["souporcell"]], on="Souporcell_Cluster"]  
 
-			results_list[["souporcell"]]$Souporcell_Individual_Assignment <- ifelse(results_list[["souporcell"]]$Souporcell_DropletType == "doublet", "doublet", results_list[["souporcell"]]$Souporcell_Individual_Assignment)
+			results_list[["souporcell"]]$Souporcell_Individual_Assignment <- ifelse(results_list[["souporcell"]]$Souporcell_DropletType == "doublet", "doublet", ifelse(results_list[["souporcell"]]$Souporcell_DropletType == "unassigned", "unassigned", results_list[["souporcell"]]$Souporcell_Individual_Assignment))
 
 			### check for excessive NA after joining ###
 			if (length(which(is.na(results_list[["souporcell"]]$Freemuxlet_Individual_Assignment)))/nrow(results_list[["souporcell"]]) >= 0.5){
