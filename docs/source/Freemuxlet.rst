@@ -146,7 +146,7 @@ or you can write it straight to a file:
 
   singularity exec Demuxafy.sif bash Freemuxlet_summary.sh $FREEMUXLET_OUTDIR/freemuxlet.clust1.samples.gz > $FREEMUXLET_OUTDIR/freemuxlet_summary.tsv
 
-.. .. admonition:: Note
+.. admonition:: Note
 :: Note
 
   To check if these numbers are consistent with the expected doublet rate in your dataset, you can use our `Doublet Estimation Calculator <test.html>`__.
