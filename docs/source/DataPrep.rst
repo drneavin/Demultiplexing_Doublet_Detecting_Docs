@@ -26,7 +26,7 @@ The demultiplexing and transcriptome-based doublet detecting softwares have diff
     - The hg19 data is available at ``/ftp/release/``
     - The hg38 data is available at ``/ftp/release/20130502/supporting/GRCh38_positions/``
 
-You won't need to pre-process the single cell count data unless you are using DoubletDecon or DoubletFinder which need QC-filtered and normalized counts (for example with `Seurat <https://satijalab.org/seurat/articles/pbmc3k_tutorial.html>`__).
+You won't need to pre-process the single cell count data unless you are using :ref:`DoubletFinder<doubletfinder-docs>` or :ref:`DoubletDecon<doubletdecon-docs>` which need QC-filtered and normalized counts (for example with `Seurat <https://satijalab.org/seurat/articles/pbmc3k_tutorial.html>`__).
 
 For the demultiplexing softwares, you should filter the SNP genotypes that you will use.
 

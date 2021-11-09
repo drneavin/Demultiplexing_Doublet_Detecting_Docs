@@ -18,7 +18,7 @@ With a larger number of droplets captured, there is an increase in the proportio
 
 This has been made possible because, as the droplet-based capture technologies have been optimized, methods to pool and then demultiplex samples - assign droplets to each individual in the pool - have been developed.
 These multiplexing methods clearly decrease cost and time of scRNA-seq experiments. 
-If left in the dataset, doublets can significantly impact scientific conclusions such identifying spurious cell trajectories or false novel cell types. 
+If left in the dataset, doublets can significantly impact scientific conclusions such as identifying spurious cell trajectories or false novel cell types. 
 Therefore, it's crucial to effectively clean datasets prior to downstream analyses.
 
 In addition to demultiplexing softwares, there are also doublet detecting softwares that use the transcriptional profiles of droplets to identify doublets by simulating doublets.
@@ -31,9 +31,9 @@ In addition to demultiplexing softwares, there are also doublet detecting softwa
    :hidden:
    
    Background
+   SoftwareSelections
    Installation
    DataPrep
-   SoftwareSelections
    Doublet Estimation Calculator <test.html#http://>
    OtherSingleCellData
    Singularity
