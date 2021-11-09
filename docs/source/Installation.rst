@@ -29,6 +29,8 @@ If everything was downloaded correctly, that command should report:
     Files Demuxafy.sif.md5 and downloaded_Demuxafy.sif.md5 are identical
 
 
+If you run into any issues with downloading the image or any issue with running anything from this image, you can reach out to us by submitting an issue at `Github <https://github.com/drneavin/Demultiplexing_Doublet_Detecting_Docs/issues>`__
+
 .. admonition:: Demuxafy software versions - for the curious
   :class: dropdown
 

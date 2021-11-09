@@ -19,6 +19,8 @@ This is the data that you will need to have preparede to run DoubletDecon_:
 
   - A QC-filtered and normalized seurat object (``$SEURAT_OBJ``)
 
+    - For example, using the `Seurat Vignette <https://satijalab.org/seurat/articles/pbmc3k_tutorial.html>`__
+
     - If you run DoubletDecon_ manually, you can use any data format of interest and read in with a method that works for your data.
 
   - Output directory (``$DOUBLETDECON_OUTDIR``)

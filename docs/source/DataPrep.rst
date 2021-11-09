@@ -19,9 +19,15 @@ The demultiplexing and transcriptome-based doublet detecting softwares have diff
 
 .. NOTE::
 
-  The SNP genotype data can be for multiplexed donors in the pool **OR** it can be publicly available common SNP genotypes which can be downloaded from 1000G (`hg19 <http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/>`__ or `hg38 <http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/supporting/GRCh38_positions/>`__) or from HRC (`hg19 <http://www.haplotype-reference-consortium.org/site>`__).
+  The SNP genotype data can be for multiplexed donors in the pool **OR** it can be publicly available common SNP genotypes which can be downloaded from `1000G <https://www.internationalgenome.org/category/ftp/>`__ (hg19 and hg38) or from `HRC <http://www.haplotype-reference-consortium.org/site>`__ (hg19 only).
 
-There isn't any pre-processing that's needed for the single cell count data.
+  For 1000G, use the instructions at the above link to access the data per your preferences and you can find the required files at the following directories:
+  
+    - The hg19 data is available at ``/ftp/release/``
+    - The hg38 data is available at ``/ftp/release/20130502/supporting/GRCh38_positions/``
+
+You won't need to pre-process the single cell count data unless you are using DoubletDecon or DoubletFinder which need QC-filtered and normalized counts (for example with `Seurat <https://satijalab.org/seurat/articles/pbmc3k_tutorial.html>`__).
+
 For the demultiplexing softwares, you should filter the SNP genotypes that you will use.
 
 
@@ -38,7 +44,7 @@ We built the required softwares into the singularity image so you can run these 
 
 Filter for Common SNPs
 ^^^^^^^^^^^^^^^^^^^^^^
-First, filter the SNP genotypes for common SNPs - here we use 5% minor allele frequency.
+First, filter the SNP genotypes for common SNPs - 5% minor allele frequency should work for most datasets but you can change this to another minor allele frequency if you would like.
 
 .. code-block:: bash
 
@@ -53,7 +59,6 @@ Next, filter for the SNPs that overlap exons.
 .. NOTE::
 
   You can get an exon bed using the `UCSC table browser <https://genome.ucsc.edu/cgi-bin/hgTables>`__ (see instructions `here <https://www.biostars.org/p/93011/>`__) and we have also provided bed files for :download:`hg19 <../../references/hg19exonsUCSC.bed>` and :download:`hg38 <../../references/hg38exonsUCSC.bed>`
-
 
 .. code-block:: bash
 
