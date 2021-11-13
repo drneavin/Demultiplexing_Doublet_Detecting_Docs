@@ -3,6 +3,7 @@
 suppressMessages(suppressWarnings(library(data.table)))
 suppressMessages(suppressWarnings(library(argparse)))
 suppressMessages(suppressWarnings(library(tidyverse)))
+suppressMessages(suppressWarnings(library(future.apply)))
 
 
 
@@ -27,12 +28,43 @@ parser$add_argument("-n", "--scDblFinder", required = FALSE, type = "character",
 parser$add_argument("-c", "--scds", required = FALSE, type = "character", default=NULL, help = "Path to scds results. Only use this option if you want to include the scds results.")
 parser$add_argument("-r", "--scrublet", required = FALSE, type = "character", default=NULL, help = "Path to scrublet results. Only use this option if you want to include the scrublet results.")
 parser$add_argument("-l", "--solo", required = FALSE, type = "character", default=NULL, help = "Path to solo results. Only use this option if you want to include the solo results.")
-# parser$add_argument("-m", "--method", required = FALSE, type = "character", default=NULL, help = "Combination method. Leave blank if you just want all the combine the methods into a single dataframe.")
+parser$add_argument("-b", "--ref", required = FALSE, type = "character", default=NULL, help = "Which demultiplexing software to use as a reference for individuals when don't have assignment key for all demultiplexing method. Options are 'Demuxlet', 'Freemuxlet', 'scSplit', 'Souporcell' and 'Vireo. If blank when assignment keys are missing, default softwares to use if present are Vireo, then Demuxlet, then Freemuxlet, then Souporcell, then scSplit.")
+parser$add_argument("-p", "--pct_agreement", required = FALSE, type = "double", default=0.9, help = "The proportion of a cluster that match the 'ref' assignment to assign that cluster the individual assignment from the reference. Can be between 0.5 and 1. Default is 0.9.")
+parser$add_argument("-m", "--method", required = FALSE, type = "character", default=NULL, help = "Combination method. Options are 'MajoritySinglet'. 'AtLeastHalfSinglet', 'AnySinglet' or 'AnyDoublet'. See https://demultiplexing-doublet-detecting-docs.readthedocs.io/en/latest/CombineResults.html for detailed explanation of each intersectional method. Leave blank if you just want all the softwares to be merged into a single dataframe.")
                                         
 # get command line options, if help option encountered print help and exit,
 # otherwise if options not found on command line then set defaults, 
 args <- parser$parse_args()
 
+### Functions ###
+which.max.simple=function(x,na.rm=TRUE,tie_value="NA"){
+	if(na.rm){
+		x=x[!is.na(x)]
+	}
+	if(length(x)==0){
+		return(NA)
+	}
+	maxval=max(x)
+	if(is.na(maxval)){
+		return(NA)
+	}
+	if(sum(x %in% maxval) > 1){
+		# Ties exist, figure out what to do with them.
+		if(tie_value=="NA"){
+			return(NA)
+		}
+		if(tie_value=="random"){
+			tie_postions=which(x==maxval)
+			return(sample(tie_postions,size=1))
+		}
+		if(tie_value=="first"){
+			tie_postions=which(x==maxval)
+			return(tie_postions[1])
+		}
+	} else{
+		return(which.max(x))
+	}
+}
 
 
 ### Check to make sure user has provided at least two softwares to combine ###
@@ -76,11 +108,11 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 	if (!is.null(args$freemuxlet)){
 		message("Reading in freemuxlet results.")
 		if (file_test("-f", args$freemuxlet)){
-			results_list[["freemuxlet"]] <- fread(args$freemuxlet, sep = "\t")
+			results_list[["Freemuxlet"]] <- fread(args$freemuxlet, sep = "\t")
 		} else {
 			freemuxlet <- list.files(args$freemuxlet, pattern = ".samples.gz")
 			if (length(freemuxlet) == 1){
-					results_list[["freemuxlet"]] <- fread(paste0(args$freemuxlet, "/", freemuxlet), sep = "\t")
+					results_list[["Freemuxlet"]] <- fread(paste0(args$freemuxlet, "/", freemuxlet), sep = "\t")
 			} else {
 				message("Can't read in the freemuxlet report either from the file you provided or to find the '*.samples.gz' file in the directory you provided. Please double check your path and provide the full path to the freemuxlet file. Exiting.")
 				q()
@@ -88,15 +120,15 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 		}
 
 		### Update dataframe to just be categories of interest
-		results_list[["freemuxlet"]] <- results_list[["freemuxlet"]][,c("BARCODE", "DROPLET.TYPE", "BEST.GUESS")]
-		colnames(results_list[["freemuxlet"]]) <- c("Barcode", "Freemuxlet_DropletType", "Freemuxlet_Cluster")
+		results_list[["Freemuxlet"]] <- results_list[["Freemuxlet"]][,c("BARCODE", "DROPLET.TYPE", "BEST.GUESS")]
+		colnames(results_list[["Freemuxlet"]]) <- c("Barcode", "Freemuxlet_DropletType", "Freemuxlet_Cluster")
 
 		### update Demuxlet_DropletType  column SNG and DBL ###
-		results_list[["freemuxlet"]]$Freemuxlet_DropletType  <- gsub("SNG", "singlet", results_list[["freemuxlet"]]$Freemuxlet_DropletType ) %>% gsub("DBL", "doublet", .) %>% gsub("AMB", "unassigned", .)
+		results_list[["Freemuxlet"]]$Freemuxlet_DropletType  <- gsub("SNG", "singlet", results_list[["Freemuxlet"]]$Freemuxlet_DropletType ) %>% gsub("DBL", "doublet", .) %>% gsub("AMB", "unassigned", .)
 
 		### Update Individual column to be individual or doublet or ambiguous/unassigned ###
-		results_list[["freemuxlet"]]$Freemuxlet_Cluster <- ifelse(results_list[["freemuxlet"]]$Freemuxlet_DropletType  == "doublet", "doublet",
-																		ifelse(results_list[["freemuxlet"]]$Freemuxlet_DropletType  == "unassigned", "unassigned", gsub(",.+","",results_list[["freemuxlet"]]$Freemuxlet_Cluster)))
+		results_list[["Freemuxlet"]]$Freemuxlet_Cluster <- ifelse(results_list[["Freemuxlet"]]$Freemuxlet_DropletType  == "doublet", "doublet",
+																		ifelse(results_list[["Freemuxlet"]]$Freemuxlet_DropletType  == "unassigned", "unassigned", gsub(",.+","",results_list[["Freemuxlet"]]$Freemuxlet_Cluster)))
 
 	}
 
@@ -128,10 +160,10 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 	if (!is.null(args$souporcell)){
 		message("Reading in souporcell results.")
 		if (file_test("-f", args$souporcell)){
-			results_list[["souporcell"]] <- fread(args$souporcell, sep = "\t")
+			results_list[["Souporcell"]] <- fread(args$souporcell, sep = "\t")
 		} else {
 			tryCatch({
-				results_list[["souporcell"]] <- fread(paste0(args$souporcell, "/clusters.tsv"), sep = "\t")
+				results_list[["Souporcell"]] <- fread(paste0(args$souporcell, "/clusters.tsv"), sep = "\t")
 			},
 			error = function(e) {
 				message(e)
@@ -141,19 +173,19 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 		}
 
 		### Update dataframe to just be categories of interest
-		results_list[["souporcell"]] <- results_list[["souporcell"]][,c("barcode", "status","assignment")]
-		colnames(results_list[["souporcell"]]) <- c("Barcode", "Souporcell_DropletType", "Souporcell_Cluster")
-		results_list[["souporcell"]]$Souporcell_Cluster <- ifelse(results_list[["souporcell"]]$Souporcell_DropletType  == "doublet", "doublet", ifelse(results_list[["souporcell"]]$Souporcell_DropletType  == "unassigned", "unassigned", results_list[["souporcell"]]$Souporcell_Cluster))
+		results_list[["Souporcell"]] <- results_list[["Souporcell"]][,c("barcode", "status","assignment")]
+		colnames(results_list[["Souporcell"]]) <- c("Barcode", "Souporcell_DropletType", "Souporcell_Cluster")
+		results_list[["Souporcell"]]$Souporcell_Cluster <- ifelse(results_list[["Souporcell"]]$Souporcell_DropletType  == "doublet", "doublet", ifelse(results_list[["Souporcell"]]$Souporcell_DropletType  == "unassigned", "unassigned", results_list[["Souporcell"]]$Souporcell_Cluster))
 
 	}
 
 	if (!is.null(args$vireo)){
 		message("Reading in vireo results.")
 		if (file_test("-f", args$vireo)){
-			results_list[["vireo"]] <- fread(args$vireo, sep = "\t")
+			results_list[["Vireo"]] <- fread(args$vireo, sep = "\t")
 		} else {
 			tryCatch({
-				results_list[["vireo"]] <- fread(paste0(args$vireo, "/donor_ids.tsv"), sep = "\t")
+				results_list[["Vireo"]] <- fread(paste0(args$vireo, "/donor_ids.tsv"), sep = "\t")
 			},
 			error = function(e) {
 				message(e)
@@ -163,9 +195,9 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 		}
 		
 		### Update dataframe to just be categories of interest
-		results_list[["vireo"]] <- results_list[["vireo"]][,c("cell", "donor_id")]
-		colnames(results_list[["vireo"]]) <- c("Barcode", "vireo_Individual_Assignment")
-		results_list[["vireo"]]$vireo_DropletType  <- ifelse(results_list[["vireo"]]$vireo_Individual_Assignment == "doublet", "doublet", "singlet")
+		results_list[["Vireo"]] <- results_list[["Vireo"]][,c("cell", "donor_id")]
+		colnames(results_list[["Vireo"]]) <- c("Barcode", "Vireo_Individual_Assignment")
+		results_list[["Vireo"]]$Vireo_DropletType  <- ifelse(results_list[["Vireo"]]$Vireo_Individual_Assignment == "doublet", "doublet", ifelse(results_list[["Vireo"]]$Vireo_Individual_Assignment == "unassigned", "unassigned", "singlet"))
 
 	}
 
@@ -286,10 +318,10 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 		if (!is.null(args$freemuxlet_assignments)){
 			message("Reading in freemuxlet cluster-to-indiviudal assignments.")
 			if (file_test("-f", args$freemuxlet_assignments)){
-				results_assignments_list[["freemuxlet"]] <- fread(args$freemuxlet_assignments, sep = "\t")
+				results_assignments_list[["Freemuxlet"]] <- fread(args$freemuxlet_assignments, sep = "\t")
 			} else {
 				tryCatch({
-					results_assignments_list[["freemuxlet"]] <- fread(paste0(args$freemuxlet_assignments, "/Genotype_ID_key.txt"), sep = "\t")
+					results_assignments_list[["Freemuxlet"]] <- fread(paste0(args$freemuxlet_assignments, "/Genotype_ID_key.txt"), sep = "\t")
 				},
 				error = function(e) {
 					message("Can't read in the freemuxlet cluster-to-indiviudal assignments report either from the file you provided or to find the 'Genotype_ID_key.tsv' file in the directory you provided. Please double check your path and provide the full path to the freemuxlet cluster-to-indiviudal key file. Exiting.")
@@ -299,28 +331,29 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 
 
 			### Check for column names ###
-			if (all(!(grepl("Genotype_ID",colnames(results_assignments_list[["freemuxlet"]]))) & !(grepl("Cluster_ID", colnames(results_assignments_list[["freemuxlet"]]))))){
+			if (all(!(grepl("Genotype_ID",colnames(results_assignments_list[["Freemuxlet"]]))) & !(grepl("Cluster_ID", colnames(results_assignments_list[["Freemuxlet"]]))))){
 				message("Didn't find 'Genotype_ID' and 'Cluster_ID' in the columns of your freemuxlet cluster-to-indiviudal assignments file. Will use first column as the individual ID and the second column will be the cluster ID.")
 			}
-			colnames(results_assignments_list[["freemuxlet"]])[1:2] <- c("Freemuxlet_Individual_Assignment", "Freemuxlet_Cluster")
-			results_assignments_list[["freemuxlet"]]$Freemuxlet_Cluster <- as.character(results_assignments_list[["freemuxlet"]]$Freemuxlet_Cluster)
+			colnames(results_assignments_list[["Freemuxlet"]])[1:2] <- c("Freemuxlet_Individual_Assignment", "Freemuxlet_Cluster")
+			results_assignments_list[["Freemuxlet"]]$Freemuxlet_Cluster <- as.character(results_assignments_list[["Freemuxlet"]]$Freemuxlet_Cluster)
 
 			### remove "CLUST" from assignments ###
-			results_assignments_list[["freemuxlet"]]$Freemuxlet_Cluster <- gsub("CLUST", "", results_assignments_list[["freemuxlet"]]$Freemuxlet_Cluster)
-			results_assignments_list[["freemuxlet"]]$Correlation <- NULL
+			results_assignments_list[["Freemuxlet"]]$Freemuxlet_Cluster <- gsub("CLUST", "", results_assignments_list[["Freemuxlet"]]$Freemuxlet_Cluster)
+			results_assignments_list[["Freemuxlet"]]$Correlation <- NULL
 
 			### Join
 			message("Adding assignments to freeuxlet dataframe")
-			results_list[["freemuxlet"]] <- results_assignments_list[["freemuxlet"]][results_list[["freemuxlet"]], on="Freemuxlet_Cluster"]  
+			results_list[["Freemuxlet"]] <- results_assignments_list[["Freemuxlet"]][results_list[["Freemuxlet"]], on="Freemuxlet_Cluster"]  
 
-			results_list[["freemuxlet"]]$Freemuxlet_Individual_Assignment <- ifelse(results_list[["freemuxlet"]]$Freemuxlet_DropletType == "doublet", "doublet", ifelse(results_list[["freemuxlet"]]$Freemuxlet_DropletType == "unassigned", "unassigned", results_list[["freemuxlet"]]$Freemuxlet_Individual_Assignment))
+			results_list[["Freemuxlet"]]$Freemuxlet_Individual_Assignment <- ifelse(results_list[["Freemuxlet"]]$Freemuxlet_DropletType == "doublet", "doublet", ifelse(results_list[["Freemuxlet"]]$Freemuxlet_DropletType == "unassigned", "unassigned", results_list[["Freemuxlet"]]$Freemuxlet_Individual_Assignment))
 
 
 			### check for excessive NA after joining ###
-			if (length(which(is.na(results_list[["freemuxlet"]]$Freemuxlet_Individual_Assignment)))/nrow(results_list[["freemuxlet"]]) >= 0.5){
+			if (length(which(is.na(results_list[["Freemuxlet"]]$Freemuxlet_Individual_Assignment)))/nrow(results_list[["Freemuxlet"]]) >= 0.5){
 				message("WARNING: There are more than 50% NA assignments after joining the cluster-to-individual assignments for freemuxlet. Please double check you files if this is unexpected.")
 			}
 		}
+
 
 		if (!is.null(args$scSplit_assignments)){
 			message("Reading in scSplit_assignments cluster-to-indiviudal assignments.")
@@ -362,10 +395,10 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 		if (!is.null(args$souporcell_assignments)){
 			message("Reading in souporcell_assignments cluster-to-indiviudal assignments.")
 			if (file_test("-f", args$souporcell_assignments)){
-				results_assignments_list[["souporcell"]] <- fread(args$souporcell_assignments, sep = "\t")
+				results_assignments_list[["Souporcell"]] <- fread(args$souporcell_assignments, sep = "\t")
 			} else {
 				tryCatch({
-					results_assignments_list[["souporcell"]] <- fread(paste0(args$souporcell_assignments, "/Genotype_ID_key.txt"), sep = "\t")
+					results_assignments_list[["Souporcell"]] <- fread(paste0(args$souporcell_assignments, "/Genotype_ID_key.txt"), sep = "\t")
 				},
 				error = function(e) {
 					message("Can't read in the souporcell cluster-to-indiviudal assignments report either from the file you provided or to find the 'Genotype_ID_key.tsv' file in the directory you provided. Please double check your path and provide the full path to the souporcell cluster-to-indiviudal key file. Exiting.")
@@ -375,31 +408,129 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 
 
 			### Check for column names ###
-			if (all(!(grepl("Genotype_ID",colnames(results_assignments_list[["souporcell"]]))) & !(grepl("Cluster_ID", colnames(results_assignments_list[["souporcell"]]))))){
+			if (all(!(grepl("Genotype_ID",colnames(results_assignments_list[["Souporcell"]]))) & !(grepl("Cluster_ID", colnames(results_assignments_list[["Souporcell"]]))))){
 				message("Didn't find 'Genotype_ID' and 'Cluster_ID' in the columns of your souporcell cluster-to-indiviudal assignments. Will use first column as the individual ID and the second column will be the cluster ID.")
 			}
-			colnames(results_assignments_list[["souporcell"]])[1:2] <- c("Souporcell_Individual_Assignment", "Souporcell_Cluster")
-			results_assignments_list[["souporcell"]]$Souporcell_Cluster <- as.character(results_assignments_list[["souporcell"]]$Souporcell_Cluster)
-			results_assignments_list[["souporcell"]]$Correlation <- NULL
+			colnames(results_assignments_list[["Souporcell"]])[1:2] <- c("Souporcell_Individual_Assignment", "Souporcell_Cluster")
+			results_assignments_list[["Souporcell"]]$Souporcell_Cluster <- as.character(results_assignments_list[["Souporcell"]]$Souporcell_Cluster)
+			results_assignments_list[["Souporcell"]]$Correlation <- NULL
 
 
 			### Join
 			message("Adding assignments to souporcell dataframe")
-			results_list[["souporcell"]] <- results_assignments_list[["souporcell"]][results_list[["souporcell"]], on="Souporcell_Cluster"]  
+			results_list[["Souporcell"]] <- results_assignments_list[["Souporcell"]][results_list[["Souporcell"]], on="Souporcell_Cluster"]  
 
-			results_list[["souporcell"]]$Souporcell_Individual_Assignment <- ifelse(results_list[["souporcell"]]$Souporcell_DropletType == "doublet", "doublet", ifelse(results_list[["souporcell"]]$Souporcell_DropletType == "unassigned", "unassigned", results_list[["souporcell"]]$Souporcell_Individual_Assignment))
+			results_list[["Souporcell"]]$Souporcell_Individual_Assignment <- ifelse(results_list[["Souporcell"]]$Souporcell_DropletType == "doublet", "doublet", ifelse(results_list[["Souporcell"]]$Souporcell_DropletType == "unassigned", "unassigned", results_list[["Souporcell"]]$Souporcell_Individual_Assignment))
 
 			### check for excessive NA after joining ###
-			if (length(which(is.na(results_list[["souporcell"]]$Freemuxlet_Individual_Assignment)))/nrow(results_list[["souporcell"]]) >= 0.5){
+			if (length(which(is.na(results_list[["Souporcell"]]$Freemuxlet_Individual_Assignment)))/nrow(results_list[["Souporcell"]]) >= 0.5){
 				message("WARNING: There are more than 50% NA assignments after joining the cluster-to-individual assignments for souporcell. Please double check you files if this is unexpected.")
 			}
-			print(results_list[["souporcell"]] )
+			print(results_list[["Souporcell"]] )
 		}
 
 	}
 
 	message("\nCombining results.\n")
 	combined_results <- reduce(results_list, left_join)
+
+
+	cluster_no_assign <- c()
+
+	if (("Freemuxlet_Cluster" %in% colnames(combined_results)) & !("Freemuxlet_Individual_Assignment" %in% colnames(combined_results))){
+		cluster_no_assign <- c(cluster_no_assign, "Freemuxlet")
+	}
+
+	if (("scSplit_Cluster" %in% colnames(combined_results)) & !("scSplit_Individual_Assignment" %in% colnames(combined_results))){
+		cluster_no_assign <- c(cluster_no_assign, "scSplit")
+	}
+
+	if (("Souporcell_Cluster" %in% colnames(combined_results)) & !("Souporcell_Individual_Assignment" %in% colnames(combined_results))){
+		cluster_no_assign <- c(cluster_no_assign, "Souporcell")
+	}
+
+
+	### Check for softwares with clusters but not assignments to standardize across softwares ###
+	if ((("Souporcell_Cluster" %in% colnames(combined_results)) & !("Souporcell_Individual_Assignment" %in% colnames(combined_results)) | ("scSplit_Cluster" %in% colnames(combined_results)) & !("scSplit_Individual_Assignment" %in% colnames(combined_results)) | ("Freemuxlet_Cluster" %in% colnames(combined_results)) & !("Freemuxlet_Individual_Assignment" %in% colnames(combined_results))) & length(c(args$demuxlet, args$freemuxlet, args$scSplit, args$souporcell, args$vireo)) > 1){
+		message("\nConverting demultiplexing clusters without individual assignments to common ids.\n")
+
+
+		cluster_assign_cols <- c(paste0(cluster_no_assign,"_Cluster"), grep("Individual_Assignment", colnames(combined_results)))
+		if (!is.null(args$ref)){
+			if (!(args$ref %in% colnames(combined_results))){
+				ref <- args$ref
+			} else {
+				message("Couldn't find data for ", args$ref, " from your input. Please double check that you provided results from ", args$ref, " when you submitted this code.")
+			}
+		} else {
+			if ("Vireo_Individual_Assignment" %in% colnames(combined_results)) {
+				ref <- "Vireo"
+			} else if ("Demuxlet_Individual_Assignment" %in% colnames(combined_results)) {
+				ref <- "Demuxlet"
+			} else if ("Freemuxlet_Individual_Assignment" %in% colnames(combined_results)) {
+				ref <- "Freemuxlet"
+			} else if ("Souporcell_Individual_Assignment" %in% colnames(combined_results)) {
+				ref <- "Souporcell"
+			} else if ("scSplit_Individual_Assignment" %in% colnames(combined_results)) {
+				ref <- "scSplit"
+			} else if ("Freemuxlet_Cluster" %in% colnames(combined_results)) {
+				ref <- "Freemuxlet"
+			} else if ("Souporcell_Cluster" %in% colnames(combined_results)) {
+				ref <- "Souporcell"
+			} else if ("scSplit_Cluster" %in% colnames(combined_results)) {
+				ref <- "scSplit"
+			}
+			message("Using ", ref, " as individual assignment reference for assignment standardization.")
+		}
+		### Fix cluster_assign_cols if was one of the softwares without an individual assignment
+		cluster_assign_cols <- cluster_assign_cols[!(cluster_assign_cols %in% ref)]
+
+		### Generate IDs if scSplit, Souporcell or freemuxlet that just have weird numbers etc as clusters
+		if ((paste0(ref, "_Cluster") %in% colnames(combined_results)) & !(paste0(ref,"_Individual_Assignment") %in% colnames(combined_results))){
+			clusters <- data.table(Cluster = unique(combined_results[[paste0(ref,"_Cluster")]])[!unique(combined_results[[paste0(ref,"_Cluster")]]) %in% c("doublet", "unassigned")])
+			colnames(clusters) <- paste0(ref, "_Cluster")
+			clusters[[paste0(ref,"_Individual_Assignment")]] <- paste0("donor",seq(1:nrow(clusters)))
+			combined_results <- clusters[combined_results, on = paste0(ref, "_Cluster")]
+		}
+
+		assign_table <- list()
+		ids <- list()
+		assign_table_top <- list()
+		cluster_df <- list()
+
+		for (software in cluster_no_assign){
+			### Get a vector of the unique individual assignments
+			assign_table[[software]] <- combined_results[,list(Total=.N) , c(paste0(software,"_Cluster"))][combined_results[,list(Count=.N) ,c(paste0(software,"_Cluster"), paste0(ref,"_Individual_Assignment"))], on = paste0(software,"_Cluster")]
+			assign_table[[software]]$Proportion <- assign_table[[software]]$Count/assign_table[[software]]$Total
+			assign_table[[software]]$Total <- NULL
+			assign_table[[software]] <- assign_table[[software]][rev(order(Count))]
+
+
+			### get just the top occurences of those assignments from the table
+			assign_table_top[[software]] <- assign_table[[software]][Proportion >= args$pct_agreement]
+			cluster_df[[software]] <- assign_table_top[[software]][, .SD, .SD = c(paste0(software, "_Cluster"), paste0(ref, "_Individual_Assignment"))]
+			colnames(cluster_df[[software]]) <- c(paste0(software, "_Cluster"), paste0(software, "_Individual_Assignment"))
+
+
+			### Join to the datatable
+			results_list[[software]] <- cluster_df[[software]][,.SD, .SD = c(paste0(software,"_Cluster"), paste0(software, "_Individual_Assignment"))][results_list[[software]], on = paste0(software,"_Cluster")]
+
+
+			### Update doublets 
+			results_list[[software]][[paste0(software, "_Individual_Assignment")]] <- ifelse(is.na(results_list[[software]][[paste0(software, "_Individual_Assignment")]]), "doublet", results_list[[software]][[paste0(software, "_Individual_Assignment")]])
+			results_list[[software]][[paste0(software, "_DropletType")]] <- ifelse(results_list[[software]][[paste0(software, "_Individual_Assignment")]] == "doublet", "doublet", results_list[[software]][[paste0(software, "_DropletType")]])
+		}
+		combined_results <- reduce(results_list, left_join)
+
+	} else if (is.null(args$demuxlet) & is.null(args$vireo) & length(cluster_no_assign) == 1){
+		### If only had one software => make clusters into assignments if assignments aren't there
+		results_list[[cluster_no_assign[1]]][[paste0(cluster_no_assign[1], "_Individual_Assignment")]] <-  results_list[[cluster_no_assign[1]]][[paste0(cluster_no_assign[1], "_Cluster")]]
+		combined_results <- reduce(results_list, left_join)
+	
+	}
+
+	### Update any missing data with doublet ###
+	combined_results[is.na(combined_results)] <- "doublet"
 
 	message("\nWriting output.\n")
 	fwrite(combined_results, args$out, sep = "\t", append = FALSE)
@@ -429,6 +560,74 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 	fwrite(combined_results_summary, paste0(tools::file_path_sans_ext(args$out),"_summary.tsv"), sep = "\t", append = FALSE)
 	
 
+	## Call singlets and doublets using combined intersectional methods ##
+	if (is.null(args$method)){
+		message("No intersection classification method was provided. Output does not contain combined software cell type or donor classifications.")
+	} else {
+		if (!(args$method %in% c("MajoritySinglet", "AtLeastHalfSinglet", "AnySinglet", "AnyDoublet"))){
+			message("Did not recognize the specified method. Can be one of 'MajoritySinglet', 'AtLeastHalfSinglet', 'AnySinglet' or 'AnyDoublet'.Output does not contain combined software cell type or donor classifications.")
+		} else{
+			### Check if using demultiplexing softwares and pull the individual ids if doing so
+			if(any(grepl("Individual_Assignment", colnames(combined_results)))){
+
+				individual_assignment_list <- future_apply(combined_results[,.SD, .SDcols = grep("Individual_Assignment", colnames(combined_results), value = TRUE)], 1, function(y) table(y)[rownames(table(y)) != "doublet"])
+
+				individual_assignment <- data.table(ID = unlist(lapply(individual_assignment_list, function(y) ifelse(is.null(names(which.max.simple(y[names(y) != "doublet"]))), NA, names(which.max.simple(y[names(y) != "doublet"]))))),
+													N =  unlist(lapply(individual_assignment_list, function(y) ifelse(is.null(names(which.max.simple(y[names(y) != "doublet"]))), NA, max(y[names(y) != "doublet"]))))) ## Need to remove doublet count from table
+			}
+
+			### Make combined calls dependent on the method selected by the user
+			if (args$method == "MajoritySinglet"){ ### Only call a singlet if majority of softwares call a singlet AND majority of demultiplexing (if present) call the same donor
+				message("Using the 'MajoritySinglet' method to call droplet classification (and donor identify if demultiplexing softwares included).")
+				
+				if (!is.null(individual_assignment)){
+					### method when have demultiplexing softwares
+					combined_results$MajoritySinglet_DropletType <- ifelse(rowSums(combined_results[,.SD, .SDcols = grep("DropletType", colnames(combined_results), value = TRUE)] == "singlet") > length(grep("DropletType", colnames(combined_results)))/2  & individual_assignment$N > length(grep("Individual_Assignment", colnames(combined_results)))/2, "singlet", "doublet")
+					combined_results$MajoritySinglet_Individual_Assignment <- ifelse(combined_results$MajoritySinglet_DropletType == "singlet" & !is.na(individual_assignment$ID), individual_assignment$ID, "doublet")
+				} else {
+					### method when no demultiplexing softwares
+					combined_results$MajoritySinglet_DropletType <- ifelse(rowSums(combined_results[,.SD, .SDcols = grep("DropletType", colnames(combined_results), value = TRUE)] == "singlet") > length(grep("DropletType", colnames(combined_results)))/2, "singlet", "doublet")
+				}
+			} else if (args$method == "AtLeastHalfSinglet"){ ### Only call a singlet if at least half of softwares call a singlet AND at least half of demultiplexing (if present) call the same donor
+				message("Using the 'AtLeastHalfSinglet' method to call droplet classification (and donor identify if demultiplexing softwares included).")
+			
+				if (any(!is.null(individual_assignment))){
+					### method when have demultiplexing softwares
+					combined_results$AtLeastHalfSinglet_DropletType <- ifelse(rowSums(combined_results[,.SD, .SDcols = grep("DropletType", colnames(combined_results), value = TRUE)] == "singlet") >= length(grep("DropletType", colnames(combined_results)))/2  & individual_assignment$N >= length(grep("Individual_Assignment", colnames(combined_results)))/2, "singlet", "doublet")
+					combined_results$AtLeastHalfSinglet_Individual_Assignment <- ifelse(combined_results$AtLeastHalfSinglet_DropletType == "singlet" & !is.na(individual_assignment$ID), individual_assignment$ID, "doublet")
+				} else {
+					### method when no demultiplexing softwares
+					combined_results$AtLeastHalfSinglet_DropletType <- ifelse(rowSums(combined_results[,.SD, .SDcols = grep("DropletType", colnames(combined_results), value = TRUE)] == "singlet") >= length(grep("DropletType", colnames(combined_results)))/2, "singlet", "doublet")
+				}
+			} else if (args$method == "AnySinglet"){ ### Call a singlet if any softwares calls that droplet a singlet AND using the donor with the most consensus (call doublet if no consensus)
+				message("Using the 'AnySinglet' method to call droplet classification (and donor identify if demultiplexing softwares included).")
+			
+				if (any(!is.null(individual_assignment))){
+					### method when have demultiplexing softwares
+					combined_results$AnySinglet_DropletType <- ifelse(any(combined_results[,.SD, .SDcols = grep("DropletType", colnames(combined_results), value = TRUE)] == "singlet") & !is.na(individual_assignment$N), "singlet", "doublet")
+					combined_results$AnySinglet_Individual_Assignment <- ifelse(combined_results$AnySinglet_DropletType == "singlet" & !is.na(individual_assignment$ID), individual_assignment$ID, "doublet")
+				} else {
+				### method when no demultiplexing softwares
+					combined_results$AnySinglet_DropletType <- ifelse(any(combined_results[,.SD, .SDcols = grep("DropletType", colnames(combined_results), value = TRUE)] == "singlet"), "singlet", "doublet")
+				}
+			} else if (args$method == "AnyDoublet"){ ### Call a singlet if all softwares calls that droplet a singlet AND all softwares call the same donor
+				message("Using the 'AnyDoublet' method to call droplet classification (and donor identify if demultiplexing softwares included).")
+			
+				if (any(!is.null(individual_assignment))){
+					### method when have demultiplexing softwares
+					combined_results$AnyDoublet_DropletType <- ifelse(any(combined_results[,.SD, .SDcols = grep("DropletType", colnames(combined_results), value = TRUE)] == "doublet") | is.na(individual_assignment$N), "doublet", "singlet")
+					combined_results$AnyDoublet_Individual_Assignment <- ifelse(combined_results$AnyDoublet_DropletType == "doublet" | !is.na(individual_assignment$ID), "doublet", individual_assignment$ID)
+				} else {
+					### method when no demultiplexing softwares
+					combined_results$AnySinglet_DropletType <- ifelse(any(combined_results[,.SD, .SDcols = grep("DropletType", colnames(combined_results), value = TRUE)] == "doublet"), "doublet", "singlet")
+				}
+			}
+		}
+	message("\nWriting output with combined calls.\n")
+	fwrite(combined_results, paste0(tools::file_path_sans_ext(args$out),"_w_combined_assignments.tsv"), sep = "\t", append = FALSE)
+	}
+
+
 	message("\nDone!\n")
 }
 
@@ -436,6 +635,5 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 ## IN docs: can provide file produced any way you want but must have either "Genotype_ID" and "Cluster_ID" as headers or the first must be individual ID and second column must be cluster id
 
 
-## Possibly add methods to call singlets and doublets (probably in the future)
 
 
