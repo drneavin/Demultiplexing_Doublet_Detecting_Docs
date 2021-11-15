@@ -630,10 +630,3 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 
 	message("\nDone!\n")
 }
-
-
-## IN docs: can provide file produced any way you want but must have either "Genotype_ID" and "Cluster_ID" as headers or the first must be individual ID and second column must be cluster id
-
-
-
-
