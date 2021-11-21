@@ -173,7 +173,6 @@ An example command that combines :ref:`Demuxlet <Demuxlet-docs>` results, :ref:`
 There are a two different options for using this script:
 
 .. tabs::
-<<<<<<< HEAD
 
   .. tab:: Combine Results + Joint Droplet Calls
 
@@ -189,7 +188,6 @@ There are a two different options for using this script:
         --scds $SCDS_OUTDIR \
         --method "MajoritySinglet"
 
-=======
 
   .. tab:: Combine Results + Joint Droplet Calls
 
@@ -205,7 +203,6 @@ There are a two different options for using this script:
         --scds $SCDS_OUTDIR \
         --method "MajoritySinglet"
 
->>>>>>> 47998f08bd4ff2d31ddba4ce30f20400cc552ed3
   .. tab:: Combine Results
 
     The other option is to just combine the results together without instersectional joint calls on the assignment and droplet type for each droplet.
