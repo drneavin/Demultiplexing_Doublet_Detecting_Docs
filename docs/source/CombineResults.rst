@@ -173,6 +173,7 @@ An example command that combines :ref:`Demuxlet <Demuxlet-docs>` results, :ref:`
 There are a two different options for using this script:
 
 .. tabs::
+<<<<<<< HEAD
 
   .. tab:: Combine Results + Joint Droplet Calls
 
@@ -188,6 +189,23 @@ There are a two different options for using this script:
         --scds $SCDS_OUTDIR \
         --method "MajoritySinglet"
 
+=======
+
+  .. tab:: Combine Results + Joint Droplet Calls
+
+    The first option is to select a method to make joint calls on the individual assignment and singlet-doublet droplet types using the softwares included.
+
+    .. code-block:: bash
+
+      singularity exec Demuxafy.sif Combine_Results.R \
+        -o $OUTDIR/combined_results.tsv \
+        --demuxlet $DEMUXLET_OUTDIR \
+        --souporcell $DEMUXLET_OUTDIR \
+        --solo $SOLO_OUTDIR \
+        --scds $SCDS_OUTDIR \
+        --method "MajoritySinglet"
+
+>>>>>>> 47998f08bd4ff2d31ddba4ce30f20400cc552ed3
   .. tab:: Combine Results
 
     The other option is to just combine the results together without instersectional joint calls on the assignment and droplet type for each droplet.
@@ -226,7 +244,6 @@ Here, we show the results for the above example that also provides combined call
   - You will only have the ``combined_results_demultiplexing_summary.tsv`` file if you included demultiplexing softwares.
 
   - And you will only have the ``combined_results_w_combined_assignments.tsv`` file if you ran it with ``--method``
-
 
 Here's a deeper look at the contents of each of these results:
 
