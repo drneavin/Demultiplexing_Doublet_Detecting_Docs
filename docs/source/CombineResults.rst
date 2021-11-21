@@ -5,7 +5,27 @@ Combining Results
 
 After you have run each of the Demultiplexing and Doublet Detecting softwares you would like, it is helpful to convert them to similar nomenclarture and combine the results into a single dataframe.
 In addition, we have found it helpful to generate summaries of each of the combinations of softwares identified.
-To help streamline this process, we have provided a script that will easily integrate all the softwares you have run into a single dataframe and to generate a summary file for all the software combinations and if you ran demultiplexing softwares, it will also generate a demultiplexing summary file for the individual and cluster assignments from the demultiplexing softwares.
+To help streamline this process, we have provided a script that will easily integrate all the softwares you have run into a single dataframe and can do the following:
+
+  1. Generate a dataframe that has all the software assignments per droplet in the pool
+
+    - A tab-separated dataframe with the droplet singlet-doublet classification and the individual assignment (for demultiplexing softwares) per droplet
+
+  1. Generate a droplet type summary file
+
+    - Provides the number of droplets classified for each combination of droplet classifications by each software
+
+  1. Generate demultiplexing individual assignment summary file
+
+    - Provides the number of droplets classified for each combination of individual assignment droplet classifications by each software
+
+  1. If individuals have not been assigned to each cluster for reference-free demultiplexing softewares, will create a common assignment across all demultiplexing softwares for easy comparison
+
+  1. Combined final droplet assignment from all softwares included
+
+    - Uses one of four intersectional methods to combine software assingments together into a single combined assignment per barcode
+
+and to generate a summary file for all the software combinations and if you ran demultiplexing softwares, it will also generate a demultiplexing summary file for the individual and cluster assignments from the demultiplexing softwares.
 
 
 Data
@@ -22,7 +42,7 @@ In order to use our script to combine the results from the various demultiplexin
     - You need to provide the path to at least one software result, otherwise, it will not run.
 
 
-Merging Results with Combine_Results.r
+Merging Results with Combine_Results.R
 --------------------------------------
 
 The script has multiple options to provide the paths to each of the software results you would like to run.
@@ -95,39 +115,231 @@ Providing the possible parameter options:
                           want to include the scrublet results.
     -l SOLO, --solo SOLO  Path to solo results. Only use this option if you want
                           to include the solo results.
+    -b REF, --ref REF     Which demultiplexing software to use as a reference
+                          for individuals when don't have assignment key for all
+                          demultiplexing method. Options are 'Demuxlet',
+                          'Freemuxlet', 'scSplit', 'Souporcell' and 'Vireo. If
+                          blank when assignment keys are missing, default
+                          softwares to use if present are Vireo, then Demuxlet,
+                          then Freemuxlet, then Souporcell, then scSplit.
+    -p PCT_AGREEMENT, --pct_agreement PCT_AGREEMENT
+                          The percent of a cluster that match the 'ref'
+                          assignment to assign that cluster the individual
+                          assignment from the reference. Can be between 0.5 and
+                          1.
+    -m METHOD, --method METHOD
+                          Combination method. Options are 'MajoritySinglet'.
+                          'AtLeastHalfSinglet', 'AnySinglet' or 'AnyDoublet'.
+                          See https://demultiplexing-doublet-detecting-
+                          docs.readthedocs.io/en/latest/CombineResults.html for
+                          detailed explanation of each intersectional method.
+                          Leave blank if you just want all the softwares to be
+                          merged into a single dataframe.
+
+
+  
+.. admonition:: Combination Methods - Additional Information
+  :class: dropdown
+
+  There are four options for making combined droplet type (singlet or doublet) and individual assignment from the softwares used:
+
+    - MajoritySinglet
+
+      - If more than half of the softwares identify a droplet as a singlet, it is classified as a singlet.
+
+      - If more than half the demultiplexing softwares identify the same indivdual, that assignment is used for the droplet.
+
+    - AtLeastHalfSinglet
+
+      - If at least half of the softwares identify a droplet as a singlet, it is classified as a singlet.
+
+      - If at least half the demultiplexing softwares identify the same indivdual, that assignment is used for the droplet.
+
+    - AnySinglet
+
+      - If this droplet is identified as a singlet by any software, the droplet is classified as a singlet.
+
+      - In other words, a doublet is only called if all softwares identified that droplet as a doublet.
+
+    - AnyDoublet
+
+      - A droplet is classified as a singlet only if all softwares identify it as a singlet.
+
+      - In other words, a doublet is called if any software identifies that droplet as a doublet.
+
+
 
 An example command that combines :ref:`Demuxlet <Demuxlet-docs>` results, :ref:`Souporcell <Souporcell-docs>` results, :ref:`Solo <Solo-docs>` results and :ref:`Scds <scds-docs>` results would look like this:
+There are a two different options for using this script:
 
-.. code-block:: bash
+.. tabs::
 
-  singularity exec Demuxafy.sif Combine_Results.R \
-    -o $OUTDIR/combined_results.tsv \
-    --demuxlet $DEMUXLET_OUTDIR \
-    --souporcell $DEMUXLET_OUTDIR \
-    --solo $SOLO_OUTDIR \
-    --scds $SCDS_OUTDIR \
+  .. tab:: Combine Results + Joint Droplet Calls
+
+    The first option is to select a method to make joint calls on the individual assignment and singlet-doublet droplet types using the softwares included.
+
+    .. code-block:: bash
+
+      singularity exec Demuxafy.sif Combine_Results.R \
+        -o $OUTDIR/combined_results.tsv \
+        --demuxlet $DEMUXLET_OUTDIR \
+        --souporcell $DEMUXLET_OUTDIR \
+        --solo $SOLO_OUTDIR \
+        --scds $SCDS_OUTDIR \
+        --method "MajoritySinglet"
+
+  .. tab:: Combine Results
+
+    The other option is to just combine the results together without instersectional joint calls on the assignment and droplet type for each droplet.
+
+    .. code-block:: bash
+
+      singularity exec Demuxafy.sif Combine_Results.R \
+        -o $OUTDIR/combined_results.tsv \
+        --demuxlet $DEMUXLET_OUTDIR \
+        --souporcell $DEMUXLET_OUTDIR \
+        --solo $SOLO_OUTDIR \
+        --scds $SCDS_OUTDIR
 
 
 .. admonition:: Note
 
-  The path to the directories will work if the file names are the expected file names.
+  The path to the directories will work if the file names are the expected file names based on the example tutorials.
   However, if you used a different file naming convention or changed the names, you can also provide the full path to the exact file for each software.
 
 
 Results and Interpretation
 --------------------------
-After running the ``Combine_Results.R`` script, you should have three (or two if you didn't have any demultiplexing softwares)
+After running the ``Combine_Results.R`` script, you should have two, three or four files depending on if you used demultiplexing softwares and if you used joint droplet calling.
+Here, we show the results for the above example that also provides combined calls with the "MajoritySinglet" calls.
 
 .. code-block:: bash
 
   .
   ├── combined_results_demultiplexing_summary.tsv
   ├── combined_results_summary.tsv
+  ├── combined_results_w_combined_assignments.tsv
   └── combined_results.tsv
 
 .. admonition:: Note
 
-  You will only have the ``combined_results_demultiplexing_summary.tsv`` file if you included demultiplexing softwares.
+  - You will only have the ``combined_results_demultiplexing_summary.tsv`` file if you included demultiplexing softwares.
+
+  - And you will only have the ``combined_results_w_combined_assignments.tsv`` file if you ran it with ``--method``
+
+
+  - combined_results_demultiplexing_summary.tsv
+
+    - A summary of the number of droplets that are classified as each individual by each demultiplexing software:
+
+      +--------------------------------+-----------------------------------------+------+
+      |Demuxlet_Individual_Assignment  | Souporcell_Individual_Assignment        | N    |
+      +================================+=========================================+======+
+      |doublet                         | doublet                                 | 2706 |
+      +--------------------------------+-----------------------------------------+------+
+      |352_353                         | 352_353                                 | 1603 |
+      +--------------------------------+-----------------------------------------+------+
+      |43_43                           | 43_43                                   | 1547 |
+      +--------------------------------+-----------------------------------------+------+
+      |597_598                         | 597_598                                 | 1510 |
+      +--------------------------------+-----------------------------------------+------+
+      |349_350                         | 349_350                                 | 1450 |
+      +--------------------------------+-----------------------------------------+------+
+      |42_42                           | 42_42                                   | 1417 |
+      +--------------------------------+-----------------------------------------+------+
+      |660_661                         | 660_661                                 | 1358 |
+      +--------------------------------+-----------------------------------------+------+
+      |113_113                         | 113_113                                 | 1333 |
+      +--------------------------------+-----------------------------------------+------+
+      |39_39                           | 39_39                                   | 1289 |
+      +--------------------------------+-----------------------------------------+------+
+      |...                             | ...                                     | ...  |
+      +--------------------------------+-----------------------------------------+------+
+
+  - combined_results_summary.tsv
+
+    - A summary of the number of droplets that are classified as each droplet type (singet/doublet) by each software:
+
+    +-------------------------+-------------------------+-------------------------+-------------------------+-------+
+    | Demuxlet_DropletType    | Souporcell_DropletType  | scds_DropletType        | solo_DropletType        | N     |
+    +=========================+=========================+=========================+=========================+=======+
+    | singlet                 | singlet                 | singlet                 | singlet                 | 16193 |
+    +-------------------------+-------------------------+-------------------------+-------------------------+-------+
+    | doublet                 | doublet                 | doublet                 | doublet                 | 1717  |
+    +-------------------------+-------------------------+-------------------------+-------------------------+-------+
+    | singlet                 | singlet                 | singlet                 | doublet                 | 947   |
+    +-------------------------+-------------------------+-------------------------+-------------------------+-------+
+    | doublet                 | doublet                 | singlet                 | singlet                 | 479   |
+    +-------------------------+-------------------------+-------------------------+-------------------------+-------+
+    | singlet                 | singlet                 | doublet                 | singlet                 | 392   |
+    +-------------------------+-------------------------+-------------------------+-------------------------+-------+
+    | singlet                 | singlet                 | doublet                 | doublet                 | 345   |
+    +-------------------------+-------------------------+-------------------------+-------------------------+-------+
+    | doublet                 | doublet                 | singlet                 | doublet                 | 339   |
+    +-------------------------+-------------------------+-------------------------+-------------------------+-------+
+    | doublet                 | doublet                 | doublet                 | singlet                 | 171   |
+    +-------------------------+-------------------------+-------------------------+-------------------------+-------+
+    | doublet                 | singlet                 | singlet                 | singlet                 | 171   |
+    +-------------------------+-------------------------+-------------------------+-------------------------+-------+
+    | ...                     | ...                     | ...                     | ...                     | ...   |
+    +-------------------------+-------------------------+-------------------------+-------------------------+-------+
+
+  - combined_results.tsv
+
+    - Dataframe combining all the software results together:
+
+      +-------------------------+-------------------------+---------------------------------+-------------------------+-----------------------------------+-------------------------+-----------------------+-------------------------+-------------------------+-------------------+
+      | Barcode                 | Demuxlet_DropletType    | Demuxlet_Individual_Assignment  | Souporcell_Cluster      | Souporcell_Individual_Assignment  | Souporcell_DropletType  | scds_score            | scds_DropletType        | solo_DropletType        | solo_DropletScore |
+      +=========================+=========================+=================================+=========================+===================================+=========================+=======================+=========================+=========================+===================+
+      | AAACCTGAGATAGCAT-1      | singlet                 | 41_41                           | 6                       | 41_41                             | singlet                 | 0.116344358493288     | singlet                 | singlet                 | -8.442187         |
+      +-------------------------+-------------------------+---------------------------------+-------------------------+-----------------------------------+-------------------------+-----------------------+-------------------------+-------------------------+-------------------+
+      | AAACCTGAGCAGCGTA-1      | singlet                 | 465_466                         | 11                      | 465_466                           | singlet                 | 0.539856378453988     | singlet                 | singlet                 | -2.8096201        |
+      +-------------------------+-------------------------+---------------------------------+-------------------------+-----------------------------------+-------------------------+-----------------------+-------------------------+-------------------------+-------------------+
+      | AAACCTGAGCGATGAC-1      | singlet                 | 113_113                         | 5                       | 113_113                           | singlet                 | 0.0237184380134577    | singlet                 | singlet                 | -2.8949203        |
+      +-------------------------+-------------------------+---------------------------------+-------------------------+-----------------------------------+-------------------------+-----------------------+-------------------------+-------------------------+-------------------+
+      | AAACCTGAGCGTAGTG-1      | singlet                 | 349_350                         | 3                       | 349_350                           | singlet                 | 0.163695865366576     | singlet                 | singlet                 | -5.928284         |
+      +-------------------------+-------------------------+---------------------------------+-------------------------+-----------------------------------+-------------------------+-----------------------+-------------------------+-------------------------+-------------------+
+      | AAACCTGAGGAGTTTA-1      | singlet                 | 632_633                         | 7                       | 632_633                           | singlet                 | 0.11591462421927      | singlet                 | doublet                 | 0.2749935         |
+      +-------------------------+-------------------------+---------------------------------+-------------------------+-----------------------------------+-------------------------+-----------------------+-------------------------+-------------------------+-------------------+
+      | AAACCTGAGGCTCATT-1      | singlet                 | 39_39                           | 12                      | 39_39                             | singlet                 | 0.0479944175570073    | singlet                 | singlet                 | -5.2726507        |
+      +-------------------------+-------------------------+---------------------------------+-------------------------+-----------------------------------+-------------------------+-----------------------+-------------------------+-------------------------+-------------------+
+      | AAACCTGAGGGCACTA-1      | singlet                 | 465_466                         | 11                      | 465_466                           | singlet                 | 0.374426050641161     | singlet                 | singlet                 | -0.65760195       |
+      +-------------------------+-------------------------+---------------------------------+-------------------------+-----------------------------------+-------------------------+-----------------------+-------------------------+-------------------------+-------------------+
+      | AAACCTGAGTAATCCC-1      | singlet                 | 660_661                         | 4                       | 660_661                           | singlet                 | 0.247842972104563     | singlet                 | singlet                 | -3.5948637        |
+      +-------------------------+-------------------------+---------------------------------+-------------------------+-----------------------------------+-------------------------+-----------------------+-------------------------+-------------------------+-------------------+
+      | AAACCTGAGTAGCCGA-1      | doublet                 | doublet                         | unassigned              | doublet                           | doublet                 | 0.342998285281922     | singlet                 | singlet                 | -0.50507957       |
+      +-------------------------+-------------------------+---------------------------------+-------------------------+-----------------------------------+-------------------------+-----------------------+-------------------------+-------------------------+-------------------+
+      | ...                     | ...                     | ...                             | ...                     | ...                               | ...                     | ...                   | ...                     | ...                     | ...               |
+      +-------------------------+-------------------------+---------------------------------+-------------------------+-----------------------------------+-------------------------+-----------------------+-------------------------+-------------------------+-------------------+
+
+  - combined_results_w_combined_assignments.tsv
+
+    - Dataframe combining all the software results together + combined assignmenmt based on selected method:
+
+    +-------------------------+-------------------------+---------------------------------+-------------------------+-----------------------------------+-------------------------+-----------------------+-------------------------+-------------------------+-------------------+---------------------------------+--------------------------------------+
+    | Barcode                 | Demuxlet_DropletType    | Demuxlet_Individual_Assignment  | Souporcell_Cluster      | Souporcell_Individual_Assignment  | Souporcell_DropletType  | scds_score            | scds_DropletType        | solo_DropletType        | solo_DropletScore | MajoritySinglet_DropletType     | MajoritySinglet_Individual_Assignment|
+    +=========================+=========================+=================================+=========================+===================================+=========================+=======================+=========================+=========================+===================+=================================+======================================+
+    | AAACCTGAGATAGCAT-1      | singlet                 | 41_41                           | 6                       | 41_41                             | singlet                 | 0.116344358493288     | singlet                 | singlet                 | -8.442187         | singlet                         |  41_41                               |
+    +-------------------------+-------------------------+---------------------------------+-------------------------+-----------------------------------+-------------------------+-----------------------+-------------------------+-------------------------+-------------------+---------------------------------+--------------------------------------+
+    | AAACCTGAGCAGCGTA-1      | singlet                 | 465_466                         | 11                      | 465_466                           | singlet                 | 0.539856378453988     | singlet                 | singlet                 | -2.8096201        | singlet                         |  465_466                             |
+    +-------------------------+-------------------------+---------------------------------+-------------------------+-----------------------------------+-------------------------+-----------------------+-------------------------+-------------------------+-------------------+---------------------------------+--------------------------------------+
+    | AAACCTGAGCGATGAC-1      | singlet                 | 113_113                         | 5                       | 113_113                           | singlet                 | 0.0237184380134577    | singlet                 | singlet                 | -2.8949203        | singlet                         |  113_113                             |
+    +-------------------------+-------------------------+---------------------------------+-------------------------+-----------------------------------+-------------------------+-----------------------+-------------------------+-------------------------+-------------------+---------------------------------+--------------------------------------+
+    | AAACCTGAGCGTAGTG-1      | singlet                 | 349_350                         | 3                       | 349_350                           | singlet                 | 0.163695865366576     | singlet                 | singlet                 | -5.928284         | singlet                         |  349_350                             |
+    +-------------------------+-------------------------+---------------------------------+-------------------------+-----------------------------------+-------------------------+-----------------------+-------------------------+-------------------------+-------------------+---------------------------------+--------------------------------------+
+    | AAACCTGAGGAGTTTA-1      | singlet                 | 632_633                         | 7                       | 632_633                           | singlet                 | 0.11591462421927      | singlet                 | doublet                 | 0.2749935         | singlet                         |  632_633                             |
+    +-------------------------+-------------------------+---------------------------------+-------------------------+-----------------------------------+-------------------------+-----------------------+-------------------------+-------------------------+-------------------+---------------------------------+--------------------------------------+
+    | AAACCTGAGGCTCATT-1      | singlet                 | 39_39                           | 12                      | 39_39                             | singlet                 | 0.0479944175570073    | singlet                 | singlet                 | -5.2726507        | singlet                         |  39_39                               |
+    +-------------------------+-------------------------+---------------------------------+-------------------------+-----------------------------------+-------------------------+-----------------------+-------------------------+-------------------------+-------------------+---------------------------------+--------------------------------------+
+    | AAACCTGAGGGCACTA-1      | singlet                 | 465_466                         | 11                      | 465_466                           | singlet                 | 0.374426050641161     | singlet                 | singlet                 | -0.65760195       | singlet                         |  465_466                             |
+    +-------------------------+-------------------------+---------------------------------+-------------------------+-----------------------------------+-------------------------+-----------------------+-------------------------+-------------------------+-------------------+---------------------------------+--------------------------------------+
+    | AAACCTGAGTAATCCC-1      | singlet                 | 660_661                         | 4                       | 660_661                           | singlet                 | 0.247842972104563     | singlet                 | singlet                 | -3.5948637        | singlet                         |  660_661                             |
+    +-------------------------+-------------------------+---------------------------------+-------------------------+-----------------------------------+-------------------------+-----------------------+-------------------------+-------------------------+-------------------+---------------------------------+--------------------------------------+
+    | AAACCTGAGTAGCCGA-1      | doublet                 | doublet                         | unassigned              | doublet                           | doublet                 | 0.342998285281922     | singlet                 | singlet                 | -0.50507957       | doublet                         |  doublet                             |
+    +-------------------------+-------------------------+---------------------------------+-------------------------+-----------------------------------+-------------------------+-----------------------+-------------------------+-------------------------+-------------------+---------------------------------+--------------------------------------+
+    | ...                     | ...                     | ...                             | ...                     | ...                               | ...                     | ...                   | ...                     | ...                     | ...               | ...                             | ...                                  |
+    +-------------------------+-------------------------+---------------------------------+-------------------------+-----------------------------------+-------------------------+-----------------------+-------------------------+-------------------------+-------------------+---------------------------------+--------------------------------------+
+
 
 Here's a deeper look at the contents of each of these cells:
 

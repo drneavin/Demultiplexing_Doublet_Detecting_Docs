@@ -9,8 +9,8 @@ Just download the singluarity image with:
 
   .. code-block:: bash
 
-    wget https://www.dropbox.com/s/2v7gv3neseg3g5v/Demuxafy.sif
-    wget https://www.dropbox.com/s/un1wrt27eab764f/Demuxafy.sif.md5
+    wget https://www.dropbox.com/s/1gzuoja31m953lo/Demuxafy.sif
+    wget https://www.dropbox.com/s/jiaqqw8qx123yyn/Demuxafy.sif.md5
 
 
 
@@ -34,14 +34,14 @@ If you run into any issues with downloading the image or any issue with running 
 .. admonition:: Demuxafy software versions - for the curious
   :class: dropdown
 
-  Image build date: 11 October, 2021
-
+  Image build date: 20 November, 2021
+ 
     +----------------------------+---------------------------+-------------------------------+
     | Software Group             | Software                  | Version                       |
     +============================+===========================+===============================+
-    |  Demultiplexing            | ``popscle``               | No versioning provided        |
-    |                            |  - ``demuxlet``           | for ``popscle`` yet           |
-    |                            |  - ``freemuxlet``         | but includes ``demuxlet v 2`` |
+    |  Demultiplexing            | ``popscle``               |                               |
+    |                            |  - ``demuxlet``           | v0.1-beta                     |
+    |                            |  - ``freemuxlet``         |                               |
     |                            +---------------------------+-------------------------------+
     |                            | ``scSplit``               | v1.0.8.2                      |
     |                            +---------------------------+-------------------------------+
@@ -55,13 +55,13 @@ If you run into any issues with downloading the image or any issue with running 
     |                            +---------------------------+-------------------------------+
     |                            | ``DoubletFinder``         | v2.0.3                        |
     |                            +---------------------------+-------------------------------+
-    |                            | ``scDblFinder``           | v1.6.0                        |
+    |                            | ``scDblFinder``           | v1.8.0                        |
     |                            +---------------------------+-------------------------------+
     |                            | ``scds``                  | v1.9.1                        |
     |                            +---------------------------+-------------------------------+
     |                            | ``scrublet``              | v0.2.3                        |
     |                            +---------------------------+-------------------------------+
-    |                            | ``solo``                  | v1.0                          |
+    |                            | ``solo``                  | v1.1                          |
     +----------------------------+---------------------------+-------------------------------+
     | Supporting Softwares       | ``minimap2``              | v2.7-r654                     |
     |                            +---------------------------+-------------------------------+
@@ -77,17 +77,17 @@ If you run into any issues with downloading the image or any issue with running 
     |                            +---------------------------+-------------------------------+
     |                            | ``freebayes``             | v1.3.5                        |
     |                            +---------------------------+-------------------------------+
-    |                            | ``cellSNP-lite``          | v1.2.1                        |
+    |                            | ``cellSNP-lite``          | v1.2.2                        |
     +----------------------------+---------------------------+-------------------------------+
-    | R Supporting Packages      | ``argparse``              | v2.1.1                        |
-    | (R v4.1.1)                 +---------------------------+-------------------------------+
-    |                            | ``ComplexHeatmap``        | v2.8.0                        |
+    | R Supporting Packages      | ``argparse``              | v2.1.2                        |
+    | (R v4.1.2)                 +---------------------------+-------------------------------+
+    |                            | ``ComplexHeatmap``        | v2.10.0                       |
     |                            +---------------------------+-------------------------------+
     |                            | ``vcfR``                  | v1.12.0                       |
     |                            +---------------------------+-------------------------------+
     |                            | ``Seurat``                | 4.0.5                         |
     |                            +---------------------------+-------------------------------+
-    |                            | ``SingleCellExperiment``  | v1.14.1                       |
+    |                            | ``SingleCellExperiment``  | v1.16.1                       |
     +----------------------------+---------------------------+-------------------------------+
     | Python Supporting Packages | ``argparse``              | v1.4.0                        |
     | (Python v3.7.2)            +---------------------------+-------------------------------+
@@ -99,11 +99,11 @@ If you run into any issues with downloading the image or any issue with running 
     |                            +---------------------------+-------------------------------+
     |                            | ``PyVCF``                 | v0.6.8                        |
     |                            +---------------------------+-------------------------------+
-    |                            | ``scipy``                 | v1.7.1                        |
+    |                            | ``scipy``                 | v1.7.2                        |
     |                            +---------------------------+-------------------------------+
     |                            | ``scvi-tools``            | v0.14.1                       |
     |                            +---------------------------+-------------------------------+
-    |                            | ``umap-learn``            | v0.5.1                        |
+    |                            | ``umap-learn``            | v0.5.2                        |
     +----------------------------+---------------------------+-------------------------------+
 
 
