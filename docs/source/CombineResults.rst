@@ -129,7 +129,7 @@ After running the ``Combine_Results.R`` script, you should have three (or two if
 
   You will only have the ``combined_results_demultiplexing_summary.tsv`` file if you included demultiplexing softwares.
 
-Here's a deeper look at the contents of each of these cells:
+Here's a deeper look at the contents of each of these results:
 
  - ``combined_results.tsv``
   
