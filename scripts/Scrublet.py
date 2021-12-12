@@ -12,7 +12,7 @@ parser.add_argument("-c", "--min_counts", required = False, default = 3, type = 
 parser.add_argument("-e", "--min_cells", required = False, default = 3, type = int, help = "Used for gene filtering prior to PCA. Genes expressed at fewer than min_counts in fewer than are excluded.")
 parser.add_argument("-v", "--min_gene_variability_pctl", required = False, default = 85, type = int, help = "Used for gene filtering prior to PCA. Keep the most highly variable genes in the top min_gene_variability_pctl percentile), as measured by the v-statistic [Klein et al., Cell 2015].")
 parser.add_argument("-p", "--n_prin_comps", required = False, default = 30, type = int, help = "Number of principal components used to embed the transcriptomes priorto k-nearest-neighbor graph construction.")
-parser.add_argument("-t", "--scrublet_doublet_threshold", required = False, default = None, type = float, help = "Manually Set the scrublet doublet threshold location. For running a second time if scrublet incorreclty places the threshold the first time")
+parser.add_argument("-t", "--scrublet_doublet_threshold", required = False, default = None, type = float, help = "Manually Set the scrublet doublet threshold location. For running a second time if scrublet incorrectly places the threshold the first time")
 parser.add_argument("-o", "--outdir", required = False, default = os.getcwd(), help = "The output directory")
 args = parser.parse_args()
 

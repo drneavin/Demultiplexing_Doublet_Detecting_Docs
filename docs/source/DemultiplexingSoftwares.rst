@@ -24,6 +24,6 @@ However, :ref:`Souporcell <Souporcell-docs>` and :ref:`Vireo <Vireo-docs>` are a
 
 We highly recommend using :ref:`Souporcell <Souporcell-docs>` if only to estimate the percentage of ambient RNA in your pool.
 As far as we are aware, this is the only software that leverages SNP genotype data to estimate ambient RNA in multiplexed pools and it is helpful to identify high ambient RNA which is sometimes undetectable with basic QC metrics.
-We view this as suppelementary to other ambient RNA methods that use the transcriptional profile to estimate and remove ambient RNA per droplet.
+We view this as supplementary to other ambient RNA methods that use the transcriptional profile to estimate and remove ambient RNA per droplet.
 
 If you don't know which demultiplexing software(s) to run, take a look at our :ref:`Software Selection Recommendations <SoftwareSelection-docs>` based on your dataset or use our **add widget link here**

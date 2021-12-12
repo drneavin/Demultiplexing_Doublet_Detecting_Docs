@@ -1,27 +1,29 @@
 .. _scDblFinder-docs:
 
-scDblFinder Tutorial
+ScDblFinder Tutorial
 ===========================
 
-.. _scDblFinder: https://github.com/plger/scDblFinder
+.. _ScDblFinder: https://github.com/plger/scDblFinder
 
 scDblFinder is a transcriptome-based doublet detecting method that uses doublet simulation from droplets in the dataset to identify doublets.
-We have provided a wrapper script that takes common arguments for scDblFinder_ and also provide example code for you to run manually if you prefer.
+We have provided a wrapper script that takes common arguments for ScDblFinder_ and also provide example code for you to run manually if you prefer.
 
 
 
 Data
 ----
-This is the data that you will need to have preparede to run scDblFinder_:
+This is the data that you will need to have prepare to run ScDblFinder_:
 
 .. admonition:: Required
   :class: important
 
-  - A counts matrix (``$MATRIX``)
+  - A counts matrix (``$MATRIX_DIR``)
   
-    - DoubletDetection expects counts to be in the cellranger output format (directory containint ``barcodes.tsv``, ``genes.tsv`` and ``matrix.mtx`` **or** ``barcodes.tsv.gz``, ``features.tsv.gz`` and ``matrix.mtx.gz``)
+    - The directory path containing your cellranger counts matrix files
 
-	  - If you don't have your data in this format, you can run scDblFinder_ manually in R and load the data in using a method of your choosing.
+    - ScDblFinder_ expects counts to be in the cellranger output format (directory containing ``barcodes.tsv``, ``genes.tsv`` and ``matrix.mtx`` **or** ``barcodes.tsv.gz``, ``features.tsv.gz`` and ``matrix.mtx.gz``)
+
+	  - If you don't have your data in this format, you can run ScDblFinder_ manually in R and load the data in using a method of your choosing.
 
   - Output directory (``$SCDBLFINDER_OUTDIR``)
 
@@ -30,9 +32,9 @@ This is the data that you will need to have preparede to run scDblFinder_:
 
 
 
-Run scDblFinder
+Run ScDblFinder
 ----------------
-You can either run scDblFinder_ with the wrapper script we have provided or you can run it manually if you would prefer to alter more parameters.
+You can either run ScDblFinder_ with the wrapper script we have provided or you can run it manually if you would prefer to alter more parameters.
 
 .. tabs::
 
@@ -40,13 +42,13 @@ You can either run scDblFinder_ with the wrapper script we have provided or you 
 
     .. code-block:: bash
 
-		  singularity exec Demuxafy.sif scDblFinder.R -o $SCDBLFINDER_OUTDIR -t $MATRIX
+		  singularity exec Demuxafy.sif scDblFinder.R -o $SCDBLFINDER_OUTDIR -t $MATRIX_DIR
 
 
   .. tab:: Run in R
 
     First, you will have to start R.
-    We have built R and all the required software to run scDblFinder_ into the singularity image so you can run it directly from the image.
+    We have built R and all the required software to run ScDblFinder_ into the singularity image so you can run it directly from the image.
 
     .. code-block:: bash
 
@@ -54,7 +56,7 @@ You can either run scDblFinder_ with the wrapper script we have provided or you 
 
 
     That will open R in your terminal.
-    Next, you can load all the libraries and run scDblFinder_.
+    Next, you can load all the libraries and run ScDblFinder_.
 
     .. code-block:: R
 
@@ -100,9 +102,9 @@ You can either run scDblFinder_ with the wrapper script we have provided or you 
 
 
 
-scDblFinder Results and Interpretation
+ScDblFinder Results and Interpretation
 ----------------------------------------
-After running the scDblFinder_ with the wrapper script or manually you should have two files in the ``$SCDBLFINDER_OUTDIR``:
+After running the ScDblFinder_ with the wrapper script or manually you should have two files in the ``$SCDBLFINDER_OUTDIR``:
 
 .. code-block:: bash
 
@@ -114,7 +116,7 @@ Here's a more detaild description of each of those files:
 
 - ``scDblFinder_doublet_summary.tsv``
 
-  - A sumamry of the number of singlets and doublets predicted by scDblFinder_.
+  - A sumamry of the number of singlets and doublets predicted by ScDblFinder_.
 
     +----------------+-----------+
     |Classification  | Droplet N |
@@ -124,11 +126,11 @@ Here's a more detaild description of each of those files:
     |singlet         | 17659     |
     +----------------+-----------+
 
-    - To check whether the numbe of doublets identified by scDblFinder_ is consistent with the expected doublet rate expected based on the number of droplets that you captured, you can use our `Expected Doublet Estimation Calculator <test.html>`__.
+    - To check whether the numbe of doublets identified by ScDblFinder_ is consistent with the expected doublet rate expected based on the number of droplets that you captured, you can use our `Expected Doublet Estimation Calculator <test.html>`__.
 
 - ``scDblFinder_doublets_singlets.tsv``
 
-  - The per-barcode singlet and doublet classification from scDblFinder_.
+  - The per-barcode singlet and doublet classification from ScDblFinder_.
 
     +-------------------------+-------------------------+--------------------------+
     | Barcode                 | scDblFinder_DropletType | scDblFinder_Score        |
@@ -153,12 +155,12 @@ Here's a more detaild description of each of those files:
     +-------------------------+-------------------------+--------------------------+
 
 
-Merging Results with Other Software Restults
+Merging Results with Other Software Results
 --------------------------------------------
 We have provided a script that will help merge and summarize the results from multiple softwares together.
 See :ref:`Combine Results <Combine-docs>`.
 
 Citation
 --------
-If you used this workflow for analysis, please reference our paper (REFERENCE) as well as `scDblFinder <https://github.com/plger/scDblFinder>`__.
+If you used the Demuxafy platform for analysis, please reference our paper (REFERENCE) as well as `ScDblFinder <https://github.com/plger/scDblFinder>`__.
 

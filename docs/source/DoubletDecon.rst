@@ -5,14 +5,14 @@ DoubletDecon Tutorial
 
 .. _DoubletDecon: https://github.com/EDePasquale/DoubletDecon
 
-DoubletDecon_ is a transcription-based doublet detction software that uses deconvolution to identify doublets using the `R` statistical software.
+DoubletDecon_ is a transcription-based doublet detection software that uses deconvolution to identify doublets using the `R` statistical software.
 We have provided a wrapper script that takes common arguments for DoubletDecon_ and also provide example code for you to run manually if you prefer.
 
 
 
 Data
 ----
-This is the data that you will need to have preparede to run DoubletDecon_:
+This is the data that you will need to have prepare to run DoubletDecon_:
 
 .. admonition:: Required
   :class: important
@@ -41,7 +41,7 @@ You can either run DoubletDecon_ with the wrapper script we have provided or you
       For example: 0.6, 0.7, 0.8, 0.9, 1, and 1.1.
       Then we select the results that predict the number of doublets closest to the expected doublet number.
       You can estimate that number with our **doublet calculator**
-      The *rhop* paramenter can be set with ``-r`` or ``--rhop`` in the command below.
+      The *rhop* parameter can be set with ``-r`` or ``--rhop`` in the command below.
 
     .. code-block:: bash
 
@@ -63,7 +63,7 @@ You can either run DoubletDecon_ with the wrapper script we have provided or you
         -o OUT, --out OUT     The output directory where results will be saved
         -s SEURAT_OBJECT, --seurat_object SEURAT_OBJECT
                               A QC, normalized seurat object with
-                              classificaitons/clusters as Idents().
+                              classifications/clusters as Idents().
         -g NUM_GENES, --num_genes NUM_GENES
                               Number of genes to use in
                               'Improved_Seurat_Pre_Process' function.
@@ -88,7 +88,7 @@ You can either run DoubletDecon_ with the wrapper script we have provided or you
                               Whether to use centroids instead of medoids for
                               doublet detecting.
         -d NUM_DOUBS, --num_doubs NUM_DOUBS
-                              The nunmber of doublets to simulate for each cluster
+                              The number of doublets to simulate for each cluster
                               pair.
         -5 ONLY50, --only50 ONLY50
                               Whether to only compute doublets as 50:50 ratio.
@@ -212,7 +212,7 @@ These are the files that we think will be the most helpful for users:
 
 - ``DoubletDecon_doublet_summary.tsv``
   
-  - A sumamry of the number of singlets and doublets predicted by DoubletDecon_.
+  - A summary of the number of singlets and doublets predicted by DoubletDecon_.
 
     +----------------+-----------+
     |Classification  | Droplet N |
@@ -245,7 +245,7 @@ These are the files that we think will be the most helpful for users:
     +-------------------------+--------------------------+
 
 
-Merging Results with Other Software Restults
+Merging Results with Other Software Results
 --------------------------------------------
 We have provided a script that will help merge and summarize the results from multiple softwares together.
 See :ref:`Combine Results <Combine-docs>`.
@@ -253,4 +253,4 @@ See :ref:`Combine Results <Combine-docs>`.
 
 Citation
 --------
-If you used this workflow for analysis, please reference our paper (REFERENCE) as well as `DoubletDecon <https://www.sciencedirect.com/science/article/pii/S2211124719312860>`__.
+If you used the Demuxafy platform for analysis, please reference our paper (REFERENCE) as well as `DoubletDecon <https://www.sciencedirect.com/science/article/pii/S2211124719312860>`__.

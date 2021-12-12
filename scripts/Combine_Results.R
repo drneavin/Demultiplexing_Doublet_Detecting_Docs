@@ -483,7 +483,7 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 			message("Using ", ref, " as individual assignment reference for assignment standardization.")
 		}
 		### Fix cluster_assign_cols if was one of the softwares without an individual assignment
-		cluster_assign_cols <- cluster_assign_cols[!(cluster_assign_cols %in% ref)]
+		cluster_assign_cols <- cluster_assign_cols[!(cluster_assign_cols %in% paste0(ref,"_Cluster"))]
 
 		### Generate IDs if scSplit, Souporcell or freemuxlet that just have weird numbers etc as clusters
 		if ((paste0(ref, "_Cluster") %in% colnames(combined_results)) & !(paste0(ref,"_Individual_Assignment") %in% colnames(combined_results))){

@@ -6,9 +6,9 @@ Souporcell Tutorial
 .. _Souporcell: https://github.com/wheaton5/souporcell
 
 Souporcell_ is a genotype-free demultiplexing software that does not require you to have SNP genotypes the donors in your multiplexed capture.
-However, it can natively integrate SNP genotypes into it's demultiplexing if you have them available for **all** the donors in your pool.
-If you don't have the reference SNP genotypes for all the donors in your multiplexed pool, we have provided some scripts that will help identify clusters from given donors after running Souporcell_ without the SNP genotuypes.
-Depdening on your downstream analyses, if you have reference SNP genotypes for donors in your pool, you could also use :ref:`Demuxlet <Demuxlet-docs>`, or :ref:`Vireo<Vireo-docs>`.
+However, it can natively integrate SNP genotypes into the demultiplexing if you have them available for **all** the donors in your pool.
+If you don't have the reference SNP genotypes for all the donors in your multiplexed pool, we have provided some scripts that will help identify clusters from given donors after running Souporcell_ without the SNP genotypes.
+Depending on your downstream analyses, if you have reference SNP genotypes for donors in your pool, you could also use :ref:`Demuxlet <Demuxlet-docs>`, or :ref:`Vireo<Vireo-docs>`.
 
 One advantage that we have found immensely helpful about Souporcell_ is that it provides an ambient RNA estimate for the pool.
 This can be helpful to identify samples that may have high ambient RNA estimates early in the analysis pipeline so that it can be accounted for throughout downstream analyses.
@@ -20,7 +20,7 @@ This can be helpful to identify samples that may have high ambient RNA estimates
 
 Data
 ----
-This is the data that you will need to have preparede to run Souporcell_:
+This is the data that you will need to have prepare to run Souporcell_:
 
 .. admonition:: Required
   :class: important
@@ -32,8 +32,6 @@ This is the data that you will need to have preparede to run Souporcell_:
       - If you have reference SNP genotypes for individuals in your pool, you can use those
 
       - If you do not have reference SNP genotypes, they can be from any large population resource (i.e. 1000 Genomes or HRC)
-
-    - Filter for common SNPs (> 5% minor allele frequency) and SNPs overlapping genes
 
     - Filter for common SNPs (> 5% minor allele frequency) and SNPs overlapping genes
 
@@ -77,7 +75,16 @@ You can run Souporcell_ with or without reference SNP genotypes - follow the ins
 
       singularity exec Demuxafy.sif souporcell_pipeline.py -i $BAM -b $BARCODES -f $FASTA -t $THREADS -o $SOUPORCELL_OUTDIR -k $N --known_genotypes $VCF --known_genotypes_sample_names donor1 donor donor3 donor4
 
-If souporcell is successfull, you will have these files in your ``$SOUPORCELL_OUTDIR``:
+    .. admonition:: Note
+
+      Souporcell can currently only be executed when either **all** or **none** of the individuals that have been pooled have SNP genotypes.
+      Further, the output still has cluster numbers but they should correspond to the order that you listed your individuals.
+      For example, if you have two individuals in your pool (donorA and donorB) and input them as ``--known_genotypes_sample_names donorA donorB``, then the output will have two clusters: 0 and 1.
+      donorA will correspond to 0 and donorB will correspond to 1.
+
+      Even when we have reference SNP genotypes, we typically runn Souporcell without reference SNP genotypes and then use the cluster vs individual correlations (below) to assign clusters to individuals.
+
+If Souporcell_ is successful, you will have these files in your ``$SOUPORCELL_OUTDIR``:
 
 .. code-block:: bash
 
@@ -169,7 +176,7 @@ or you can write the results to file:
 
 
 
-If the souporcell summary is successfull, you will have this new file in your ``$SOUPORCELL_OUTDIR``:
+If the souporcell summary is successful, you will have this new file in your ``$SOUPORCELL_OUTDIR``:
 
 .. code-block:: bash
   :emphasize-lines: 21
@@ -238,7 +245,7 @@ If you have reference SNP genotypes for some or all of the donors in your pool, 
                                                       The output directory where results will be saved
       -c CLUSTER_VCF, --cluster_vcf CLUSTER_VCF
                                                       A QC, normalized seurat object with
-                                                      classificaitons/clusters as Idents().
+                                                      classifications/clusters as Idents().
       -o OUTDIR, --outdir OUTDIR
                                                       Number of genes to use in
                                                       'Improved_Seurat_Pre_Process' function.
@@ -495,7 +502,7 @@ If you have reference SNP genotypes for some or all of the donors in your pool, 
 After correlating the cluster and reference donor SNP genotypes, you should have the new results in your directory:
 
 
-If the souporcell summary is successfull, you will have this new file in your ``$SOUPORCELL_OUTDIR``:
+If the souporcell summary is successful, you will have this new file in your ``$SOUPORCELL_OUTDIR``:
 
 .. code-block:: bash
   :emphasize-lines: 15,16,19,20
@@ -536,14 +543,14 @@ Additional details about outputs are available below in the :ref:`Souporcell Res
 Souporcell Results and Interpretation
 -------------------------------------
 After running the Souporcell_ steps and summarizing the results, you will have a number of files from some of the intermediary steps. 
-Theses are the files that most users will find the most informative:
+These are the files that most users will find the most informative:
 
 
     - To check if these numbers are consistent with the expected doublet rate in your dataset, you can use our `Expected Doublet Estimation Calculator <test.html>`__.
 
   - ``clusters.tsv``
 
-    - The Souporcell_ droplet classifications with the log probabilitites of each donor and doublet vs singlet.
+    - The Souporcell_ droplet classifications with the log probabilities of each donor and doublet vs singlet.
 
       +-------------------------+----------+-----------------+-------------------------+-------------------------+-------------------------+--------------------------+-------------------------+-------------------------+----------------------+-------------------------+---------------------------+-------------------------+------------------------+-------------------------+-------------------------+--------------------------+------------------------+----------------------+
       | barcode                 | status   | assignment      | log_prob_singleton      | log_prob_doublet        | cluster0                |cluster1                  | cluster2                | cluster3                | cluster4             | cluster5                | cluster6                  | cluster7                | cluster8               |cluster9                 | cluster10               | cluster11                | cluster12              | cluster13            |
@@ -573,7 +580,7 @@ If you ran the ``Assign_Indiv_by_Geno.R`` script, you will also have the followi
 
   - ``Genotype_ID_key.txt``
 
-    - Key of the cluster and assignments for each individual and the pearson correlation coefficient.
+    - Key of the cluster and assignments for each individual and the Pearson correlation coefficient.
 
       +-------------+------------+-------------+
       | Genotype_ID | Cluster_ID | Correlation |
@@ -610,13 +617,13 @@ If you ran the ``Assign_Indiv_by_Geno.R`` script, you will also have the followi
 
   - ``ref_clust_pearson_correlation.png``
 
-    - Figure of the pearson correlation coefficients for each cluster-individual pair.
+    - Figure of the Pearson correlation coefficients for each cluster-individual pair.
 
       .. figure:: _figures/OneK1K_scRNA_Sample54_souporcell_pearson_correlation.png
 
   - ``ref_clust_pearson_correlations.tsv``
 
-    - All of the pearson correlation coefficients between the clusters and the individuals
+    - All of the Pearson correlation coefficients between the clusters and the individuals
 
       +---------+---------------------+---------------------+---------------------+---------------------+---------------------+-----+
       | Cluster |          113_113    |          349_350    |          352_353    |          39_39      |          40_40      | ... |
@@ -635,7 +642,7 @@ If you ran the ``Assign_Indiv_by_Geno.R`` script, you will also have the followi
       +---------+---------------------+---------------------+---------------------+---------------------+---------------------+-----+
 
 
-Merging Results with Other Software Restults
+Merging Results with Other Software Results
 --------------------------------------------
 We have provided a script that will help merge and summarize the results from multiple softwares together.
 See :ref:`Combine Results <Combine-docs>`.
@@ -643,4 +650,4 @@ See :ref:`Combine Results <Combine-docs>`.
 
 Citation
 --------
-If you used this workflow for analysis, please reference our paper (REFERENCE) as well as `Souporcell <https://www.nature.com/articles/s41592-020-0820-1>`__.
+If you used the Demuxafy platform for analysis, please reference our paper (REFERENCE) as well as `Souporcell <https://www.nature.com/articles/s41592-020-0820-1>`__.

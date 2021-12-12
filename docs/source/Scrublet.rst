@@ -13,12 +13,12 @@ We have provided a wrapper script that enables Scrublet_ to be easily run from t
 
 Data
 ----
-This is the data that you will need to have preparede to run Scrublet_:
+This is the data that you will need to have prepare to run Scrublet_:
 
 .. admonition:: Required
   :class: important
 
-  - A counts matrix (``$MATRIX``)
+  - A counts matrix (``$MATRIX_DIR``)
   
     - DoubletDetection expects counts to be in the cellranger output format (directory containint ``barcodes.tsv``, ``genes.tsv`` and ``matrix.mtx`` **or** ``barcodes.tsv.gz``, ``features.tsv.gz`` and ``matrix.mtx.gz``)
 
@@ -47,7 +47,7 @@ You can either run Scrublet_ with the wrapper script we have provided or you can
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif Scrublet.py -m $MATRIX -o $SCRUBLET_OUTDIR
+      singularity exec Demuxafy.sif Scrublet.py -m $MATRIX_DIR -o $SCRUBLET_OUTDIR
 
     To see all the parameters that this wrapper script will accept, run:
 
@@ -90,7 +90,7 @@ You can either run Scrublet_ with the wrapper script we have provided or you can
                   construction.
       -t SCRUBLET_DOUBLET_THRESHOLD, --scrublet_doublet_threshold SCRUBLET_DOUBLET_THRESHOLD
                   Manually Set the scrublet doublet threshold location.
-                  For running a second time if scrublet incorreclty
+                  For running a second time if scrublet incorrectly
                   places the threshold the first time
       -o OUTDIR, --outdir OUTDIR
                   The output directory
@@ -206,7 +206,7 @@ We have found these to be the most helpful:
 
 - ``scrublet_summary.tsv``
 
-  - A sumamry of the number of singlets and doublets predicted by Scrublet_.
+  - A summary of the number of singlets and doublets predicted by Scrublet_.
 
   +------------------------------+-----------+
   | scrublet_DropletType         | Droplet N |
@@ -256,7 +256,7 @@ We have found these to be the most helpful:
 
     - In the case of the left sample, we would rerun with different parameters to try to get a better distribution and possibly manually set the threshold to ~0.2 depending on the results. In the event that we can't achieve a clear bimodal distribution, we don't use scrublet for doublet detecting.
 
-Merging Results with Other Software Restults
+Merging Results with Other Software Results
 --------------------------------------------
 We have provided a script that will help merge and summarize the results from multiple softwares together.
 See :ref:`Combine Results <Combine-docs>`.
@@ -264,4 +264,4 @@ See :ref:`Combine Results <Combine-docs>`.
 
 Citation
 --------
-If you used this workflow for analysis, please reference our paper (REFERENCE) as well as `Scrublet <https://www.cell.com/cell-systems/pdfExtended/S2405-4712(18)30474-5>`__.
+If you used the Demuxafy platform for analysis, please reference our paper (REFERENCE) as well as `Scrublet <https://www.cell.com/cell-systems/pdfExtended/S2405-4712(18)30474-5>`__.

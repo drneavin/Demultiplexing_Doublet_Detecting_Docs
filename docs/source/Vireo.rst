@@ -36,8 +36,6 @@ This is the data that you will need to have preparede to run Vireo_:
 
     - Filter for common SNPs (> 5% minor allele frequency) and SNPs overlapping genes
 
-    - Filter for common SNPs (> 5% minor allele frequency) and SNPs overlapping genes
-
   - Barcode file (``$BARCODES``)
 
   - Number of samples in pool (``$N``)
@@ -60,17 +58,17 @@ First, you need to count the number of alleles at each SNP in each droplet using
 
 .. code-block:: bash
 
-  singularity exec Demuxafy.sif cellsnp-lite -s $BAM -b $BARCODES -O $VIREO_OUTDIR -R $VCF -p 20 --minMAF 0.1 --minCOUNT 20
+  singularity exec Demuxafy.sif cellsnp-lite -s $BAM -b $BARCODES -O $VIREO_OUTDIR -R $VCF -p 20 --minMAF 0.1 --minCOUNT 20 --gzip
 
 You can alter the ``-p``, ``--minMAF`` and ``--minCOUNT`` parameters to fit your data and your needs.
-We have found these settings to work well with our data
+We have found these settings to work well with our data.
 
-If the pileup is successfull, you will have this new file in your ``$VIREO_OUTDIR``:
+If the pileup is successful, you will have this new file in your ``$VIREO_OUTDIR``:
 
 .. code-block:: bash
 
 	.
-	├── cellSNP.base.vcf
+	├── cellSNP.base.vcf.gz
 	├── cellSNP.samples.tsv
 	├── cellSNP.tag.AD.mtx
 	├── cellSNP.tag.DP.mtx
@@ -78,13 +76,6 @@ If the pileup is successfull, you will have this new file in your ``$VIREO_OUTDI
 
 Additional details about outputs are available below in the :ref:`Vireo Results and Interpretation <vireo-results>`.
 
-
-Vireo expects the `cellSNP.base.vcf` input to be gzipped. 
-We have contacted the developers to update this issue, but until ``cellSNP-lite`` outputs, we will need to add one extra step to prepare for the demultiplexing step:
-
-.. code-block::
-
-	singularity exec Demuxafy.sif bgzip $VIREO_OUTDIR/cellSNP.base.vcf
 
 
 Demultiplex with Vireo
@@ -99,27 +90,30 @@ We've provided an example command for each of these differing amounts of donor S
 
     You will need to provide which genotype measure  (``$FIELD``) is provided in your donor SNP genotype file (GT, GP, or PL); default is PL.
 
-    .. admonition:: Note
-
-      For Vireo_ you should only have the donors that are in this pool in the vcf file.
-
-    .. admonition:: Recommended
+    .. admonition:: STRONGLY Recommended
       :class: important
 
-      Vireo runs more efficiently when the SNPs from the donor ``$VCF`` have been filtered for the SNPs identified by ``cellSNP-lite``.
-      Therefore, it is highly recommended subset the vcf first:\.
+      For Vireo_ you should only have the donors that are in this pool in the vcf file.
+      Vireo_ assumes all the individuals in your vcf are in the pool - so if left unfiltered, it will check for all the individuals in the reference SNP genotype file.
 
-      If your ``$VCF`` file is bgzipped (`i.e.` ends in ``.vcf.gz``), you can use ``bcftools`` to filter your ``$VCF`` for the positions in ``$VIREO_OUTDIR/cellSNP.base.vcf``:
+      Vireo_ also runs more efficiently when the SNPs from the donor ``$VCF`` have been filtered for the SNPs identified by ``cellSNP-lite``.
+      Therefore, it is highly recommended subset the vcf first.
+
+      We can do both of these filtering actions at the same time with `bcftools`:
+
+        **Note:** If your reference SNP genotype ``$VCF`` is bgzipped (`i.e.` ends in ``.vcf.gz``), you should first bgzip and index your file with:
+
+          .. code-block::
+
+            singularity exec Demuxafy.sif bgzip -c $VCF > $VCF.gz
+            singularity exec Demuxafy.sif tabix -p vcf $VCF.gz
 
         .. code-block::
 
-          singularity exec Demuxafy.sif bcftools view $VCF -R $VIREO_OUTDIR/cellSNP.base.vcf.gz -Ov -o $VIREO_OUTDIR/donor_subset.vcf
+          singularity exec Demuxafy.sif bcftools view $VCF -R $VIREO_OUTDIR/cellSNP.base.vcf.gz -s sample1,sample2 -Ov -o $VIREO_OUTDIR/donor_subset.vcf
 
-      If your ``$VCF`` file is **not** bgzipped (`i.e.` ends in ``.vcf``), you can use ``bedtools`` to filter your ``$VCF`` for the positions in ``$VIREO_OUTDIR/cellSNP.base.vcf``:
+        Alternatively, if you have the individuals from the pool in a file with each individuals separated by a new line (``individual_file.tsv``), then you can use ``-S individual_file.tsv``.
 
-        .. code-block::
-
-          singularity exec Demuxafy.sif bedtools intersect -a $VCF -b $VIREO_OUTDIR/cellSNP.base.vcf.gz -wa -header > $VIREO_OUTDIR/donor_subset.vcf
 
     To run Vireo_ with reference SNP genotype data for your donors (ideally filtered as shown above):
 
@@ -129,10 +123,29 @@ We've provided an example command for each of these differing amounts of donor S
 
   .. tab:: With SNP Genotype |br| Data for Some Donors
 
-    .. admonition:: Note
+    .. admonition:: STRONGLY Recommended
 
-      For Vireo_ you should only have the donors that are in this pool in the vcf file. 
+      For Vireo_ you should only have the donors that are in this pool in the reference SNP genotype vcf file. 
+      Vireo assumes all the individuals in your vcf are in the pool - so if left unfiltered, it will check for all the individuals in the reference SNP genotype file.
       It assumes that ``$N`` is larger than the number of donors in the ``$VCF``
+
+      Vireo_ also runs more efficiently when the SNPs from the donor ``$VCF`` have been filtered for the SNPs identified by ``cellSNP-lite``.
+      Therefore, it is highly recommended to subset the vcf first.
+
+      We can do both of these filtering actions at the same time with `bcftools`:
+
+        **Note:** If your reference SNP genotype ``$VCF`` is bgzipped (`i.e.` ends in ``.vcf.gz``), you should first bgzip and index your file with:
+
+          .. code-block::
+
+            singularity exec Demuxafy.sif bgzip -c $VCF > $VCF.gz
+            singularity exec Demuxafy.sif tabix -p vcf $VCF.gz
+
+        .. code-block::
+
+          singularity exec Demuxafy.sif bcftools view $VCF -R $VIREO_OUTDIR/cellSNP.base.vcf.gz -s sample1,sample2 -Ov -o $VIREO_OUTDIR/donor_subset.vcf
+
+        Alternatively, if you have the individuals from the pool in a file with each individuals separated by a new line (``individual_file.tsv``), then you can use ``-S individual_file.tsv``.
 
     .. admonition:: Recommended
       :class: important
@@ -142,12 +155,12 @@ We've provided an example command for each of these differing amounts of donor S
 
         .. code-block::
 
-          singularity exec Demuxafy.sif bcftools view $VCF -R $VIREO_OUTDIR/cellSNP.base.vcf -Oz -o $VIREO_OUTDIR/donor_subset.vcf
+          singularity exec Demuxafy.sif bcftools view $VCF -R $VIREO_OUTDIR/cellSNP.base.vcf.gz -Oz -o $VIREO_OUTDIR/donor_subset.vcf
 
 
     .. code-block::
 
-      singularity exec Demuxafy.sif vireo -c $VIREO_OUTDIR -d $VIREO_OUTDIR/donor_subset.vcf -o $VIREO_OUTDIR -t $FIELD -N $N
+      singularity exec Demuxafy.sif vireo -c $VIREO_OUTDIR -d $VIREO_OUTDIR/donor_subset.vcf.gz -o $VIREO_OUTDIR -t $FIELD -N $N
 
   .. tab:: Without Donor SNP |br| Genotype Data
 
@@ -155,7 +168,7 @@ We've provided an example command for each of these differing amounts of donor S
 
       singularity exec Demuxafy.sif vireo -c $VIREO_OUTDIR -o $VIREO_OUTDIR -N $N
 
-If Vireo_ is successfull, you will have these new files in your ``$VIREO_OUTDIR``:
+If Vireo_ is successful, you will have these new files in your ``$VIREO_OUTDIR``:
 
 .. code-block:: bash
   :emphasize-lines: 7,8,9,10,11,12,13
@@ -182,7 +195,7 @@ Additional details about outputs are available below in the :ref:`Vireo Results 
 Vireo Results and Interpretation
 -------------------------------------
 After running the Vireo_ steps, you will have a number of files in your ``$VIREO_OUTDIR``. 
-Theses are the files that most users will find the most informative:
+These are the files that most users will find the most informative:
 
 - ``summary.tsv``
 
@@ -224,7 +237,7 @@ Theses are the files that most users will find the most informative:
     | unassigned | 113  |
     +------------+------+
 
-    - To check whether the numbe of doublets identified by Vireo_ is consistent with the expected doublet rate based on the number of droplets that you captured, you can use our `Expected Doublet Estimation Calculator <test.html>`__.
+    - To check whether the number of doublets identified by Vireo_ is consistent with the expected doublet rate based on the number of droplets that you captured, you can use our `Expected Doublet Estimation Calculator <test.html>`__.
 
 
 - ``donor_ids.tsv``
@@ -248,11 +261,11 @@ Theses are the files that most users will find the most informative:
     +-------------------------+---------+-----------------+-----------------+---------+--------------+------------------+
 
 
-Merging Results with Other Software Restults
+Merging Results with Other Software Results
 --------------------------------------------
 We have provided a script that will help merge and summarize the results from multiple softwares together.
 See :ref:`Combine Results <Combine-docs>`.
 
 Citation
 --------
-If you used this workflow for analysis, please reference our paper (REFERENCE) as well as `Vireo <https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1865-2>`__.
+If you used the Demuxafy platform for analysis, please reference our paper (REFERENCE) as well as `Vireo <https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1865-2>`__.

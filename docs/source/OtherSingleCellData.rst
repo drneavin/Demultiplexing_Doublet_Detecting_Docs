@@ -37,7 +37,7 @@ You may even want to filter the SNPs further if you still have many after filter
 We typically aim for ~250,000 SNP.
 Regardless, since UMI tags aren't used for snATAC-seq data, demultiplexing can take a lot of memory and time.
 
-In addtion, the following flags are required for each of the following softwares to effectively process snATAC-seq data.
+In addition, the following flags are required for each of the following softwares to effectively process snATAC-seq data.
 
 **Souporcell**
 

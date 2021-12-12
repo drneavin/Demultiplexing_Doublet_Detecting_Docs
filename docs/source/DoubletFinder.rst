@@ -6,7 +6,7 @@ DoubletFinder Tutorial
 .. _DoubletFinder: https://github.com/chris-mcginnis-ucsf/DoubletFinder
 
 DoubletFinder_ is a transcription-based doublet detection software that uses simulated doublets to find droplets that has a high proportion of neighbors that are doublets.
-We have provided a wrapper script that takes common arguments for DoubletFinder_ and we alsp provide an example script that you can run manually in R if you prefer.
+We have provided a wrapper script that takes common arguments for DoubletFinder_ and we also provide an example script that you can run manually in R if you prefer.
 
 
 
@@ -58,7 +58,7 @@ You can either run DoubletFinder_ with the wrapper script we have provided or yo
         -o OUT, --out OUT     The output directory where results will be saved
         -s SEURAT_OBJECT, --seurat_object SEURAT_OBJECT
                               A QC, normalized seurat object with
-                              classificaitons/clusters as Idents().
+                              classifications/clusters as Idents().
         -c SCT, --sct SCT     Whether sctransform was used for normalization.
         -d DOUBLET_NUMBER, --doublet_number DOUBLET_NUMBER
                               Number of expected doublets based on droplets
@@ -196,11 +196,11 @@ Here's a more detailed description of the contents of each of those files:
   - If you do not have a clear ``BC`` maximum, see responses from the DoubletFinder_ developer `here <https://github.com/chris-mcginnis-ucsf/DoubletFinder/issues/62>`__ and `here <https://github.com/chris-mcginnis-ucsf/DoubletFinder/issues/71>`__ for possible solutions.
 
 
-Merging Results with Other Software Restults
+Merging Results with Other Software Results
 --------------------------------------------
 We have provided a script that will help merge and summarize the results from multiple softwares together.
 See :ref:`Combine Results <Combine-docs>`.
 
 Citation
 --------
-If you used this workflow for analysis, please reference our paper (REFERENCE) as well as `DoubletFinder <https://www.sciencedirect.com/science/article/pii/S2405471219300730>`__.
+If you used the Demuxafy platform for analysis, please reference our paper (REFERENCE) as well as `DoubletFinder <https://www.sciencedirect.com/science/article/pii/S2405471219300730>`__.

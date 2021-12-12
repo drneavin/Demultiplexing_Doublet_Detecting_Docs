@@ -3,7 +3,7 @@
 Combining Results
 =================
 
-After you have run each of the Demultiplexing and Doublet Detecting softwares you would like, it is helpful to convert them to similar nomenclarture and combine the results into a single dataframe.
+After you have run each of the Demultiplexing and Doublet Detecting softwares you would like, it is helpful to convert them to similar nomenclature and combine the results into a single dataframe.
 In addition, we have found it helpful to generate summaries of each of the combinations of softwares identified.
 To help streamline this process, we have provided a script that will easily integrate all the softwares you have run into a single dataframe and can do the following:
 
@@ -11,19 +11,19 @@ To help streamline this process, we have provided a script that will easily inte
 
     - A tab-separated dataframe with the droplet singlet-doublet classification and the individual assignment (for demultiplexing softwares) per droplet
 
-  1. Generate a droplet type summary file
+  2. Generate a droplet type summary file
 
     - Provides the number of droplets classified for each combination of droplet classifications by each software
 
-  1. Generate demultiplexing individual assignment summary file
+  3. Generate demultiplexing individual assignment summary file
 
     - Provides the number of droplets classified for each combination of individual assignment droplet classifications by each software
 
-  1. If individuals have not been assigned to each cluster for reference-free demultiplexing softewares, will create a common assignment across all demultiplexing softwares for easy comparison
+  4. If individuals have not been assigned to each cluster for reference-free demultiplexing softwares, will create a common assignment across all demultiplexing softwares for easy comparison
 
-  1. Combined final droplet assignment from all softwares included
+  5. Combined final droplet assignment from all softwares included
 
-    - Uses one of four intersectional methods to combine software assingments together into a single combined assignment per barcode
+    - Uses one of four intersectional methods to combine software assignments together into a single combined assignment per barcode
 
 and to generate a summary file for all the software combinations and if you ran demultiplexing softwares, it will also generate a demultiplexing summary file for the individual and cluster assignments from the demultiplexing softwares.
 
@@ -183,22 +183,7 @@ There are a two different options for using this script:
       singularity exec Demuxafy.sif Combine_Results.R \
         -o $OUTDIR/combined_results.tsv \
         --demuxlet $DEMUXLET_OUTDIR \
-        --souporcell $DEMUXLET_OUTDIR \
-        --solo $SOLO_OUTDIR \
-        --scds $SCDS_OUTDIR \
-        --method "MajoritySinglet"
-
-
-  .. tab:: Combine Results + Joint Droplet Calls
-
-    The first option is to select a method to make joint calls on the individual assignment and singlet-doublet droplet types using the softwares included.
-
-    .. code-block:: bash
-
-      singularity exec Demuxafy.sif Combine_Results.R \
-        -o $OUTDIR/combined_results.tsv \
-        --demuxlet $DEMUXLET_OUTDIR \
-        --souporcell $DEMUXLET_OUTDIR \
+        --souporcell $SOUPORCELL_OUTDIR \
         --solo $SOLO_OUTDIR \
         --scds $SCDS_OUTDIR \
         --method "MajoritySinglet"
@@ -212,7 +197,7 @@ There are a two different options for using this script:
       singularity exec Demuxafy.sif Combine_Results.R \
         -o $OUTDIR/combined_results.tsv \
         --demuxlet $DEMUXLET_OUTDIR \
-        --souporcell $DEMUXLET_OUTDIR \
+        --souporcell $SOUPORCELL_OUTDIR \
         --solo $SOLO_OUTDIR \
         --scds $SCDS_OUTDIR
 
@@ -354,7 +339,7 @@ Here's a deeper look at the contents of each of these results:
 
   - combined_results_w_combined_assignments.tsv
 
-    - Dataframe combining all the software results together + combined assignmenmt based on selected method:
+    - Dataframe combining all the software results together + combined assignment based on selected method:
 
     +-------------------------+-------------------------+---------------------------------+-------------------------+-----------------------------------+-------------------------+-----------------------+-------------------------+-------------------------+-------------------+---------------------------------+--------------------------------------+
     | Barcode                 | Demuxlet_DropletType    | Demuxlet_Individual_Assignment  | Souporcell_Cluster      | Souporcell_Individual_Assignment  | Souporcell_DropletType  | scds_score            | scds_DropletType        | solo_DropletType        | solo_DropletScore | MajoritySinglet_DropletType     | MajoritySinglet_Individual_Assignment|
@@ -384,4 +369,4 @@ Here's a deeper look at the contents of each of these results:
 
 Citation
 --------
-If you used this workflow for analysis, please reference our paper (REFERENCE).
+If you used the Demuxafy platform for analysis, please reference our paper (REFERENCE).

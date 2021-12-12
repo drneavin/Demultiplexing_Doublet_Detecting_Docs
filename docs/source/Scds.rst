@@ -3,28 +3,30 @@
 Scds Tutorial
 ===========================
 
-.. _scds: https://github.com/kostkalab/scds
+.. _Scds: https://github.com/kostkalab/scds
 
-scds_ is a transcription-based doublet detection software that uses two different methods to detect doublets - cxds and bcds.
+Scds_ is a transcription-based doublet detection software that uses two different methods to detect doublets - cxds and bcds.
 The cxds method uses marker genes that are not co-expressed to identify droplets that are likely doublets.
 bcds simulates doublet by adding droplet transcriptomes together and then uses variable genes to identify the probability a droplet is a doublet with a binary classification algorithm.
 We typically use the combined score of these two methods but they can be use separately as well.
-We have provided a wrapper script that takes common arguments for scds_ and we alsp provide an example script that you can run manually in R if you prefer.
+We have provided a wrapper script that takes common arguments for Scds_ and we also provide an example script that you can run manually in R if you prefer.
 
 
 
 Data
 ----
-This is the data that you will need to have preparede to run scds_:
+This is the data that you will need to have prepare to run Scds_:
 
 .. admonition:: Required
   :class: important
 
-  - A counts matrix (``$MATRIX``)
+  - A counts matrix (``$MATRIX_DIR``)
   
-    - Scds_ expects counts to be in the cellranger output format (directory containing ``barcodes.tsv``, ``genes.tsv`` and ``matrix.mtx`` **or** ``barcodes.tsv.gz``, ``features.tsv.gz`` and ``matrix.mtx.gz``)
+    - The directory path containing your cellranger counts matrix files
 
-	  - If you don't have your data in this format, you can run scds_ manually in R and load the data in using a method of your choosing.
+    - Scds_ expects counts to be in the cellranger counts matrix direcotry output format (a directory containing ``barcodes.tsv``, ``genes.tsv`` and ``matrix.mtx`` **or** ``barcodes.tsv.gz``, ``features.tsv.gz`` and ``matrix.mtx.gz``)
+
+	  - If you don't have your data in this format, you can run Scds_ manually in R and load the data in using a method of your choosing.
 
   - Output directory (``$SCDS_OUTDIR``)
 
@@ -33,9 +35,9 @@ This is the data that you will need to have preparede to run scds_:
 
 
 
-Run scds
+Run Scds
 ----------------
-You can either run scds_ with the wrapper script we have provided or you can run it manually if you would prefer to alter more parameters.
+You can either run Scds_ with the wrapper script we have provided or you can run it manually if you would prefer to alter more parameters.
 
 .. tabs::
 
@@ -44,20 +46,20 @@ You can either run scds_ with the wrapper script we have provided or you can run
 
     .. code-block:: bash
 
-		  singularity exec Demuxafy.sif scds.R -o $SCDS_OUTDIR -t $MATRIX
+		  singularity exec Demuxafy.sif scds.R -o $SCDS_OUTDIR -t $MATRIX_DIR
 
 
   .. tab:: Run in R
 
     First, you will have to start R.
-    We have built R and all the required software to run scds_ into the singularity image so you can run it directly from the image.
+    We have built R and all the required software to run Scds_ into the singularity image so you can run it directly from the image.
 
     .. code-block:: bash
 
       singularity exec Demuxafy.sif R
 
     That will open R in your terminal.
-    Next, you can load all the libraries and run scds_.
+    Next, you can load all the libraries and run Scds_.
 
     .. code-block:: R
 
@@ -116,9 +118,9 @@ You can either run scds_ with the wrapper script we have provided or you can run
 
 
 
-scds Results and Interpretation
+Scds Results and Interpretation
 ----------------------------------------
-After running the scds_ with the wrapper script or manually you should have two files in the ``$SCDS_OUTDIR``:
+After running the Scds_ with the wrapper script or manually you should have two files in the ``$SCDS_OUTDIR``:
 
 .. code-block:: bash
 
@@ -128,7 +130,7 @@ After running the scds_ with the wrapper script or manually you should have two 
 
 - ``scds_doublet_summary.tsv``
 
-  - A sumamry of the number of singlets and doublets predicted by scds_.
+  - A summary of the number of singlets and doublets predicted by Scds_.
 
     +----------------+-----------+
     |Classification  | Droplet N |
@@ -138,11 +140,11 @@ After running the scds_ with the wrapper script or manually you should have two 
     |singlet         | 18211     |
     +----------------+-----------+
 
-    - To check whether the numbe of doublets identified by scds_ is consistent with the expected doublet rate expected based on the number of droplets that you captured, you can use our `Expected Doublet Estimation Calculator <test.html>`__.
+    - To check whether the number of doublets identified by Scds_ is consistent with the expected doublet rate expected based on the number of droplets that you captured, you can use our `Expected Doublet Estimation Calculator <test.html>`__.
 
 - ``scds_doublets_singlets.tsv``
 
-  - The per-barcode singlet and doublet classification from scds_.
+  - The per-barcode singlet and doublet classification from Scds_.
   
     +-------------------------+-------------------------+------------------+
     | Barcode                 | scds_score              | scds_DropletType |
@@ -167,11 +169,11 @@ After running the scds_ with the wrapper script or manually you should have two 
     +-------------------------+-------------------------+------------------+
 
 
-Merging Results with Other Software Restults
+Merging Results with Other Software Retults
 --------------------------------------------
 We have provided a script that will help merge and summarize the results from multiple softwares together.
 See :ref:`Combine Results <Combine-docs>`.
 
 Citation
 --------
-If you used this workflow for analysis, please reference our paper (REFERENCE) as well as `scds <https://academic.oup.com/bioinformatics/article/36/4/1150/5566507>`__.
+If you used the Demuxafy platform for analysis, please reference our paper (REFERENCE) as well as `scds <https://academic.oup.com/bioinformatics/article/36/4/1150/5566507>`__.

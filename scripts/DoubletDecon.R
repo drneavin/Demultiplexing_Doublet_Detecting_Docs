@@ -10,7 +10,7 @@ parser <- ArgumentParser()
 # specify our desired options 
 # by default ArgumentParser will add an help option 
 parser$add_argument("-o", "--out", required = TRUE, help="The output directory where results will be saved")
-parser$add_argument("-s", "--seurat_object", required = TRUE, type = "character", help = "A QC, normalized seurat object with classificaitons/clusters as Idents().")
+parser$add_argument("-s", "--seurat_object", required = TRUE, type = "character", help = "A QC, normalized seurat object with classifications/clusters as Idents().")
 parser$add_argument("-g", "--num_genes", required = FALSE, type = "integer", default=50, help = "Number  of genes to use in \'Improved_Seurat_Pre_Process\' function.")
 parser$add_argument("-r", "--rhop", required = FALSE, type="double", default=0.9, help="rhop to use in DoubletDecon - the number of SD from the mean to identify upper limit to blacklist")
 parser$add_argument("-p", "--species", required = FALSE, type = "character", default="hsa", help = "The species of your sample. Can be scientific species name, KEGG ID, three letter species abbreviation, or NCBI ID.")
@@ -19,7 +19,7 @@ parser$add_argument("-c", "--removeCC", required = FALSE, type = "logical", defa
 parser$add_argument("-m", "--pmf", required = FALSE, type = "logical", default=TRUE, help = "Whether to use unique gene expression in doublet determination.")
 parser$add_argument("-f", "--heatmap", required = FALSE, type = "logical", default=FALSE, help = "Whether to generate heatmaps.")
 parser$add_argument("-t", "--centroids", required = FALSE, type = "logical", default=FALSE, help = "Whether to use centroids instead of medoids for doublet detecting.")
-parser$add_argument("-d", "--num_doubs", required = FALSE, type = "integer", default=100, help = "The nunmber of doublets to simulate for each cluster pair.")
+parser$add_argument("-d", "--num_doubs", required = FALSE, type = "integer", default=100, help = "The number of doublets to simulate for each cluster pair.")
 parser$add_argument("-5", "--only50", required = FALSE, type = "logical", default=FALSE, help = "Whether to only compute doublets as 50:50 ratio. Default is to use other ratios as well.")
 parser$add_argument("-u", "--min_uniq", required = FALSE, type = "integer", default=4, help = "Minimum number of unique genes to rescue a cluster identified as doublets.")
                                         

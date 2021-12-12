@@ -1,6 +1,6 @@
 .. _DoubletDetection-docs:
 
-DoulbetDetection Tutorial
+DoubletDetection Tutorial
 ===========================
 
 .. _DoubletDetection: https://github.com/JonathanShor/DoubletDetection
@@ -13,14 +13,14 @@ We have provided a wrapper script that enables DoubletDetection_ to be easily ru
 
 Data
 ----
-This is the data that you will need to have preparede to run DoubletDetection_:
+This is the data that you will need to have prepare to run DoubletDetection_:
 
 .. admonition:: Required
   :class: important
 
-  - A counts matrix (``$MATRIX``)
+  - A counts matrix (``$MATRIX_DIR``)
   
-    - DoubletDetection expects counts to be in the cellranger output format (directory containint ``barcodes.tsv``, ``genes.tsv`` and ``matrix.mtx`` **or** ``barcodes.tsv.gz``, ``features.tsv.gz`` and ``matrix.mtx.gz``)
+    - DoubletDetection_ expects counts to be in the cellranger output format (directory containing ``barcodes.tsv``, ``genes.tsv`` and ``matrix.mtx`` **or** ``barcodes.tsv.gz``, ``features.tsv.gz`` and ``matrix.mtx.gz``)
 
 	  - If you don't have your data in this format, you can run DoubletDetection_ manually in python and load the data in using a method of your choosing.
 
@@ -41,7 +41,7 @@ You can either run DoubletDetection_ with the wrapper script we have provided or
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif DoubletDetection.py -m $MATRIX -o $DOUBLETDETECTION_OUTDIR
+      singularity exec Demuxafy.sif DoubletDetection.py -m $MATRIX_DIR -o $DOUBLETDETECTION_OUTDIR
 
     To see all the parameters that this wrapper script will accept, run:
 
@@ -60,9 +60,10 @@ You can either run DoubletDetection_ with the wrapper script we have provided or
       optional arguments:
         -h, --help            show this help message and exit
         -m COUNTS_MATRIX, --counts_matrix COUNTS_MATRIX
-                              cell ranger counts matrix.mtx
+                              cell ranger counts matrix directory containing matrix 
+                              files. Can also use full path to matrix.mtx.
         -b BARCODES, --barcodes BARCODES
-                              File containing droplet barcodes. Use barcodes from
+                              File containing droplet barcodes. Uses barcodes from
                               provided 10x dir by default.
         -o OUTDIR, --outdir OUTDIR
                               The output directory; default is current working
@@ -183,7 +184,7 @@ We have found these to be the most helpful:
 
 - ``DoubletDetection_summary.tsv``
 
-  - A sumamry of the number of singlets and doublets predicted by DoubletDetection_.
+  - A summary of the number of singlets and doublets predicted by DoubletDetection_.
 
   +------------------------------+-----------+
   | DoubletDetection_DropletType | Droplet N |
@@ -193,7 +194,7 @@ We have found these to be the most helpful:
   | singlet                      | 18388     |
   +------------------------------+-----------+
 
-    - To check whether the numbe of doublets identified by DoubletDetection_ is consistent with the expected doublet rate expected based on the number of droplets that you captured, you can use our `Expected Doublet Estimation Calculator <test.html>`__.
+    - To check whether the number of doublets identified by DoubletDetection_ is consistent with the expected doublet rate expected based on the number of droplets that you captured, you can use our `Expected Doublet Estimation Calculator <test.html>`__.
 
 - ``DoubletDetection_doublets_singlets.tsv``
 
@@ -232,11 +233,11 @@ We have found these to be the most helpful:
     +--------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------+
 
 
-Merging Results with Other Software Restults
+Merging Results with Other Software Results
 --------------------------------------------
 We have provided a script that will help merge and summarize the results from multiple softwares together.
 See :ref:`Combine Results <Combine-docs>`.
 
 Citation
 --------
-If you used this workflow for analysis, please reference our paper (REFERENCE) as well as `DoubletDetection <https://zenodo.org/record/4359992>`__.
+If you used the Demuxafy platform for analysis, please reference our paper (REFERENCE) as well as `DoubletDetection <https://zenodo.org/record/4359992>`__.

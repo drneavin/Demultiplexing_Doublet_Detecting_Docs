@@ -6,7 +6,7 @@ Freemuxlet Tutorial
 .. _Freemuxlet: https://github.com/statgen/popscle
 
 Freemuxlet_ is a genotype-free demultiplexing software that does not require you to have SNP genotypes the donors in your multiplexed capture.
-In fact, it can't natively integrate SNP genotypes into it's demultiplexing.
+In fact, it can't natively integrate SNP genotypes into the demultiplexing.
 We have provided some scripts that will help identify clusters from given donors if you do have SNP genotypes but use Freemuxlet_.
 However, it might be better to use a software that is designed integrate SNP genotypes while assigning donor/cluster (:ref:`Demuxlet <Demuxlet-docs>`, :ref:`Souporcell <Souporcell-docs>`  or :ref:`Vireo<Vireo-docs>`).
 
@@ -15,7 +15,7 @@ However, it might be better to use a software that is designed integrate SNP gen
 
 Data
 ----
-This is the data that you will need to have preparede to run Freemuxlet_:
+This is the data that you will need to have prepare to run Freemuxlet_:
 
 .. admonition:: Required
   :class: important
@@ -27,8 +27,6 @@ This is the data that you will need to have preparede to run Freemuxlet_:
       - If you have reference SNP genotypes for individuals in your pool, you can use those
 
       - If you do not have reference SNP genotypes, they can be from any large population resource (i.e. 1000 Genomes or HRC)
-
-    - Filter for common SNPs (> 5% minor allele frequency) and SNPs overlapping genes
 
     - Filter for common SNPs (> 5% minor allele frequency) and SNPs overlapping genes
 
@@ -47,7 +45,7 @@ This is the data that you will need to have preparede to run Freemuxlet_:
 
 Run Freemuxlet
 --------------
-Poscle Pileup
+Popscle Pileup
 ^^^^^^^^^^^^^
 First we will need to identify the number of reads from each allele at each of the common SNP location:
 
@@ -186,7 +184,7 @@ If you have reference SNP genotypes for some or all of the donors in your pool, 
                                                       The output directory where results will be saved
       -c CLUSTER_VCF, --cluster_vcf CLUSTER_VCF
                                                       A QC, normalized seurat object with
-                                                      classificaitons/clusters as Idents().
+                                                      classifications/clusters as Idents().
       -o OUTDIR, --outdir OUTDIR
                                                       Number of genes to use in
                                                       'Improved_Seurat_Pre_Process' function.
@@ -470,7 +468,7 @@ Theses are the files that most users will find the most informative:
 
   - ``freemuxlet.clust1.samples.gz``
 
-    - Metrics for each droplet including the singelt, doublet or ambiguous assignment (``DROPLET.TYPE``), final assignment (``BEST.GUESS``), log likelihood of the final assignment (``BEST.LLK``) and other QC metrics.
+    - Metrics for each droplet including the singlet, doublet or ambiguous assignment (``DROPLET.TYPE``), final assignment (``BEST.GUESS``), log likelihood of the final assignment (``BEST.LLK``) and other QC metrics.
 
       +---------+--------------------+----------+-----------+--------------+-------------------------+---------+-------------------------+---------+--------------------+----------------+---------------+---------------+--------------+---------------+---------------+-------------------------+-------------------------+----------------+-------------------+
       | INT_ID  | BARCODE            | NUM.SNPS | NUM.READS | DROPLET.TYPE | BEST.GUESS              |BEST.LLK |       NEXT.GUESS        |NEXT.LLK | DIFF.LLK.BEST.NEXT | BEST.POSTERIOR | SNG.POSTERIOR | SNG.BEST.GUESS| SNG.BEST.LLK | SNG.NEXT.GUESS| SNG.NEXT.LLK  | SNG.ONLY.POSTERIOR      | DBL.BEST.GUESS          |  DBL.BEST.LLK  |  DIFF.LLK.SNG.DBL |
@@ -556,7 +554,7 @@ If you ran the ``Assign_Indiv_by_Geno.R`` script, you will also have the followi
       +---------+---------------------+---------------------+---------------------+---------------------+---------------------+-----+
 
 
-Merging Results with Other Software Restults
+Merging Results with Other Software Results
 --------------------------------------------
 We have provided a script that will help merge and summarize the results from multiple softwares together.
 See :ref:`Combine Results <Combine-docs>`.
@@ -564,4 +562,4 @@ See :ref:`Combine Results <Combine-docs>`.
 
 Citation
 --------
-If you used this workflow for analysis, please reference our paper (REFERENCE) as well as `Freemuxlet <https://github.com/statgen/popscle>`__.
+If you used the Demuxafy platform for analysis, please reference our paper (REFERENCE) as well as `Freemuxlet <https://github.com/statgen/popscle>`__.

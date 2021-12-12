@@ -5,7 +5,7 @@ import os
 
 parser = argparse.ArgumentParser(
     description="wrapper for DoubletDetection for doublet detection from transcriptomic data.")
-parser.add_argument("-m", "--counts_matrix", required = True, help = "cell ranger counts matrix.mtx")
+parser.add_argument("-m", "--counts_matrix", required = True, help = "cell ranger counts matrix directory containing matrix files. Can also use full path to matrix.mtx.")
 parser.add_argument("-b", "--barcodes", required = False, default = None, help = "File containing droplet barcodes. Use barcodes from provided 10x dir by default.")
 parser.add_argument("-o", "--outdir", required = False, default = os.getcwd(), help = "The output directory; default is current working directory")
 parser.add_argument("-i", "--n_iterations", required = False, default = 50, type = int, help = "Number of iterations to use; default is 50")

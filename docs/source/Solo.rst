@@ -5,13 +5,13 @@ Solo Tutorial
 
 .. _solo: https://github.com/calico/solo
 
-solo_ is a transcription-based doublet detecting software that was one of the better transcription-based doublet detecting softwares that we tested (CITATION)
+Solo_ is a transcription-based doublet detecting software that was one of the better transcription-based doublet detecting softwares that we tested (CITATION).
 
 
 
 Data
 ----
-This is the data that you will need to have preparede to run solo_:
+This is the data that you will need to have prepare to run Solo_:
 
 .. admonition:: Required
   :class: important
@@ -24,8 +24,6 @@ This is the data that you will need to have preparede to run solo_:
 
     - This can be a h5ad file, loom file, or 10x counts matrix directory (containing ``barcodes.tsv``, ``genes.tsv`` and ``matrix.mtx`` **or** ``barcodes.tsv.gz``, ``features.tsv.gz`` and ``matrix.mtx.gz``)
 
-  - Barcode files (``barcodes.tsv``)
-
   - Output directory (``$SOLO_OUTDIR``)
 
 
@@ -35,14 +33,14 @@ This is the data that you will need to have preparede to run solo_:
 
 
 
-Run solo
+Run Solo
 ----------------
 
 .. code-block:: bash
 
   singularity exec Demuxafy.sif solo -o $SOLO_OUTDIR -e $N_DOUB -j $JSON -d $COUNTS
 
-Solo_ also has additional paramters that can be seen with:
+Solo_ also has additional parameters that can be seen with:
 
 .. code-block:: bash
 
@@ -85,7 +83,7 @@ Solo_ also has additional paramters that can be seen with:
                           (default: False)
     --version             Get version of solo-sc (default: False)
 
-If solo_ runs correctly, you should have the following files and directory structure in your ``$SOLO_OUTDIR``:
+If Solo_ runs correctly, you should have the following files and directory structure in your ``$SOLO_OUTDIR``:
 
 .. code-block::
 
@@ -117,8 +115,8 @@ If solo_ runs correctly, you should have the following files and directory struc
 
 Solo Summary
 ^^^^^^^^^^^^^^^^
-We have provided a script that will summarize the number of droplets classified as doublets and singlets by solo_ and write it to the ``$SOLO_OUTDIR``.
-This script also combines some of the solo_ outputs into a single file that can be more easily used for downstream analyses. 
+We have provided a script that will summarize the number of droplets classified as doublets and singlets by Solo_ and write it to the ``$SOLO_OUTDIR``.
+This script also combines some of the Solo_ outputs into a single file that can be more easily used for downstream analyses. 
 You can run this to get a fast and easy summary of your results with:
 
 .. code-block:: bash
@@ -160,12 +158,12 @@ If successful, you should have two new files in your ``$SOLO_OUTDIR``:
 
 Solo Results and Interpretation
 ----------------------------------------
-solo_ puts most of the results in multiple separate files. 
+Solo_ puts most of the results in multiple separate files. 
 However, the wrapper script and the example code has some steps to combine these results together into a single file, which will likely be the most informative output.
 
 - ``solo_summary.tsv``
 
-  - A sumamry of the number of singlets and doublets predicted by solo_.
+  - A summary of the number of singlets and doublets predicted by Solo_.
 
   +-----------------+-----------+
   | Classification  | Droplet N |
@@ -175,11 +173,11 @@ However, the wrapper script and the example code has some steps to combine these
   | doublet         | 3521      |
   +-----------------+-----------+
 
-    - To check whether the numbe of doublets identified by solo_ is consistent with the expected doublet rate expected based on the number of droplets that you captured, you can use our `Expected Doublet Estimation Calculator <test.html>`__.
+    - To check whether the number of doublets identified by Solo_ is consistent with the expected doublet rate expected based on the number of droplets that you captured, you can use our `Expected Doublet Estimation Calculator <test.html>`__.
 
 - ``solo_results.tsv``
 
-  - The per-barcode singlet and doublet classification from solo_.
+  - The per-barcode singlet and doublet classification from Solo_.
 
     +-------------------------+-------------------------+--------------------------+
     | Barcode                 | solo_DropletType        | solo_DropletScore        |
@@ -204,7 +202,7 @@ However, the wrapper script and the example code has some steps to combine these
     +-------------------------+-------------------------+--------------------------+
 
 
-Merging Results with Other Software Restults
+Merging Results with Other Software Results
 --------------------------------------------
 We have provided a script that will help merge and summarize the results from multiple softwares together.
 See :ref:`Combine Results <Combine-docs>`.
@@ -212,4 +210,4 @@ See :ref:`Combine Results <Combine-docs>`.
 
 Citation
 --------
-If you used this workflow for analysis, please reference our paper (REFERENCE) as well as `solo <https://www.sciencedirect.com/science/article/pii/S2405471220301952>`__.
+If you used the Demuxafy platform for analysis, please reference our paper (REFERENCE) as well as `solo <https://www.sciencedirect.com/science/article/pii/S2405471220301952>`__.

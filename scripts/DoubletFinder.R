@@ -9,7 +9,7 @@ parser <- ArgumentParser()
 # specify our desired options 
 # by default ArgumentParser will add an help option 
 parser$add_argument("-o", "--out", required = TRUE, help="The output directory where results will be saved")
-parser$add_argument("-s", "--seurat_object", required = TRUE, type = "character", help = "A QC, normalized seurat object with classificaitons/clusters as Idents().")
+parser$add_argument("-s", "--seurat_object", required = TRUE, type = "character", help = "A QC, normalized seurat object with classifications/clusters as Idents().")
 parser$add_argument("-c", "--sct", required = TRUE, type = "logical", help = "Whether sctransform was used for normalization.")
 parser$add_argument("-d", "--doublet_number", required = TRUE, type = "integer", help = "Number of expected doublets based on droplets captured.")
 parser$add_argument("-p", "--PCs", required = FALSE, default = 10, type = "integer", help = "Number of PCs to use for \'doubletFinder_v3\' function.")

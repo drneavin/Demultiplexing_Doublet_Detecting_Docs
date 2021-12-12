@@ -1,15 +1,15 @@
 .. _scSplit-docs:
 
-scSplit Tutorial
+ScSplit Tutorial
 ===========================
 
-.. _scSplit: https://github.com/jon-xu/scSplit
+.. _ScSplit: https://github.com/jon-xu/scSplit
 
 ScSplit_ is a reference-free demultiplexing software. If you have reference SNP genotypes, it would be better to use a demultiplexing software that can handle reference SNP genotypes (:ref:`Demuxlet <Demuxlet-docs>`, :ref:`Souporcell <Souporcell-docs>` or :ref:`Vireo<Vireo-docs>`)
 
 Data
 ----
-This is the data that you will ned to have prepared to run scSplit_:
+This is the data that you will need to have prepared to run ScSplit_:
 
 .. admonition:: Required
   :class: important
@@ -86,7 +86,7 @@ After running these SNV calling steps, you will have the following new files in 
   └── freebayes_var.vcf
 
 
-Demultiplex with scSplit
+Demultiplex with ScSplit
 ^^^^^^^^^^^^^^^^^^^^^^^^
 The prepared SNV genotypes and bam file can then be used to demultiplex and call genotypes in each cluster.
 
@@ -124,9 +124,9 @@ Additional details about outputs are available below in the :ref:`Demuxlet Resul
 
 ScSplit Summary
 ^^^^^^^^^^^^^^^
-We have provided a script that will provide a summary of the number of droplets classified as doublets, ambiguous and assigned to each cluster by scSplit_. 
+We have provided a script that will provide a summary of the number of droplets classified as doublets, ambiguous and assigned to each cluster by ScSplit_. 
 You can run this to get a fast and easy summary of your results.
-Just pass the scSplit_ result file:
+Just pass the ScSplit_ result file:
 
 .. code-block:: bash
 
@@ -213,7 +213,7 @@ If you have reference SNP genotypes for some or all of the donors in your pool, 
                                                       The output directory where results will be saved
       -c CLUSTER_VCF, --cluster_vcf CLUSTER_VCF
                                                       A QC, normalized seurat object with
-                                                      classificaitons/clusters as Idents().
+                                                      classifications/clusters as Idents().
       -o OUTDIR, --outdir OUTDIR
                                                       Number of genes to use in
                                                       'Improved_Seurat_Pre_Process' function.
@@ -470,7 +470,7 @@ If you have reference SNP genotypes for some or all of the donors in your pool, 
 
 ScSplit Results and Interpretation
 ----------------------------------
-After running the scSplit_ steps and summarizing the results, you will have a number of files from some of the intermediary steps. Theses are the files that most users will find the most informative:
+After running the ScSplit_ steps and summarizing the results, you will have a number of files from some of the intermediary steps. Theses are the files that most users will find the most informative:
 
   - ``scSplit_doublets_singlets.csv``
 
@@ -504,7 +504,7 @@ If you ran the ``Assign_Indiv_by_Geno.R`` script, you will also have the followi
 
   - ``Genotype_ID_key.txt``
 
-    - Key of the cluster and assignments for each individual and the pearson correlation coefficient.
+    - Key of the cluster and assignments for each individual and the Pearson correlation coefficient.
 
       +-------------+------------+-------------+
       | Genotype_ID | Cluster_ID | Correlation |
@@ -540,13 +540,13 @@ If you ran the ``Assign_Indiv_by_Geno.R`` script, you will also have the followi
 
   - ``ref_clust_pearson_correlation.png``
 
-    - Figure of the pearson correlation coefficients for each cluster-individual pair.
+    - Figure of the Pearson correlation coefficients for each cluster-individual pair.
 
       .. figure:: _figures/OneK1K_scRNA_Sample54_scSplit_pearson_correlation.png
 
   - ``ref_clust_pearson_correlations.tsv``
 
-    - All of the pearson correlation coefficients between the clusters and the individuals
+    - All of the Pearson correlation coefficients between the clusters and the individuals
 
       +---------+---------------------+---------------------+---------------------+---------------------+---------------------+-----+
       | Cluster |          113_113    |          349_350    |          352_353    |          39_39      |          40_40      | ... |
@@ -565,11 +565,11 @@ If you ran the ``Assign_Indiv_by_Geno.R`` script, you will also have the followi
       +---------+---------------------+---------------------+---------------------+---------------------+---------------------+-----+
 
 
-Merging Results with Other Software Restults
+Merging Results with Other Software Results
 --------------------------------------------
 We have provided a script that will help merge and summarize the results from multiple softwares together.
 See :ref:`Combine Results <Combine-docs>`.
 
 Citation
 --------
-If you used this workflow for analysis, please reference our paper (REFERENCE) as well as `scSplit <https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1852-7>`__.
+If you used the Demuxafy platform for analysis, please reference our paper (REFERENCE) as well as `ScSplit <https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1852-7>`__.

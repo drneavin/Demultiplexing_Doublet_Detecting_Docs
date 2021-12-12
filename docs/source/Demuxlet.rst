@@ -7,12 +7,12 @@ Demuxlet Tutorial
 
 Demuxlet_ is a genotype demultiplexing software that requires reference genotypes to be available for each individual in the pool. 
 Therefore, if you don't have reference genotypes, you may want to demultiplex with one of the softwares that do not require reference genotype data
-(:ref:`Freemuxlet <Freemuxlet-docs>`, :ref:`scSplit <scSplit-docs>`, :ref:`Souporcell <Souporcell-docs>` or :ref:`Vireo<Vireo-docs>`)
+(:ref:`Freemuxlet <Freemuxlet-docs>`, :ref:`scSplit <scSplit-docs>`, :ref:`Souporcell <Souporcell-docs>` or :ref:`Vireo <Vireo-docs>`)
 
 
 Data
 ----
-This is the data that you will need to have preparede to run Demuxlet_:
+This is the data that you will need to have prepare to run Demuxlet_:
 
 .. admonition:: Required
   :class: important
@@ -21,7 +21,7 @@ This is the data that you will need to have preparede to run Demuxlet_:
 
     - Filter for common SNPs (> 5% minor allele frequency) and SNPs overlapping genes
 
-    - Demuxlet_ is very sensitive to missing data in a vcf so please make sure you only have complete cases in your refernce donor SNP genotype file
+    - Demuxlet_ is very sensitive to missing data in a vcf so please make sure you only have complete cases in your reference donor SNP genotype file
 
   - Genotype field in ``$VCF`` (``$FIELD``)
 
@@ -47,8 +47,8 @@ This is the data that you will need to have preparede to run Demuxlet_:
 
 Run Demuxlet
 ------------
-Poscle Pileup
-^^^^^^^^^^^^^
+Popscle Pileup
+^^^^^^^^^^^^^^
 First we will need to identify the number of reads from each allele at each SNP location:
 
 .. tabs::
@@ -70,7 +70,7 @@ First we will need to identify the number of reads from each allele at each SNP 
 
       singularity exec Demuxafy.sif popscle dsc-pileup --sam $BAM --vcf $VCF --group-list $BARCODES --out $DEMUXLET_OUTDIR/pileup
 
-If the pileup is successfull, you will have these files in your ``$DEMUXLET_OUTDIR``:
+If the pileup is successful, you will have these files in your ``$DEMUXLET_OUTDIR``:
 
 .. code-block:: bash
 
@@ -106,7 +106,12 @@ Once you have run ``popscle pileup``, you can demultiplex your samples:
 
       singularity exec Demuxafy.sif popscle demuxlet --plp $DEMUXLET_OUTDIR/pileup --vcf $VCF --field $FIELD --group-list $BARCODES --geno-error-coeff 1.0 --geno-error-offset 0.05 --out $DEMUXLET_OUTDIR/demuxlet
 
-If demuxlet is successfull, you will have these new files in your ``$DEMUXLET_OUTDIR``:
+.. admonition:: Note
+
+  Demuxlet_ by default assumes that your ``$VCF`` uses ``R2`` to indicate the imputation score. 
+  If you have a different imputation metric (``INFO`` is also commonly used), then you should use ``--r2-info`` to indicate the metric it should use (for example: ``--r2-info INFO``)
+
+If demuxlet is successful, you will have these new files in your ``$DEMUXLET_OUTDIR``:
 
 .. code-block:: bash
   :emphasize-lines: 2
@@ -171,7 +176,7 @@ or you can write it straight to a file:
 
 .. code-block:: bash
 
-  singularity exec Demuxafy.sif bash Demuxlet_summary.sh $FREEMUXLET_OUTDIR/demuxlet.best > $DEMUXLET_OUTDIR/demuxlet_summary.tsv
+  singularity exec Demuxafy.sif bash Demuxlet_summary.sh $DEMUXLET_OUTDIR/demuxlet.best > $DEMUXLET_OUTDIR/demuxlet_summary.tsv
 
 
 .. admonition:: Note
@@ -185,11 +190,11 @@ or you can write it straight to a file:
 Demuxlet Results and Interpretation
 -----------------------------------
 After running the Demuxlet_ steps and summarizing the results, you will have a number of files from some of the intermediary steps. 
-Theses are the files that most users will find the most informative:
+These are the files that most users will find the most informative:
 
   - ``demuxlet.best``
 
-    - Metrics for each droplet including the singelt, doublet or ambiguous assignment (``DROPLET.TYPE``), final assignment (``BEST.GUESS``), log likelihood of the final assignment (``BEST.LLK``) and other QC metrics.
+    - Metrics for each droplet including the singlet, doublet or ambiguous assignment (``DROPLET.TYPE``), final assignment (``BEST.GUESS``), log likelihood of the final assignment (``BEST.LLK``) and other QC metrics.
 
       +---------+--------------------+----------+-----------+--------------+-------------------------+---------+-------------------------+---------+--------------------+----------------+---------------+---------------+--------------+---------------+---------------+-------------------------+-------------------------+----------------+-------------------+
       | INT_ID  | BARCODE            | NUM.SNPS | NUM.READS | DROPLET.TYPE | BEST.GUESS              |BEST.LLK |       NEXT.GUESS        |NEXT.LLK | DIFF.LLK.BEST.NEXT | BEST.POSTERIOR | SNG.POSTERIOR | SNG.BEST.GUESS| SNG.BEST.LLK | SNG.NEXT.GUESS| SNG.NEXT.LLK  | SNG.ONLY.POSTERIOR      | DBL.BEST.GUESS          |  DBL.BEST.LLK  |  DIFF.LLK.SNG.DBL |
@@ -208,11 +213,11 @@ Theses are the files that most users will find the most informative:
       +---------+--------------------+----------+-----------+--------------+-------------------------+---------+-------------------------+---------+--------------------+----------------+---------------+---------------+--------------+---------------+---------------+-------------------------+-------------------------+----------------+-------------------+
 
 
-Merging Results with Other Software Restults
+Merging Results with Other Software Results
 --------------------------------------------
 We have provided a script that will help merge and summarize the results from multiple softwares together.
 See :ref:`Combine Results <Combine-docs>`.
 
 Citation
 --------
-If you used this workflow for analysis, please reference our paper (REFERENCE) as well as `Demuxlet <https://www.nature.com/articles/nbt.4042>`__.
+If you used the Demuxafy platform for analysis, please reference our paper (REFERENCE) as well as `Demuxlet <https://www.nature.com/articles/nbt.4042>`__.
