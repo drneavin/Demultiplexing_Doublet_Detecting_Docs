@@ -179,6 +179,7 @@ From: continuumio/miniconda3
     R --slave -e 'install.packages("Cairo",repo="http://cran.us.r-project.org")' ### Required for Complex Heatmap
     R --slave -e 'BiocManager::install("ComplexHeatmap")'
     R --slave -e 'install.packages("lsa", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'install.packages("ComplexUpset", repos = "http://cran.us.r-project.org")'
 
 	## Single Cell packages ##
 #    R --slave -e 'install.packages("BH", repos = "http://cran.us.r-project.org")'
