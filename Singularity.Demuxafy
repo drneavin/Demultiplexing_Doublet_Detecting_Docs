@@ -3,7 +3,7 @@ From: continuumio/miniconda3
 
 %labels
 	Author = Drew Neavin
-	Image_version = 0.0.4
+	Image_version = 0.0.5
 
 %environment
     export PATH=/opt:/usr/games:/opt/conda/envs/py37/bin:/opt/conda/bin:/opt/Demultiplexing_Doublet_Detecting_Docs/scripts:opt/Demultiplexing_Doublet_Detecting_Docs/mods:/opt/bedtools2/bin:/opt/vartrix-v1.1.3-x86_64-linux/:opt/vcflib/bin:/opt/vcflib/scripts:/opt/souporcell:/opt/souporcell/troublet/target/release:/opt/minimap2-2.7:/root/.cargo/bin:/opt/freebayes/scripts:/opt/popscle/bin/:/opt/conda/envs/py37/lib/python3.7/site-packages/scSplit/:$PATH
