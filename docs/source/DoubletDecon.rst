@@ -17,7 +17,7 @@ This is the data that you will need to have prepare to run DoubletDecon_:
 .. admonition:: Required
   :class: important
 
-  - A QC-filtered and normalized seurat object (``$SEURAT_OBJ``)
+  - A QC-filtered and normalized seurat object saved as an ``rds`` object (``$SEURAT_RDS``)
 
     - For example, using the `Seurat Vignette <https://satijalab.org/seurat/articles/pbmc3k_tutorial.html>`__
 
@@ -45,7 +45,7 @@ You can either run DoubletDecon_ with the wrapper script we have provided or you
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif DoubletDecon.R -o $DOUBLETDECON_OUTDIR -s $SEURAT_OBJ
+      singularity exec Demuxafy.sif DoubletDecon.R -o $DOUBLETDECON_OUTDIR -s $SEURAT_RDS
 
     You can provide many other parameters as well which can be seen from running a help request:
 
@@ -53,7 +53,7 @@ You can either run DoubletDecon_ with the wrapper script we have provided or you
 
       singularity exec image DoubletDecon.R -h
 
-      usage: DoubletDecon.R [-h] -o OUT -s SEURAT_OBJECT [-g NUM_GENES] [-r RHOP]
+      usage: DoubletDecon.R [-h] -o OUT -s SEURAT_RDSECT [-g NUM_GENES] [-r RHOP]
                       [-p SPECIES] [-n NCORES] [-c REMOVECC] [-m PMF]
                       [-f HEATMAP] [-t CENTROIDS] [-d NUM_DOUBS] [-5 ONLY50]
                       [-u MIN_UNIQ]
@@ -61,7 +61,7 @@ You can either run DoubletDecon_ with the wrapper script we have provided or you
       optional arguments:
         -h, --help            show this help message and exit
         -o OUT, --out OUT     The output directory where results will be saved
-        -s SEURAT_OBJECT, --seurat_object SEURAT_OBJECT
+        -s SEURAT_RDSECT, --SEURAT_RDSect SEURAT_RDSECT
                               A QC, normalized seurat object with
                               classifications/clusters as Idents().
         -g NUM_GENES, --num_genes NUM_GENES
@@ -120,7 +120,7 @@ You can either run DoubletDecon_ with the wrapper script we have provided or you
 
       ## Set up variables ##
       out <- "/path/to/doubletdecon/outdir"
-      seurat_object <- "/path/to/preprocessed/seurat_object.rds"
+      SEURAT_RDSect <- "/path/to/preprocessed/SEURAT_RDSect.rds"
 
 
 
@@ -129,7 +129,7 @@ You can either run DoubletDecon_ with the wrapper script we have provided or you
       dir.create(out, recursive = TRUE)
 
       ## Read in Data ##
-      seurat <- readRDS(seurat_object)
+      seurat <- readRDS(SEURAT_RDSect)
 
       ## Preprocess ##
       processed <- Improved_Seurat_Pre_Process(seurat, num_genes=50, write_files=FALSE)

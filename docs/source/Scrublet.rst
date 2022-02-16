@@ -18,11 +18,17 @@ This is the data that you will need to have prepare to run Scrublet_:
 .. admonition:: Required
   :class: important
 
-  - A counts matrix (``$MATRIX_DIR``)
+  - A counts matrix (``$COUNTS``)
   
-    - DoubletDetection expects counts to be in the cellranger output format (directory containint ``barcodes.tsv``, ``genes.tsv`` and ``matrix.mtx`` **or** ``barcodes.tsv.gz``, ``features.tsv.gz`` and ``matrix.mtx.gz``)
+    - Scrublet_ expects counts to be in the cellranger output format either as
 
-	  - If you don't have your data in this format, you can run Scrublet_ manually in python and load the data in using a method of your choosing.
+      - h5 file (``filtered_feature_bc_matrix.h5``) 
+      
+      **or** 
+      
+      - matrix directory (directory containing ``barcodes.tsv``, ``genes.tsv`` and ``matrix.mtx`` **or** ``barcodes.tsv.gz``, ``features.tsv.gz`` and ``matrix.mtx.gz``)
+
+	    - If you don't have your data in this format, you can run Scrublet_ manually in python and load the data in using a method of your choosing.
 
 .. admonition:: Optional
 
@@ -47,7 +53,7 @@ You can either run Scrublet_ with the wrapper script we have provided or you can
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif Scrublet.py -m $MATRIX_DIR -o $SCRUBLET_OUTDIR
+      singularity exec Demuxafy.sif Scrublet.py -m $COUNTS -o $SCRUBLET_OUTDIR
 
     To see all the parameters that this wrapper script will accept, run:
 

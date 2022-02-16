@@ -20,11 +20,13 @@ This is the data that you will need to have prepare to run Scds_:
 .. admonition:: Required
   :class: important
 
-  - A counts matrix (``$MATRIX_DIR``)
+  - A counts matrix (``$COUNTS``)
   
-    - The directory path containing your cellranger counts matrix files
+    - The directory path containing your cellranger counts matrix files (directory containing ``barcodes.tsv``, ``genes.tsv`` and ``matrix.mtx`` **or** ``barcodes.tsv.gz``, ``features.tsv.gz`` and ``matrix.mtx.gz``)
 
-    - Scds_ expects counts to be in the cellranger counts matrix direcotry output format (a directory containing ``barcodes.tsv``, ``genes.tsv`` and ``matrix.mtx`` **or** ``barcodes.tsv.gz``, ``features.tsv.gz`` and ``matrix.mtx.gz``)
+    **OR**
+
+    - h5 file (``filtered_feature_bc_matrix.h5``) 
 
 	  - If you don't have your data in this format, you can run Scds_ manually in R and load the data in using a method of your choosing.
 
@@ -76,7 +78,7 @@ You can either run Scds_ with the wrapper script we have provided or you can run
       tenX_matrix <- "/path/to/counts/matrix/dir/"
 
       ## Read in data
-      counts <- Read10X(as.character(tenX_matrix), gene.column = 1)
+      counts <- Read10X(as.character(tenX_matrix), gene.column = 1) ## or Read10X_h5 if using h5 file as input
 
       ## Account for possibility that not just single cell data
       if (is.list(counts)){

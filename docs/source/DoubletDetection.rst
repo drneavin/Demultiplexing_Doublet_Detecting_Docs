@@ -18,11 +18,17 @@ This is the data that you will need to have prepare to run DoubletDetection_:
 .. admonition:: Required
   :class: important
 
-  - A counts matrix (``$MATRIX_DIR``)
+  - A counts matrix (``$COUNTS``)
   
-    - DoubletDetection_ expects counts to be in the cellranger output format (directory containing ``barcodes.tsv``, ``genes.tsv`` and ``matrix.mtx`` **or** ``barcodes.tsv.gz``, ``features.tsv.gz`` and ``matrix.mtx.gz``)
+    - DoubletDetection_ expects counts to be in the cellranger output format either as
+    
+      - h5 file (``filtered_feature_bc_matrix.h5``) 
+      
+      **or** 
+      
+      - matrix directory (directory containing ``barcodes.tsv``, ``genes.tsv`` and ``matrix.mtx`` **or** ``barcodes.tsv.gz``, ``features.tsv.gz`` and ``matrix.mtx.gz``)
 
-	  - If you don't have your data in this format, you can run DoubletDetection_ manually in python and load the data in using a method of your choosing.
+	    - If you don't have your data in either of these formats, you can run DoubletDetection_ manually in python and load the data in using a method of your choosing.
 
 .. admonition:: Optional
 
@@ -41,7 +47,7 @@ You can either run DoubletDetection_ with the wrapper script we have provided or
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif DoubletDetection.py -m $MATRIX_DIR -o $DOUBLETDETECTION_OUTDIR
+      singularity exec Demuxafy.sif DoubletDetection.py -m $COUNTS -o $DOUBLETDETECTION_OUTDIR
 
     To see all the parameters that this wrapper script will accept, run:
 

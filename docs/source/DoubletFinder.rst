@@ -17,7 +17,7 @@ This is the data that you will need to have preparede to run DoubletFinder_:
 .. admonition:: Required
   :class: important
 
-  - A QC-filtered and normalized seurat object (``$SEURAT_OBJ``)
+  - A QC-filtered and normalized seurat object saved as an ``rds`` object (``$SEURAT_RDS``)
 
     - For example, using the `Seurat Vignette <https://satijalab.org/seurat/articles/pbmc3k_tutorial.html>`__
 
@@ -44,7 +44,7 @@ You can either run DoubletFinder_ with the wrapper script we have provided or yo
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif DoubletFinder.R -o $DOUBLETFINDER_OUTDIR -s $SEURAT_OBJ -c TRUE -d $DOUBLETS
+      singularity exec Demuxafy.sif DoubletFinder.R -o $DOUBLETFINDER_OUTDIR -s $SEURAT_RDS -c TRUE -d $DOUBLETS
 
     You can provide many other parameters as well which can be seen from running a help request:
 
@@ -53,10 +53,10 @@ You can either run DoubletFinder_ with the wrapper script we have provided or yo
       singularity exec Demuxafy.sif DoubletFinder.R -h
 
 
-      usage: DoubletFinder.R [-h] -o OUT -s SEURAT_OBJECT -c SCT -d DOUBLET_NUMBER [-p PCS] [-n PN]a@brenner-fpoptional arguments:  
+      usage: DoubletFinder.R [-h] -o OUT -s SEURAT_RDSECT -c SCT -d DOUBLET_NUMBER [-p PCS] [-n PN]a@brenner-fpoptional arguments:  
 	  	-h, --help            show this help message and exit
         -o OUT, --out OUT     The output directory where results will be saved
-        -s SEURAT_OBJECT, --seurat_object SEURAT_OBJECT
+        -s SEURAT_RDSECT, --SEURAT_RDSect SEURAT_RDSECT
                               A QC, normalized seurat object with
                               classifications/clusters as Idents().
         -c SCT, --sct SCT     Whether sctransform was used for normalization.
@@ -93,7 +93,7 @@ You can either run DoubletFinder_ with the wrapper script we have provided or yo
 
       ## Set up parameters ##
       out <- "/path/to/doubletfinder/outdir"
-      seurat_object <- "/path/to/preprocessed/seurat_object.rds"
+      SEURAT_RDSect <- "/path/to/preprocessed/SEURAT_RDSect.rds"
       doublet_number <- 3200
 
       ## make sure the directory exists ###
@@ -103,7 +103,7 @@ You can either run DoubletFinder_ with the wrapper script we have provided or yo
       options(future.globals.maxSize=(850*1024^2))
 
       ### Read in the data
-      seurat <- readRDS(seurat_object)
+      seurat <- readRDS(SEURAT_RDSect)
 
 
       ## pK Identification (no ground-truth) ---------------------------------------------------------------------------------------

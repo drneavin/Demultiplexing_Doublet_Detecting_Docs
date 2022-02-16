@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 .libPaths("/usr/local/lib/R/site-library")
-library(argparse)
+lsuppressMessages(suppressWarnings(ibrary(argparse)))
 
 
 # create parser object
@@ -17,12 +17,12 @@ parser$add_argument("-o", "--outdir", required = TRUE, type = "character", help 
 args <- parser$parse_args()
 
 
-library(tidyr)
-library(tidyverse)
-library(dplyr)
-library(vcfR)
-library(lsa)
-library(ComplexHeatmap)
+suppressMessages(suppressWarnings(library(tidyr)))
+suppressMessages(suppressWarnings(library(tidyverse)))
+suppressMessages(suppressWarnings(library(dplyr)))
+suppressMessages(suppressWarnings(library(vcfR)))
+suppressMessages(suppressWarnings(library(lsa)))
+suppressMessages(suppressWarnings(library(ComplexHeatmap)))
 
 ########## Set up functions ##########
 calculate_DS <- function(GP_df){

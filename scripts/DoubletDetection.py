@@ -5,7 +5,7 @@ import os
 
 parser = argparse.ArgumentParser(
     description="wrapper for DoubletDetection for doublet detection from transcriptomic data.")
-parser.add_argument("-m", "--counts_matrix", required = True, help = "cell ranger counts matrix directory containing matrix files. Can also use full path to matrix.mtx.")
+parser.add_argument("-m", "--counts_matrix", required = True, help = "cell ranger counts matrix directory containing matrix files or full path to matrix.mtx. Can also also provide the 10x h5.")
 parser.add_argument("-b", "--barcodes", required = False, default = None, help = "File containing droplet barcodes. Use barcodes from provided 10x dir by default.")
 parser.add_argument("-o", "--outdir", required = False, default = os.getcwd(), help = "The output directory; default is current working directory")
 parser.add_argument("-i", "--n_iterations", required = False, default = 50, type = int, help = "Number of iterations to use; default is 50")
@@ -23,6 +23,7 @@ matplotlib.use('PDF')
 import matplotlib.pyplot as plt
 import sys
 import pandas as pd
+import scanpy
 
 # Load read10x function from mods directory
 
@@ -51,7 +52,14 @@ if not os.path.isdir(args.outdir):
 
 
 ### Read in data ###
-raw_counts = read10x.import_cellranger_mtx(args.counts_matrix)
+if os.path.exists(args.counts_matrix):
+    if args.counts_matrix.endswith(".h5"):
+        raw_counts = scanpy.read_10x_h5(args.counts_matrix)
+    else:
+        raw_counts = read10x.import_cellranger_mtx(args.counts_matrix)
+else:
+    print("Couldn't find the counts file " + args.counts_matrix)
+
 
 if args.barcodes is None:
     if os.path.exists(os.path.join(args.counts_matrix, "barcodes.tsv.gz")):
@@ -59,7 +67,7 @@ if args.barcodes is None:
     elif os.path.exists(os.path.join(args.counts_matrix, "barcodes.tsv")):
         barcodes_df = read10x.read_barcodes(os.path.join(args.counts_matrix ,"barcodes.tsv"))
     else:
-        print("No barcode file in provided counts matrix directory")
+        print("No barcode file in provided or couldn't find it at counts matrix directory " + args.counts_matrix)
 else:
     barcodes_df = read10x.read_barcodes(args.barcodes)
 

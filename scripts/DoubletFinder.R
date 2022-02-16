@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 .libPaths("/usr/local/lib/R/site-library")
-library(argparse)
+suppressMessages(suppressWarnings(library(argparse)))
 
 # create parser object
 parser <- ArgumentParser()
@@ -9,7 +9,7 @@ parser <- ArgumentParser()
 # specify our desired options 
 # by default ArgumentParser will add an help option 
 parser$add_argument("-o", "--out", required = TRUE, help="The output directory where results will be saved")
-parser$add_argument("-s", "--seurat_object", required = TRUE, type = "character", help = "A QC, normalized seurat object with classifications/clusters as Idents().")
+parser$add_argument("-s", "--seurat_object", required = TRUE, type = "character", help = "A QC, normalized seurat object with classifications/clusters as Idents() saved as an rds object.")
 parser$add_argument("-c", "--sct", required = TRUE, type = "logical", help = "Whether sctransform was used for normalization.")
 parser$add_argument("-d", "--doublet_number", required = TRUE, type = "integer", help = "Number of expected doublets based on droplets captured.")
 parser$add_argument("-p", "--PCs", required = FALSE, default = 10, type = "integer", help = "Number of PCs to use for \'doubletFinder_v3\' function.")
@@ -19,12 +19,12 @@ parser$add_argument("-n", "--pN", required = FALSE, default = 0.25, type = "doub
 # otherwise if options not found on command line then set defaults, 
 args <- parser$parse_args()
 
-library(Seurat)
-library(ggplot2)
-library(DoubletFinder)
-library(dplyr)
-library(tidyr)
-library(tidyverse)
+suppressMessages(suppressWarnings(library(Seurat)))
+suppressMessages(suppressWarnings(library(ggplot2)))
+suppressMessages(suppressWarnings(library(DoubletFinder)))
+suppressMessages(suppressWarnings(library(dplyr)))
+suppressMessages(suppressWarnings(library(tidyr)))
+suppressMessages(suppressWarnings(library(tidyverse)))
 
 ## make sure the directory exists ###
 dir.create(args$out, recursive = TRUE)

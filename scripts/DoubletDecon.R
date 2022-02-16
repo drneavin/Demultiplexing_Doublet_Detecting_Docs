@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 .libPaths("/usr/local/lib/R/site-library")
-library(argparse)
+suppressMessages(suppressWarnings(library(argparse)))
 
 
 # create parser object
@@ -10,7 +10,7 @@ parser <- ArgumentParser()
 # specify our desired options 
 # by default ArgumentParser will add an help option 
 parser$add_argument("-o", "--out", required = TRUE, help="The output directory where results will be saved")
-parser$add_argument("-s", "--seurat_object", required = TRUE, type = "character", help = "A QC, normalized seurat object with classifications/clusters as Idents().")
+parser$add_argument("-s", "--seurat_object", required = TRUE, type = "character", help = "A QC, normalized seurat object with classifications/clusters as Idents() saved as an rds object.")
 parser$add_argument("-g", "--num_genes", required = FALSE, type = "integer", default=50, help = "Number  of genes to use in \'Improved_Seurat_Pre_Process\' function.")
 parser$add_argument("-r", "--rhop", required = FALSE, type="double", default=0.9, help="rhop to use in DoubletDecon - the number of SD from the mean to identify upper limit to blacklist")
 parser$add_argument("-p", "--species", required = FALSE, type = "character", default="hsa", help = "The species of your sample. Can be scientific species name, KEGG ID, three letter species abbreviation, or NCBI ID.")
@@ -27,11 +27,11 @@ parser$add_argument("-u", "--min_uniq", required = FALSE, type = "integer", defa
 # otherwise if options not found on command line then set defaults, 
 args <- parser$parse_args()
 
-library(DoubletDecon)
-library(tidyverse)
-library(Seurat)
-library(ggplot2)
-library(data.table)
+suppressMessages(suppressWarnings(library(DoubletDecon)))
+suppressMessages(suppressWarnings(library(tidyverse)))
+suppressMessages(suppressWarnings(library(Seurat)))
+suppressMessages(suppressWarnings(library(ggplot2)))
+suppressMessages(suppressWarnings(library(data.table)))
 
 
 ## make sure the directory exists ###
