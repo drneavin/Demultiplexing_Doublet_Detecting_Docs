@@ -28,7 +28,7 @@ parser$add_argument("-v", "--vireo", required = FALSE, type = "character", defau
 parser$add_argument("-e", "--DoubletDecon", required = FALSE, type = "character", default=NULL, help = "Path to DoubletDecon results. Only use this option if you want to include the DoubletDecon results.")
 parser$add_argument("-t", "--DoubletDetection", required = FALSE, type = "character", default=NULL, help = "Path to DoubletDetection results. Only use this option if you want to include the DoubletDetection results.")
 parser$add_argument("-i", "--DoubletFinder", required = FALSE, type = "character", default=NULL, help = "Path to DoubletFinder results. Only use this option if you want to include the DoubletFinder results.")
-parser$add_argument("-n", "--seurat_mid", required = FALSE, type = "character", default=NULL, help = "Path to seurat_mid results. Only use this option if you want to include the seurat_mid results.")
+parser$add_argument("-n", "--scDblFinder", required = FALSE, type = "character", default=NULL, help = "Path to scDblFinder results. Only use this option if you want to include the scDblFinder results.")
 parser$add_argument("-c", "--scds", required = FALSE, type = "character", default=NULL, help = "Path to scds results. Only use this option if you want to include the scds results.")
 parser$add_argument("-r", "--scrublet", required = FALSE, type = "character", default=NULL, help = "Path to scrublet results. Only use this option if you want to include the scrublet results.")
 parser$add_argument("-l", "--solo", required = FALSE, type = "character", default=NULL, help = "Path to solo results. Only use this option if you want to include the solo results.")
@@ -72,7 +72,7 @@ which.max.simple=function(x,na.rm=TRUE,tie_value="NA"){
 
 
 ### Check to make sure user has provided at least two softwares to combine ###
-if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(args$scSplit), !is.null(args$souporcell), !is.null(args$vireo),!is.null(args$DoubletDecon), !is.null(args$DoubletDetection), !is.null(args$DoubletFinder), !is.null(args$seurat_mid), !is.null(args$scds), !is.null(args$scrublet), !is.null(args$solo)))) < 1){
+if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(args$scSplit), !is.null(args$souporcell), !is.null(args$vireo),!is.null(args$DoubletDecon), !is.null(args$DoubletDetection), !is.null(args$DoubletFinder), !is.null(args$scDblFinder), !is.null(args$scds), !is.null(args$scrublet), !is.null(args$solo)))) < 1){
 	message("You didn't provide any software results to combine. Please try again - this time providing at least one inputs.")
 	q()
 } else{
@@ -251,16 +251,16 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 		}
 	}
 
-	if (!is.null(args$seurat_mid)){
-		message("Reading in seurat_mid results.")
-		if (file_test("-f", args$seurat_mid)){
-			results_list[["seurat_mid"]] <- fread(args$seurat_mid, sep = "\t")
+	if (!is.null(args$scDblFinder)){
+		message("Reading in scDblFinder results.")
+		if (file_test("-f", args$scDblFinder)){
+			results_list[["scDblFinder"]] <- fread(args$scDblFinder, sep = "\t")
 		} else {
 			tryCatch({
-				results_list[["seurat_mid"]] <- fread(paste0(args$seurat_mid, "/seurat_mid_doublets_singlets.tsv"), sep = "\t")
+				results_list[["scDblFinder"]] <- fread(paste0(args$scDblFinder, "/scDblFinder_doublets_singlets.tsv"), sep = "\t")
 			},
 			error = function(e) {
-				message("Can't read in the seurat_mid report either from the file you provided or to find the 'seurat_mid_doublets_singlets.tsv' file in the directory you provided. Please double check your path and provide the full path to the seurat_mid file. Exiting.")
+				message("Can't read in the scDblFinder report either from the file you provided or to find the 'scDblFinder_doublets_singlets.tsv' file in the directory you provided. Please double check your path and provide the full path to the scDblFinder file. Exiting.")
 				q()
 			})
 		}
@@ -336,6 +336,11 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 			### Check for column names ###
 			if (all(!(grepl("Genotype_ID",colnames(results_assignments_list[["Freemuxlet"]]))) & !(grepl("Cluster_ID", colnames(results_assignments_list[["Freemuxlet"]]))))){
 				message("Didn't find 'Genotype_ID' and 'Cluster_ID' in the columns of your freemuxlet cluster-to-indiviudal assignments file. Will use first column as the individual ID and the second column will be the cluster ID.")
+			} else {
+				if ("Correlation" %in% colnames(results_assignments_list[["Freemuxlet"]])){
+					temp <- results_assignments_list[["Freemuxlet"]][,c("Genotype_ID", "Cluster_ID", "Correlation")]
+					results_assignments_list[["Freemuxlet"]] <- temp
+				}
 			}
 			colnames(results_assignments_list[["Freemuxlet"]])[1:2] <- c("Freemuxlet_Individual_Assignment", "Freemuxlet_Cluster")
 			results_assignments_list[["Freemuxlet"]]$Freemuxlet_Cluster <- as.character(results_assignments_list[["Freemuxlet"]]$Freemuxlet_Cluster)
@@ -344,7 +349,7 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 			results_assignments_list[["Freemuxlet"]]$Freemuxlet_Cluster <- gsub("CLUST", "", results_assignments_list[["Freemuxlet"]]$Freemuxlet_Cluster)
 			results_assignments_list[["Freemuxlet"]] <- results_assignments_list[["Freemuxlet"]][Freemuxlet_Cluster != "unassigned"]
 			
-			if ("Correlation" %in% colnames(results_assignments_list[["scSplit"]])){
+			if ("Correlation" %in% colnames(results_assignments_list[["Freemuxlet"]])){
 				results_assignments_list[["Freemuxlet"]] <- results_assignments_list[["Freemuxlet"]][Correlation > args$freemuxlet_correlation_limit]
 				results_assignments_list[["Freemuxlet"]]$Correlation <- NULL
 			}
@@ -382,6 +387,12 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 			### Check for column names ###
 			if (all(!(grepl("Genotype_ID",colnames(results_assignments_list[["scSplit"]]))) & !(grepl("Cluster_ID", colnames(results_assignments_list[["scSplit"]]))))){
 				message("Didn't find 'Genotype_ID' and 'Cluster_ID' in the columns of your scSplit cluster-to-indiviudal assignments. Will use first column as the individual ID and the second column will be the cluster ID.")
+			} else {
+				if ("Correlation" %in% colnames(results_assignments_list[["scSplit"]])){
+					temp <- results_assignments_list[["scSplit"]][,c("Genotype_ID", "Cluster_ID", "Correlation")]
+					results_assignments_list[["scSplit"]] <- temp
+				}
+					colnames(results_assignments_list[["scSplit"]])[1:2] <- c("scSplit_Individual_Assignment", "scSplit_Cluster")
 			}
 			colnames(results_assignments_list[["scSplit"]])[1:2] <- c("scSplit_Individual_Assignment", "scSplit_Cluster")
 			results_assignments_list[["scSplit"]]$scSplit_Cluster <- as.character(results_assignments_list[["scSplit"]]$scSplit_Cluster)
@@ -423,6 +434,12 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 			### Check for column names ###
 			if (all(!(grepl("Genotype_ID",colnames(results_assignments_list[["Souporcell"]]))) & !(grepl("Cluster_ID", colnames(results_assignments_list[["Souporcell"]]))))){
 				message("Didn't find 'Genotype_ID' and 'Cluster_ID' in the columns of your souporcell cluster-to-indiviudal assignments. Will use first column as the individual ID and the second column will be the cluster ID.")
+			} else {
+				if ("Correlation" %in% colnames(results_assignments_list[["scSplit"]])){
+					temp <- results_assignments_list[["scSplit"]][,c("Genotype_ID", "Cluster_ID", "Correlation")]
+					results_assignments_list[["scSplit"]] <- temp
+				} 
+					colnames(results_assignments_list[["scSplit"]])[1:2] <- c("scSplit_Individual_Assignment", "scSplit_Cluster")
 			}
 			colnames(results_assignments_list[["Souporcell"]])[1:2] <- c("Souporcell_Individual_Assignment", "Souporcell_Cluster")
 			results_assignments_list[["Souporcell"]]$Souporcell_Cluster <- as.character(results_assignments_list[["Souporcell"]]$Souporcell_Cluster)
@@ -474,7 +491,7 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 
 	if (length(c(args$demuxlet, args$freemuxlet, args$scSplit, args$souporcell, args$vireo)) > 1) {
 
-		if (("Souporcell_Cluster" %in% colnames(combined_results)) & !("Souporcell_Individual_Assignment" %in% colnames(combined_results)) | ("scSplit_Cluster" %in% colnames(combined_results)) & !("scSplit_Individual_Assignment" %in% colnames(combined_results)) | ("Freemuxlet_Cluster" %in% colnames(combined_results)) & !("Freemuxlet_Individual_Assignment" %in% colnames(combined_results))){
+		if (("Souporcell_Cluster" %in% colnames(combined_results) & !("Souporcell_Individual_Assignment" %in% colnames(combined_results))) | ("scSplit_Cluster" %in% colnames(combined_results)) & !("scSplit_Individual_Assignment" %in% colnames(combined_results)) | ("Freemuxlet_Cluster" %in% colnames(combined_results)) & !("Freemuxlet_Individual_Assignment" %in% colnames(combined_results))){
 
 				update_assignments <- TRUE
 
@@ -483,7 +500,7 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 		
 		if (!is.null(args$souporcell_assignments)){
 			if ("Souporcell_Individual_Assignment" %in% colnames(combined_results)) {
-				if (unique(results_assignments_list[["Souporcell"]]$Souporcell_Cluster) < unique(combined_results$Souporcell_Individual_Assignment[!(combined_results$Souporcell_Individual_Assignment %in% c("doublet", "unassigned"))])) {
+				if (length(unique(results_assignments_list[["Souporcell"]]$Souporcell_Cluster)) < length(unique(combined_results$Souporcell_Individual_Assignment[!(combined_results$Souporcell_Individual_Assignment %in% c("doublet", "unassigned"))]))) {
 					update_assignments <- TRUE
 				}
 			}
@@ -492,7 +509,7 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 
 		if (!is.null(args$scSplit_assignments)){
 			if ("scSplit_Individual_Assignment" %in% colnames(combined_results)) {
-				if (unique(results_assignments_list[["scSplit"]]$scSplit_Cluster) < unique(combined_results$scSplit_Individual_Assignment[!(combined_results$scSplit_Individual_Assignment %in% c("doublet", "unassigned"))])){
+				if (length(unique(results_assignments_list[["scSplit"]]$scSplit_Cluster)) < length(unique(combined_results$scSplit_Individual_Assignment[!(combined_results$scSplit_Individual_Assignment %in% c("doublet", "unassigned"))]))){
 					update_assignments <- TRUE
 				}
 			}
@@ -500,7 +517,7 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 
 		if (!is.null(args$freemuxlet_assignments)){
 			if ("Freemuxlet_Individual_Assignment" %in% colnames(combined_results)) {
-				if (unique(results_assignments_list[["Freemuxlet"]]$Freemuxlet_Cluster) < unique(combined_results$Freemuxlet_Individual_Assignment[!(combined_results$Freemuxlet_Individual_Assignment %in% c("doublet", "unassigned"))])) {
+				if (length(unique(results_assignments_list[["Freemuxlet"]]$Freemuxlet_Cluster)) < length(unique(combined_results$Freemuxlet_Individual_Assignment[!(combined_results$Freemuxlet_Individual_Assignment %in% c("doublet", "unassigned"))]))) {
 					update_assignments <- TRUE
 				}
 			}
@@ -513,7 +530,7 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 		message("\nConverting demultiplexing clusters without individual assignments to common ids.\n")
 
 
-		cluster_assign_cols <- c(paste0(cluster_no_assign,"_Cluster"), grep("Individual_Assignment", colnames(combined_results)))
+		cluster_assign_cols <- c(paste0(cluster_no_assign,"_Cluster"), grep("Individual_Assignment", colnames(combined_results), value = TRUE))
 		if (!is.null(args$ref)){
 			if (!(args$ref %in% colnames(combined_results))){
 				ref <- args$ref
@@ -697,7 +714,7 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 		upset_df <- upset_df[, !(colnames(upset_df) %in% c("MajoritySinglet_DropletType", "AtLeastHalfSinglet", "AnySinglet_DropletType", "AnyDoublet_DropletType"))]
 		upset_df <- as.data.frame(1*(upset_df == "singlet"))
 		colnames(upset_df) <- gsub("_DropletType", "", colnames(upset_df))
-		softwares_ordered <- c("Demuxlet", "Freemuxlet", "scSplit", "Souporcell", "Vireo", "DoubletDecon", "DoubletDetection", "DoubletFinder", "seurat_mid", "scds", "scrublet", "solo")
+		softwares_ordered <- c("Demuxlet", "Freemuxlet", "scSplit", "Souporcell", "Vireo", "DoubletDecon", "DoubletDetection", "DoubletFinder", "scDblFinder", "scds", "scrublet", "solo")
 		columns <- softwares_ordered[softwares_ordered %in% colnames(upset_df)]
 
 		upset_df$Final_Individual_Assignment <- as.vector(combined_results[,.SD, .SDcols = (colnames(combined_results) %in% c("AnySinglet_Individual_Assignment", "AtLeastHalfSinglet_Individual_Assignment", "AnySinglet_Individual_Assignment", "MajoritySinglet_Individual_Assignment"))][[1]])
@@ -725,7 +742,7 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 		message("\nMaking figures of software and final assignments.\n")
 
 		pdf(file= paste0(tools::file_path_sans_ext(args$out),"Singlets_upset.pdf"), height = 5, width = 10) # or other device
-		pUpset
+		print(pUpset)
 		dev.off()
 
 
@@ -735,7 +752,7 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 		upset_df <- upset_df[, !(colnames(upset_df) %in% c("MajoritySinglet_DropletType", "AtLeastHalfSinglet_DropletType", "AnySinglet_DropletType", "AnyDoublet_DropletType"))]
 		upset_df <- as.data.frame(1*(upset_df == "singlet"))
 		colnames(upset_df) <- gsub("_DropletType", "", colnames(upset_df))
-		softwares_ordered <- c("Demuxlet", "Freemuxlet", "scSplit", "Souporcell", "Vireo", "DoubletDecon", "DoubletDetection", "DoubletFinder", "seurat_mid", "scds", "scrublet", "solo")
+		softwares_ordered <- c("Demuxlet", "Freemuxlet", "scSplit", "Souporcell", "Vireo", "DoubletDecon", "DoubletDetection", "DoubletFinder", "scDblFinder", "scds", "scrublet", "solo")
 		columns <- softwares_ordered[softwares_ordered %in% colnames(upset_df)]
 
 		upset_df$Final_Assignment <- as.vector(combined_results[,.SD, .SDcols = (colnames(combined_results) %in% c("MajoritySinglet_DropletType", "AtLeastHalfSinglet_DropletType", "AnySinglet_DropletType", "AnyDoublet_DropletType"))][[1]])
@@ -763,7 +780,7 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 		message("\nMaking figures of software and final assignments.\n")
 
 		pdf(file= paste0(tools::file_path_sans_ext(args$out),"Singlets_upset.pdf"), height = 5, width = 10) # or other device
-		pUpset
+		print(pUpset)
 		dev.off()
 
 	} else {
@@ -772,7 +789,7 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 		upset_df <- upset_df[, !(colnames(upset_df) %in% c("MajoritySinglet_DropletType", "AtLeastHalfSinglet_DropletType", "AnySinglet_DropletType", "AnyDoublet_DropletType"))]
 		upset_df <- as.data.frame(1*(upset_df == "singlet"))
 		colnames(upset_df) <- gsub("_DropletType", "", colnames(upset_df))
-		softwares_ordered <- c("Demuxlet", "Freemuxlet", "scSplit", "Souporcell", "Vireo", "DoubletDecon", "DoubletDetection", "DoubletFinder", "seurat_mid", "scds", "scrublet", "solo")
+		softwares_ordered <- c("Demuxlet", "Freemuxlet", "scSplit", "Souporcell", "Vireo", "DoubletDecon", "DoubletDetection", "DoubletFinder", "scDblFinder", "scds", "scrublet", "solo")
 		columns <- softwares_ordered[softwares_ordered %in% colnames(upset_df)]
 
 
@@ -791,7 +808,7 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 		message("\nMaking figures of final assignments.\n")
 
 		pdf(file= paste0(tools::file_path_sans_ext(args$out),"Singlets_upset.pdf"), height = 5, width = 10) # or other device
-		pUpset
+		print(pUpset)
 		dev.off()
 
 	}

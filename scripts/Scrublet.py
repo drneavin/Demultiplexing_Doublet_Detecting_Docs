@@ -42,9 +42,9 @@ plt.rcParams['pdf.fonttype'] = 42
 ## Basic run with scrublet
 if os.path.exists(args.counts_matrix):
     if args.counts_matrix.endswith(".h5"):
-        raw_counts = scanpy.read_10x_h5(args.counts_matrix)
+        counts_matrix = scanpy.read_10x_h5(args.counts_matrix)
     else:
-        raw_counts = read10x.import_cellranger_mtx(args.counts_matrix)
+        counts_matrix = read10x.import_cellranger_mtx(args.counts_matrix)
 else:
     print("Couldn't find the counts file " + args.counts_matrix)
 

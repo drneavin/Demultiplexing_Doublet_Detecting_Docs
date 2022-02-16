@@ -27,7 +27,7 @@ suppressMessages(suppressWarnings(library(SingleCellExperiment)))
 ## Read in data
 if (file.exists(args$tenX_matrix)){
     print(paste0("Using the following counts: ", args$tenX_matrix))
-    if endsWith(args$tenX_matrix, ".h5"){
+    if (endsWith(args$tenX_matrix, ".h5")){
         counts <- Read10X_h5(args$tenX_matrix, gene.column = 1)
     } else {
         counts <- Read10X(args$tenX_matrix, gene.column = 1)

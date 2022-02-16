@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 .libPaths("/usr/local/lib/R/site-library")
-lsuppressMessages(suppressWarnings(ibrary(argparse)))
+suppressMessages(suppressWarnings(library(argparse)))
 
 
 # create parser object
