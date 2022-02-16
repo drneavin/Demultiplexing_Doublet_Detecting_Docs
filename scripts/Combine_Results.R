@@ -435,11 +435,11 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 			if (all(!(grepl("Genotype_ID",colnames(results_assignments_list[["Souporcell"]]))) & !(grepl("Cluster_ID", colnames(results_assignments_list[["Souporcell"]]))))){
 				message("Didn't find 'Genotype_ID' and 'Cluster_ID' in the columns of your souporcell cluster-to-indiviudal assignments. Will use first column as the individual ID and the second column will be the cluster ID.")
 			} else {
-				if ("Correlation" %in% colnames(results_assignments_list[["scSplit"]])){
-					temp <- results_assignments_list[["scSplit"]][,c("Genotype_ID", "Cluster_ID", "Correlation")]
-					results_assignments_list[["scSplit"]] <- temp
+				if ("Correlation" %in% colnames(results_assignments_list[["Souporcell"]])){
+					temp <- results_assignments_list[["Souporcell"]][,c("Genotype_ID", "Cluster_ID", "Correlation")]
+					results_assignments_list[["Souporcell"]] <- temp
 				} 
-					colnames(results_assignments_list[["scSplit"]])[1:2] <- c("scSplit_Individual_Assignment", "scSplit_Cluster")
+					colnames(results_assignments_list[["Souporcell"]])[1:2] <- c("Souporcell_Individual_Assignment", "Souporcell_Cluster")
 			}
 			colnames(results_assignments_list[["Souporcell"]])[1:2] <- c("Souporcell_Individual_Assignment", "Souporcell_Cluster")
 			results_assignments_list[["Souporcell"]]$Souporcell_Cluster <- as.character(results_assignments_list[["Souporcell"]]$Souporcell_Cluster)
