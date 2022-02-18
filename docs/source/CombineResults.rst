@@ -217,9 +217,10 @@ Here, we show the results for the above example that also provides combined call
 
   .
   ├── combined_results_demultiplexing_summary.tsv
+  ├── combined_resultsSinglets_upset.pdf
   ├── combined_results_summary.tsv
-  ├── combined_results_w_combined_assignments.tsv
-  └── combined_results.tsv
+  ├── combined_results.tsv
+  └── combined_results_w_combined_assignments.tsv
 
 .. admonition:: Note
 
@@ -229,7 +230,15 @@ Here, we show the results for the above example that also provides combined call
 
 Here's a deeper look at the contents of each of these results:
 
- - ``combined_results.tsv``
+  - ``combined_resultsSinglets_upset.pdf``
+
+    - This is an upset figure of the droplets which are colored by their finall individual or doublet classification.
+
+    - A filled circle indicates the that those droplets are classified as singlets by that method while empty circles indicate a doublet classification by that software
+
+    .. image:: _figures/combined_resultsSinglets_upset.png
+
+  - ``combined_results.tsv``
   
     - Has the selected results combined; only including key columns.
 
@@ -337,7 +346,7 @@ Here's a deeper look at the contents of each of these results:
       |...                             | ...                                     | ...  |
       +--------------------------------+-----------------------------------------+------+
 
-  - combined_results_w_combined_assignments.tsv
+  - ``combined_results_w_combined_assignments.tsv``
 
     - Dataframe combining all the software results together + combined assignment based on selected method:
 

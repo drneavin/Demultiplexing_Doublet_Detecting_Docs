@@ -18,11 +18,17 @@ This is the data that you will need to have prepare to run Scrublet_:
 .. admonition:: Required
   :class: important
 
-  - A counts matrix (``$MATRIX_DIR``)
+  - A counts matrix (``$COUNTS``)
   
-    - DoubletDetection expects counts to be in the cellranger output format (directory containint ``barcodes.tsv``, ``genes.tsv`` and ``matrix.mtx`` **or** ``barcodes.tsv.gz``, ``features.tsv.gz`` and ``matrix.mtx.gz``)
+    - Scrublet_ expects counts to be in the cellranger output format either as
 
-	  - If you don't have your data in this format, you can run Scrublet_ manually in python and load the data in using a method of your choosing.
+      - h5 file (``filtered_feature_bc_matrix.h5``) 
+      
+        **or** 
+      
+      - matrix directory (directory containing ``barcodes.tsv``, ``genes.tsv`` and ``matrix.mtx`` **or** ``barcodes.tsv.gz``, ``features.tsv.gz`` and ``matrix.mtx.gz``)
+
+      - If you don't have your data in this format, you can run Scrublet_ manually in python and load the data in using a method of your choosing.
 
 .. admonition:: Optional
 
@@ -47,7 +53,7 @@ You can either run Scrublet_ with the wrapper script we have provided or you can
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif Scrublet.py -m $MATRIX_DIR -o $SCRUBLET_OUTDIR
+      singularity exec Demuxafy.sif Scrublet.py -m $COUNTS -o $SCRUBLET_OUTDIR
 
     To see all the parameters that this wrapper script will accept, run:
 
@@ -56,44 +62,31 @@ You can either run Scrublet_ with the wrapper script we have provided or you can
       singularity exec Demuxafy.sif Scrublet.py -h
 
 
-      usage: scrublet.py [-h] -m COUNTS_MATRIX [-b BARCODES] [-r SIM_DOUBLET_RATIO]
-              [-c MIN_COUNTS] [-e MIN_CELLS]
-              [-v MIN_GENE_VARIABILITY_PCTL] [-p N_PRIN_COMPS]
-              [-t SCRUBLET_DOUBLET_THRESHOLD] [-o OUTDIR]
+
+      usage: Scrublet.py [-h] -m COUNTS_MATRIX [-b BARCODES] [-r SIM_DOUBLET_RATIO] [-c MIN_COUNTS] [-e MIN_CELLS] [-v MIN_GENE_VARIABILITY_PCTL] [-p N_PRIN_COMPS] [-t SCRUBLET_DOUBLET_THRESHOLD] [-o OUTDIR]
 
       wrapper for scrublet for doublet detection of transcriptomic data.
 
       optional arguments:
-      -h, --help            show this help message and exit
-      -m COUNTS_MATRIX, --counts_matrix COUNTS_MATRIX
-                  cell ranger counts matrix directory
-      -b BARCODES, --barcodes BARCODES
-                  barcodes.tsv or barcodes.tsv.gz from cellranger
-      -r SIM_DOUBLET_RATIO, --sim_doublet_ratio SIM_DOUBLET_RATIO
-                  Number of doublets to simulate relative to the number
-                  of observed transcriptomes.
-      -c MIN_COUNTS, --min_counts MIN_COUNTS
-                  Used for gene filtering prior to PCA. Genes expressed
-                  at fewer than min_counts in fewer than min_cells are
-                  excluded.
-      -e MIN_CELLS, --min_cells MIN_CELLS
-                  Used for gene filtering prior to PCA. Genes expressed
-                  at fewer than min_counts in fewer than are excluded.
-      -v MIN_GENE_VARIABILITY_PCTL, --min_gene_variability_pctl MIN_GENE_VARIABILITY_PCTL
-                  Used for gene filtering prior to PCA. Keep the most
-                  highly variable genes in the top
-                  min_gene_variability_pctl percentile), as measured by
-                  the v-statistic [Klein et al., Cell 2015].
-      -p N_PRIN_COMPS, --n_prin_comps N_PRIN_COMPS
-                  Number of principal components used to embed the
-                  transcriptomes priorto k-nearest-neighbor graph
-                  construction.
-      -t SCRUBLET_DOUBLET_THRESHOLD, --scrublet_doublet_threshold SCRUBLET_DOUBLET_THRESHOLD
-                  Manually Set the scrublet doublet threshold location.
-                  For running a second time if scrublet incorrectly
-                  places the threshold the first time
-      -o OUTDIR, --outdir OUTDIR
-                  The output directory
+        -h, --help            show this help message and exit
+        -m COUNTS_MATRIX, --counts_matrix COUNTS_MATRIX
+                              cell ranger counts matrix directory containing matrix files or full path to matrix.mtx. Can also also provide the 10x h5.
+        -b BARCODES, --barcodes BARCODES
+                              barcodes.tsv or barcodes.tsv.gz from cellranger
+        -r SIM_DOUBLET_RATIO, --sim_doublet_ratio SIM_DOUBLET_RATIO
+                              Number of doublets to simulate relative to the number of observed transcriptomes.
+        -c MIN_COUNTS, --min_counts MIN_COUNTS
+                              Used for gene filtering prior to PCA. Genes expressed at fewer than min_counts in fewer than min_cells are excluded.
+        -e MIN_CELLS, --min_cells MIN_CELLS
+                              Used for gene filtering prior to PCA. Genes expressed at fewer than min_counts in fewer than are excluded.
+        -v MIN_GENE_VARIABILITY_PCTL, --min_gene_variability_pctl MIN_GENE_VARIABILITY_PCTL
+                              Used for gene filtering prior to PCA. Keep the most highly variable genes in the top min_gene_variability_pctl percentile), as measured by the v-statistic [Klein et al., Cell 2015].
+        -p N_PRIN_COMPS, --n_prin_comps N_PRIN_COMPS
+                              Number of principal components used to embed the transcriptomes priorto k-nearest-neighbor graph construction.
+        -t SCRUBLET_DOUBLET_THRESHOLD, --scrublet_doublet_threshold SCRUBLET_DOUBLET_THRESHOLD
+                              Manually Set the scrublet doublet threshold location. For running a second time if scrublet incorrectly places the threshold the first time
+        -o OUTDIR, --outdir OUTDIR
+                              The output directory
 
 
   .. tab:: Run in python
@@ -140,7 +133,7 @@ You can either run Scrublet_ with the wrapper script we have provided or you can
       plt.rcParams['pdf.fonttype'] = 42
 
       ## Basic run with scrublet
-      counts_matrix = read10x.import_cellranger_mtx(counts_matrix_dir)
+      counts_matrix = read10x.import_cellranger_mtx(counts_matrix_dir) ## or scanpy.read_10x_h5(counts_matrix_dir)
 
       try:
         barcodes_df = read10x.read_barcodes(counts_matrix_dir + "/barcodes.tsv.gz")

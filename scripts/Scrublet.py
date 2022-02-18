@@ -5,7 +5,7 @@ import os
 
 parser = argparse.ArgumentParser(
     description="wrapper for scrublet for doublet detection of transcriptomic data.")
-parser.add_argument("-m", "--counts_matrix", required = True, help = "cell ranger counts matrix directory")
+parser.add_argument("-m", "--counts_matrix", required = True, help = "cell ranger counts matrix directory containing matrix files or full path to matrix.mtx. Can also also provide the 10x h5.")
 parser.add_argument("-b", "--barcodes", required = False, help = "barcodes.tsv or barcodes.tsv.gz from cellranger")
 parser.add_argument("-r", "--sim_doublet_ratio", required = False, default = 2, type = int, help = "Number of doublets to simulate relative to the number of observed transcriptomes.")
 parser.add_argument("-c", "--min_counts", required = False, default = 3, type = int, help = "Used for gene filtering prior to PCA. Genes expressed at fewer than min_counts in fewer than min_cells are excluded.")
@@ -40,7 +40,14 @@ plt.rc('font', size=14)
 plt.rcParams['pdf.fonttype'] = 42
 
 ## Basic run with scrublet
-counts_matrix = read10x.import_cellranger_mtx(args.counts_matrix)
+if os.path.exists(args.counts_matrix):
+    if args.counts_matrix.endswith(".h5"):
+        counts_matrix = scanpy.read_10x_h5(args.counts_matrix)
+    else:
+        counts_matrix = read10x.import_cellranger_mtx(args.counts_matrix)
+else:
+    print("Couldn't find the counts file " + args.counts_matrix)
+
 
 if args.barcodes is None:
 	if os.path.exists(os.path.join(args.counts_matrix, "barcodes.tsv.gz")):

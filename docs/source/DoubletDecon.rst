@@ -17,7 +17,7 @@ This is the data that you will need to have prepare to run DoubletDecon_:
 .. admonition:: Required
   :class: important
 
-  - A QC-filtered and normalized seurat object (``$SEURAT_OBJ``)
+  - A QC-filtered and normalized seurat object saved as an ``rds`` object (``$SEURAT_RDS``)
 
     - For example, using the `Seurat Vignette <https://satijalab.org/seurat/articles/pbmc3k_tutorial.html>`__
 
@@ -45,7 +45,7 @@ You can either run DoubletDecon_ with the wrapper script we have provided or you
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif DoubletDecon.R -o $DOUBLETDECON_OUTDIR -s $SEURAT_OBJ
+      singularity exec Demuxafy.sif DoubletDecon.R -o $DOUBLETDECON_OUTDIR -s $SEURAT_RDS
 
     You can provide many other parameters as well which can be seen from running a help request:
 
@@ -54,48 +54,35 @@ You can either run DoubletDecon_ with the wrapper script we have provided or you
       singularity exec image DoubletDecon.R -h
 
       usage: DoubletDecon.R [-h] -o OUT -s SEURAT_OBJECT [-g NUM_GENES] [-r RHOP]
-                      [-p SPECIES] [-n NCORES] [-c REMOVECC] [-m PMF]
-                      [-f HEATMAP] [-t CENTROIDS] [-d NUM_DOUBS] [-5 ONLY50]
-                      [-u MIN_UNIQ]
+                            [-p SPECIES] [-n NCORES] [-c REMOVECC] [-m PMF]
+                            [-f HEATMAP] [-t CENTROIDS] [-d NUM_DOUBS] [-5 ONLY50]
+                            [-u MIN_UNIQ]
 
       optional arguments:
         -h, --help            show this help message and exit
         -o OUT, --out OUT     The output directory where results will be saved
         -s SEURAT_OBJECT, --seurat_object SEURAT_OBJECT
-                              A QC, normalized seurat object with
-                              classifications/clusters as Idents().
+                              A QC, normalized seurat object with classifications/clusters as Idents() saved as an rds object.
         -g NUM_GENES, --num_genes NUM_GENES
-                              Number of genes to use in
-                              'Improved_Seurat_Pre_Process' function.
-        -r RHOP, --rhop RHOP  rhop to use in DoubletDecon - the number of SD from
-                              the mean to identify upper limit to blacklist
+                              Number of genes to use in 'Improved_Seurat_Pre_Process' function.
+        -r RHOP, --rhop RHOP  rhop to use in DoubletDecon - the number of SD from the mean to identify upper limit to blacklist
         -p SPECIES, --species SPECIES
-                              The species of your sample. Can be scientific species
-                              name, KEGG ID, three letter species abbreviation, or
-                              NCBI ID.
+                              The species of your sample. Can be scientific species name, KEGG ID, three letter species abbreviation, or NCBI ID.
         -n NCORES, --nCores NCORES
-                              The number of unique cores you would like to use to
-                              run DoubletDecon. By default, uses one less than
-                              available detected.
+                              The number of unique cores you would like to use to run DoubletDecon. By default, uses one less than available detected.
         -c REMOVECC, --removeCC REMOVECC
-                              Whether to remove clusters enriched in cell cycle
-                              genes.
-        -m PMF, --pmf PMF     Whether to use unique gene expression in doublet
-                              determination.
+                              Whether to remove clusters enriched in cell cycle genes.
+        -m PMF, --pmf PMF     Whether to use unique gene expression in doublet determination.
         -f HEATMAP, --heatmap HEATMAP
                               Whether to generate heatmaps.
         -t CENTROIDS, --centroids CENTROIDS
-                              Whether to use centroids instead of medoids for
-                              doublet detecting.
+                              Whether to use centroids instead of medoids for doublet detecting.
         -d NUM_DOUBS, --num_doubs NUM_DOUBS
-                              The number of doublets to simulate for each cluster
-                              pair.
+                              The number of doublets to simulate for each cluster pair.
         -5 ONLY50, --only50 ONLY50
-                              Whether to only compute doublets as 50:50 ratio.
-                              Default is to use other ratios as well.
+                              Whether to only compute doublets as 50:50 ratio. Default is to use other ratios as well.
         -u MIN_UNIQ, --min_uniq MIN_UNIQ
-                              Minimum number of unique genes to rescue a cluster
-                              identified as doublets.
+                              Minimum number of unique genes to rescue a cluster identified as doublets.
 
   .. tab:: Run in R
 
@@ -120,7 +107,7 @@ You can either run DoubletDecon_ with the wrapper script we have provided or you
 
       ## Set up variables ##
       out <- "/path/to/doubletdecon/outdir"
-      seurat_object <- "/path/to/preprocessed/seurat_object.rds"
+      SEURAT_RDSect <- "/path/to/preprocessed/SEURAT_RDSect.rds"
 
 
 
@@ -129,7 +116,7 @@ You can either run DoubletDecon_ with the wrapper script we have provided or you
       dir.create(out, recursive = TRUE)
 
       ## Read in Data ##
-      seurat <- readRDS(seurat_object)
+      seurat <- readRDS(SEURAT_RDSect)
 
       ## Preprocess ##
       processed <- Improved_Seurat_Pre_Process(seurat, num_genes=50, write_files=FALSE)

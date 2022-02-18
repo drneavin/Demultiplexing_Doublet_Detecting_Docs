@@ -1,31 +1,40 @@
 #!/usr/bin/env Rscript
 
 .libPaths("/usr/local/lib/R/site-library")
-library(argparse)
 
+suppressMessages(suppressWarnings(library(argparse)))
 # create parser object
 parser <- ArgumentParser()
 
 # specify our desired options 
 # by default ArgumentParser will add an help option 
 parser$add_argument("-o", "--out", required = TRUE, help="The output directory where results will be saved")
-parser$add_argument("-t", "--tenX_matrix", required = TRUE, type = "character", help = "Path to the 10x filtered matrix directory.")
+parser$add_argument("-t", "--tenX_matrix", required = TRUE, type = "character", help = "Path to the 10x filtered matrix directory or h5 file.")
 
 # get command line options, if help option encountered print help and exit,
 # otherwise if options not found on command line then set defaults, 
 args <- parser$parse_args()
 
 
-library(dplyr)
-library(tidyr)
-library(tidyverse)
-library(scds)
-library(Seurat)
-library(SingleCellExperiment)
+suppressMessages(suppressWarnings(library(tidyr)))
+suppressMessages(suppressWarnings(library(dplyr)))
+suppressMessages(suppressWarnings(library(tidyverse)))
+suppressMessages(suppressWarnings(library(scds)))
+suppressMessages(suppressWarnings(library(Seurat)))
+suppressMessages(suppressWarnings(library(SingleCellExperiment)))
 
 
 ## Read in data
-counts <- Read10X(as.character(args$tenX_matrix), gene.column = 1)
+if (file.exists(args$tenX_matrix)){
+    print(paste0("Using the following counts: ", args$tenX_matrix))
+    if (endsWith(args$tenX_matrix, ".h5")){
+        counts <- Read10X_h5(args$tenX_matrix, gene.column = 1)
+    } else {
+        counts <- Read10X(args$tenX_matrix, gene.column = 1)
+    }
+} else {
+    print(paste0("Cannot find the counts matrix ", args$tenX_matrix))
+}
 
 if (is.list(counts)){
 	sce <- SingleCellExperiment(list(counts=counts[[grep("Gene", names(counts))]]))
