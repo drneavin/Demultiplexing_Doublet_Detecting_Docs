@@ -53,19 +53,18 @@ You can either run DoubletFinder_ with the wrapper script we have provided or yo
       singularity exec Demuxafy.sif DoubletFinder.R -h
 
 
-      usage: DoubletFinder.R [-h] -o OUT -s SEURAT_RDSECT -c SCT -d DOUBLET_NUMBER [-p PCS] [-n PN]a@brenner-fpoptional arguments:  
-	  	-h, --help            show this help message and exit
+      usage: DoubletFinder.R [-h] -o OUT -s SEURAT_OBJECT -c SCT -d DOUBLET_NUMBER [-p PCS] [-n PN]
+
+      optional arguments:
+        -h, --help            show this help message and exit
         -o OUT, --out OUT     The output directory where results will be saved
-        -s SEURAT_RDSECT, --SEURAT_RDSect SEURAT_RDSECT
-                              A QC, normalized seurat object with
-                              classifications/clusters as Idents().
+        -s SEURAT_OBJECT, --seurat_object SEURAT_OBJECT
+                              A QC, normalized seurat object with classifications/clusters as Idents() saved as an rds object.
         -c SCT, --sct SCT     Whether sctransform was used for normalization.
         -d DOUBLET_NUMBER, --doublet_number DOUBLET_NUMBER
-                              Number of expected doublets based on droplets
-                              captured.
+                              Number of expected doublets based on droplets captured.
         -p PCS, --PCs PCS     Number of PCs to use for 'doubletFinder_v3' function.
-        -n PN, --pN PN        Number of doublets to simulate as a proportion of the
-                              pool size.
+        -n PN, --pN PN        Number of doublets to simulate as a proportion of the pool size.
 
 
   .. tab:: Run in R

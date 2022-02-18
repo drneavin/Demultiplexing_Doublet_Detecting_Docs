@@ -24,7 +24,7 @@ This is the data that you will need to have prepare to run Scds_:
   
     - The directory path containing your cellranger counts matrix files (directory containing ``barcodes.tsv``, ``genes.tsv`` and ``matrix.mtx`` **or** ``barcodes.tsv.gz``, ``features.tsv.gz`` and ``matrix.mtx.gz``)
 
-    **OR**
+      **or**
 
     - h5 file (``filtered_feature_bc_matrix.h5``) 
 
@@ -48,7 +48,7 @@ You can either run Scds_ with the wrapper script we have provided or you can run
 
     .. code-block:: bash
 
-		  singularity exec Demuxafy.sif scds.R -o $SCDS_OUTDIR -t $MATRIX_DIR
+		  singularity exec Demuxafy.sif scds.R -o $SCDS_OUTDIR -t $COUNTS
 
 
   .. tab:: Run in R

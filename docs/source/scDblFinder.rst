@@ -21,7 +21,7 @@ This is the data that you will need to have prepare to run ScDblFinder_:
   
     - The directory path containing your cellranger counts matrix files (directory containing ``barcodes.tsv``, ``genes.tsv`` and ``matrix.mtx`` **or** ``barcodes.tsv.gz``, ``features.tsv.gz`` and ``matrix.mtx.gz``)
 
-    **OR**
+      **or**
 
     - h5 file (``filtered_feature_bc_matrix.h5``) 
 

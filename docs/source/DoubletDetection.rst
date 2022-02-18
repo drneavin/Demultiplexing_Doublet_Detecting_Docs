@@ -24,11 +24,11 @@ This is the data that you will need to have prepare to run DoubletDetection_:
     
       - h5 file (``filtered_feature_bc_matrix.h5``) 
       
-      **or** 
+        **or** 
       
       - matrix directory (directory containing ``barcodes.tsv``, ``genes.tsv`` and ``matrix.mtx`` **or** ``barcodes.tsv.gz``, ``features.tsv.gz`` and ``matrix.mtx.gz``)
 
-	    - If you don't have your data in either of these formats, you can run DoubletDetection_ manually in python and load the data in using a method of your choosing.
+      - If you don't have your data in either of these formats, you can run DoubletDetection_ manually in python and load the data in using a method of your choosing.
 
 .. admonition:: Optional
 
@@ -55,40 +55,28 @@ You can either run DoubletDetection_ with the wrapper script we have provided or
 
       singularity exec Demuxafy.sif DoubletDetection.py -h
 
-
-      usage: DoubletDetection.py [-h] -m COUNTS_MATRIX [-b BARCODES] [-o OUTDIR]
-                                [-i N_ITERATIONS] [-p PHENOGRAPH]
-                                [-s STANDARD_SCALING] [-t P_THRESH]
-                                [-v VOTER_THRESH]
+      usage: DoubletDetection.py [-h] -m COUNTS_MATRIX [-b BARCODES] [-o OUTDIR] [-i N_ITERATIONS] [-p PHENOGRAPH] [-s STANDARD_SCALING] [-t P_THRESH] [-v VOTER_THRESH]
 
       wrapper for DoubletDetection for doublet detection from transcriptomic data.
 
       optional arguments:
         -h, --help            show this help message and exit
         -m COUNTS_MATRIX, --counts_matrix COUNTS_MATRIX
-                              cell ranger counts matrix directory containing matrix 
-                              files. Can also use full path to matrix.mtx.
+                              cell ranger counts matrix directory containing matrix files or full path to matrix.mtx. Can also also provide the 10x h5.
         -b BARCODES, --barcodes BARCODES
-                              File containing droplet barcodes. Uses barcodes from
-                              provided 10x dir by default.
+                              File containing droplet barcodes. Use barcodes from provided 10x dir by default.
         -o OUTDIR, --outdir OUTDIR
-                              The output directory; default is current working
-                              directory
+                              The output directory; default is current working directory
         -i N_ITERATIONS, --n_iterations N_ITERATIONS
                               Number of iterations to use; default is 50
         -p PHENOGRAPH, --phenograph PHENOGRAPH
-                              Whether to use phenograph (True) or not (False);
-                              default is False
+                              Whether to use phenograph (True) or not (False); default is False
         -s STANDARD_SCALING, --standard_scaling STANDARD_SCALING
-                              Whether to use standard scaling of normalized count
-                              matrix prior to PCA (True) or not (False); default is
-                              True
+                              Whether to use standard scaling of normalized count matrix prior to PCA (True) or not (False); default is True
         -t P_THRESH, --p_thresh P_THRESH
-                              P-value threshold for doublet calling; default is
-                              1e-16
+                              P-value threshold for doublet calling; default is 1e-16
         -v VOTER_THRESH, --voter_thresh VOTER_THRESH
                               Voter threshold for doublet calling; default is 0.5
-
 
   .. tab:: Run in python
 
