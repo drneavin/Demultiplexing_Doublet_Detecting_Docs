@@ -1,6 +1,6 @@
 .. _Freemuxlet-docs:
 
-Freemuxlet Tutorial
+Freemuxlet
 ===========================
 
 .. _Freemuxlet: https://github.com/statgen/popscle
@@ -46,7 +46,7 @@ This is the data that you will need to have prepare to run Freemuxlet_:
 Run Freemuxlet
 --------------
 Popscle Pileup
-^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^
 First we will need to identify the number of reads from each allele at each of the common SNP location:
 
 .. code-block:: bash

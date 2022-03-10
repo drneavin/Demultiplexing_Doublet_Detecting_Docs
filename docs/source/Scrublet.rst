@@ -1,7 +1,7 @@
 .. _Scrublet-docs:
 
 
-Scrublet Tutorial
+Scrublet
 ===========================
 
 .. _Scrublet: https://github.com/swolock/scrublet

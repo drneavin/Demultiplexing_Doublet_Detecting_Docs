@@ -6,7 +6,7 @@
 
 .. _Vireo-docs:
 
-Vireo Tutorial
+Vireo
 ===========================
 
 .. _Vireo: https://github.com/statgen/popscle

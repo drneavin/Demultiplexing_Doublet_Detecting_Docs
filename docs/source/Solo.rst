@@ -1,6 +1,6 @@
 .. _solo-docs:
 
-Solo Tutorial
+Solo
 ===========================
 
 .. _solo: https://github.com/calico/solo

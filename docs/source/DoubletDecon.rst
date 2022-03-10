@@ -1,6 +1,6 @@
 .. _DoubletDecon-docs:
 
-DoubletDecon Tutorial
+DoubletDecon
 ===========================
 
 .. _DoubletDecon: https://github.com/EDePasquale/DoubletDecon

@@ -1,6 +1,6 @@
 .. _scDblFinder-docs:
 
-ScDblFinder Tutorial
+ScDblFinder
 ===========================
 
 .. _ScDblFinder: https://github.com/plger/scDblFinder

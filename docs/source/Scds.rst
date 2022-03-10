@@ -1,6 +1,6 @@
 .. _scds-docs:
 
-Scds Tutorial
+Scds
 ===========================
 
 .. _Scds: https://github.com/kostkalab/scds
