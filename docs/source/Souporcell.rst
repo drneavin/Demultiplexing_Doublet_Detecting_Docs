@@ -1,6 +1,6 @@
 .. _Souporcell-docs:
 
-Souporcell Tutorial
+Souporcell
 ===========================
 
 .. _Souporcell: https://github.com/wheaton5/souporcell

@@ -29,12 +29,25 @@ If everything was downloaded correctly, that command should report:
     Files Demuxafy.sif.md5 and downloaded_Demuxafy.sif.md5 are identical
 
 
+.. note::
+
+  Please note that the singularity image and this documentation is updated with each release. 
+  This means that the most recent documentation may not be 100% compatible with the singularity image that you have.
+  For example, additional parameters and functionality were implemented in v1.0.2 that was not available in v0.0.4.
+  
+  You can check the version of your singularity image to match with documentation with:
+
+    .. code-block:: bash
+
+      singularity inspect Demuxafy.sif
+
+
 If you run into any issues with downloading the image or any issue with running anything from this image, you can reach out to us by submitting an issue at `Github <https://github.com/drneavin/Demultiplexing_Doublet_Detecting_Docs/issues>`__
 
 .. admonition:: Demuxafy software versions - for the curious
   :class: dropdown
 
-  Image build date: 20 November, 2021
+  Image build date: 18 February, 2022
  
     +----------------------------+---------------------------+-------------------------------+
     | Software Group             | Software                  | Version                       |

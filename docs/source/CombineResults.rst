@@ -7,21 +7,23 @@ After you have run each of the Demultiplexing and Doublet Detecting softwares yo
 In addition, we have found it helpful to generate summaries of each of the combinations of softwares identified.
 To help streamline this process, we have provided a script that will easily integrate all the softwares you have run into a single dataframe and can do the following:
 
-  1. Generate a dataframe that has all the software assignments per droplet in the pool
+  #. Generate a dataframe that has all the software assignments per droplet in the pool
 
     - A tab-separated dataframe with the droplet singlet-doublet classification and the individual assignment (for demultiplexing softwares) per droplet
 
-  2. Generate a droplet type summary file
+  #. Generate an upset plot that shows the droplet classificaitons by each software and the final classifications 
+
+  #. Generate a droplet type summary file
 
     - Provides the number of droplets classified for each combination of droplet classifications by each software
 
-  3. Generate demultiplexing individual assignment summary file
+  #. Generate demultiplexing individual assignment summary file
 
     - Provides the number of droplets classified for each combination of individual assignment droplet classifications by each software
 
-  4. If individuals have not been assigned to each cluster for reference-free demultiplexing softwares, will create a common assignment across all demultiplexing softwares for easy comparison
+  #. If individuals have not been assigned to each cluster for reference-free demultiplexing softwares, will create a common assignment across all demultiplexing softwares for easy comparison
 
-  5. Combined final droplet assignment from all softwares included
+  #. Combined final droplet assignment from all softwares included
 
     - Uses one of four intersectional methods to combine software assignments together into a single combined assignment per barcode
 
@@ -56,12 +58,14 @@ Providing the possible parameter options:
 
 .. code-block:: bash
 
-  usage: Combine_Results.R
-       [-h] -o OUT [-d DEMUXLET] [-f FREEMUXLET] [-g FREEMUXLET_ASSIGNMENTS]
-       [-s SCSPLIT] [-w SCSPLIT_ASSIGNMENTS] [-u SOUPORCELL]
-       [-x SOUPORCELL_ASSIGNMENTS] [-v VIREO] [-e DOUBLETDECON]
-       [-t DOUBLETDETECTION] [-i DOUBLETFINDER] [-n SCDBLFINDER] [-c SCDS]
-       [-r SCRUBLET] [-l SOLO]
+  usage: /directflow/SCCGGroupShare/projects/DrewNeavin/Demultiplex_Benchmark/Demultiplexing_Doublet_Detecting_Docs/scripts/Combine_Results.R
+        [-h] -o OUT [-d DEMUXLET] [-f FREEMUXLET] [-g FREEMUXLET_ASSIGNMENTS]
+        [-a FREEMUXLET_CORRELATION_LIMIT] [-s SCSPLIT] [-w SCSPLIT_ASSIGNMENTS]
+        [-j SCSPLIT_CORRELATION_LIMIT] [-u SOUPORCELL]
+        [-x SOUPORCELL_ASSIGNMENTS] [-k SOUPORCELL_CORRELATION_LIMIT]
+        [-v VIREO] [-e DOUBLETDECON] [-t DOUBLETDETECTION] [-i DOUBLETFINDER]
+        [-n SCDBLFINDER] [-c SCDS] [-r SCRUBLET] [-l SOLO] [-b REF]
+        [-p PCT_AGREEMENT] [-m METHOD]
 
   optional arguments:
     -h, --help            show this help message and exit
@@ -77,6 +81,11 @@ Providing the possible parameter options:
                           Only use this option if have used reference SNP
                           genotypes to assign individuals to clusters for the
                           freemuxlet results.
+    -a FREEMUXLET_CORRELATION_LIMIT, --freemuxlet_correlation_limit FREEMUXLET_CORRELATION_LIMIT
+                          The minimum correlation between the cluster and the
+                          individual SNP genotypes which should be considered as
+                          a valid assignment. If you want no limit, use 0.
+                          Default is 0.7.
     -s SCSPLIT, --scSplit SCSPLIT
                           Path to scSplit results. Only use this option if you
                           want to include the scSplit results.
@@ -85,6 +94,11 @@ Providing the possible parameter options:
                           Only use this option if you have used reference SNP
                           genotypes to assign individuals to clusters for the
                           scSplit results.
+    -j SCSPLIT_CORRELATION_LIMIT, --scSplit_correlation_limit SCSPLIT_CORRELATION_LIMIT
+                          The minimum correlation between the cluster and the
+                          individual SNP genotypes which should be considered as
+                          a valid assignment. If you want no limit, use 0.
+                          Default is 0.7.
     -u SOUPORCELL, --souporcell SOUPORCELL
                           Path to souporcell results. Only use this option if
                           you want to include the souporcell results.
@@ -93,6 +107,11 @@ Providing the possible parameter options:
                           Only use this option if you have used reference SNP
                           genotypes to assign individuals to clusters for the
                           souporcell results.
+    -k SOUPORCELL_CORRELATION_LIMIT, --souporcell_correlation_limit SOUPORCELL_CORRELATION_LIMIT
+                          The minimum correlation between the cluster and the
+                          individual SNP genotypes which should be considered as
+                          a valid assignment. If you want no limit, use 0.
+                          Default is 0.7.
     -v VIREO, --vireo VIREO
                           Path to vireo results. Only use this option if you
                           want to include the vireo results.
@@ -116,21 +135,24 @@ Providing the possible parameter options:
     -l SOLO, --solo SOLO  Path to solo results. Only use this option if you want
                           to include the solo results.
     -b REF, --ref REF     Which demultiplexing software to use as a reference
-                          for individuals when don't have assignment key for all
-                          demultiplexing method. Options are 'Demuxlet',
-                          'Freemuxlet', 'scSplit', 'Souporcell' and 'Vireo. If
+                          for individuals when you do not have assignment key
+                          for all demultiplexing method. Options are 'Demuxlet',
+                          'Freemuxlet', 'scSplit', 'Souporcell' and 'Vireo'. If
                           blank when assignment keys are missing, default
                           softwares to use if present are Vireo, then Demuxlet,
                           then Freemuxlet, then Souporcell, then scSplit.
     -p PCT_AGREEMENT, --pct_agreement PCT_AGREEMENT
-                          The percent of a cluster that match the 'ref'
+                          The proportion of a cluster that match the 'ref'
                           assignment to assign that cluster the individual
                           assignment from the reference. Can be between 0.5 and
-                          1.
+                          1. Default is 0.9.
     -m METHOD, --method METHOD
                           Combination method. Options are 'MajoritySinglet'.
-                          'AtLeastHalfSinglet', 'AnySinglet' or 'AnyDoublet'.
-                          See https://demultiplexing-doublet-detecting-
+                          'AtLeastHalfSinglet', 'AnySinglet' or 'AnyDoublet'. We
+                          have found that 'MajoritySinglet' provides the most
+                          accurate results in most situations and therefore
+                          recommend this method. See https://demultiplexing-
+                          doublet-detecting-
                           docs.readthedocs.io/en/latest/CombineResults.html for
                           detailed explanation of each intersectional method.
                           Leave blank if you just want all the softwares to be
@@ -149,6 +171,8 @@ Providing the possible parameter options:
 
       - If more than half the demultiplexing softwares identify the same indivdual, that assignment is used for the droplet.
 
+      - We have found 
+
     - AtLeastHalfSinglet
 
       - If at least half of the softwares identify a droplet as a singlet, it is classified as a singlet.
@@ -166,6 +190,8 @@ Providing the possible parameter options:
       - A droplet is classified as a singlet only if all softwares identify it as a singlet.
 
       - In other words, a doublet is called if any software identifies that droplet as a doublet.
+
+
 
 
 

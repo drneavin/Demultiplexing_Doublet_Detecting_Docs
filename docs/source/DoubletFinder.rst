@@ -1,6 +1,6 @@
 .. _DoubletFinder-docs:
 
-DoubletFinder Tutorial
+DoubletFinder
 ===========================
 
 .. _DoubletFinder: https://github.com/chris-mcginnis-ucsf/DoubletFinder

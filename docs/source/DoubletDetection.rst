@@ -1,6 +1,6 @@
 .. _DoubletDetection-docs:
 
-DoubletDetection Tutorial
+DoubletDetection
 ===========================
 
 .. _DoubletDetection: https://github.com/JonathanShor/DoubletDetection

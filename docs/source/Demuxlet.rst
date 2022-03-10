@@ -1,6 +1,6 @@
 .. _Demuxlet-docs:
 
-Demuxlet Tutorial
+Demuxlet
 ===========================
 
 .. _Demuxlet: https://github.com/statgen/popscle

@@ -1,6 +1,6 @@
 .. _scSplit-docs:
 
-ScSplit Tutorial
+ScSplit
 ===========================
 
 .. _ScSplit: https://github.com/jon-xu/scSplit
