@@ -9,8 +9,8 @@ Just download the singluarity image with:
 
   .. code-block:: bash
 
-    wget https://www.dropbox.com/s/6p64z451qobi070/Demuxafy.sif
-    wget https://www.dropbox.com/s/0hpzm04oqbqg4ra/Demuxafy.sif.md5
+    wget https://www.dropbox.com/s/q3hpbqa7gahbrhf/Demuxafy.sif
+    wget https://www.dropbox.com/s/583b8cxko3lc0y1/Demuxafy.sif.md5
 
 
 
@@ -47,7 +47,7 @@ If you run into any issues with downloading the image or any issue with running 
 .. admonition:: Demuxafy software versions - for the curious
   :class: dropdown
 
-  Image build date: 18 February, 2022
+  Image build date: 11 March, 2022
  
     +----------------------------+---------------------------+-------------------------------+
     | Software Group             | Software                  | Version                       |
@@ -82,9 +82,9 @@ If you run into any issues with downloading the image or any issue with running 
     |                            +---------------------------+-------------------------------+
     |                            | ``vartrix``               | v1.1.3                        |
     |                            +---------------------------+-------------------------------+
-    |                            | ``htslib``                | v1.7 & v1.13 & v1.14          |
+    |                            | ``htslib``                | v1.13 & v1.14                 |
     |                            +---------------------------+-------------------------------+
-    |                            | ``samtools``              | v1.7                          |
+    |                            | ``samtools``              | v1.15                         |
     |                            +---------------------------+-------------------------------+
     |                            | ``bcftools``              | v1.13                         |
     |                            +---------------------------+-------------------------------+
@@ -93,7 +93,7 @@ If you run into any issues with downloading the image or any issue with running 
     |                            | ``cellSNP-lite``          | v1.2.2                        |
     +----------------------------+---------------------------+-------------------------------+
     | R Supporting Packages      | ``argparse``              | v2.1.3                        |
-    | (R v4.1.2)                 +---------------------------+-------------------------------+
+    | (R v4.1.3)                 +---------------------------+-------------------------------+
     |                            | ``ComplexHeatmap``        | v2.10.0                       |
     |                            +---------------------------+-------------------------------+
     |                            | ``ComplexUpset``          | v1.3.3                        |
@@ -106,7 +106,7 @@ If you run into any issues with downloading the image or any issue with running 
     +----------------------------+---------------------------+-------------------------------+
     | Python Supporting Packages | ``argparse``              | v1.4.0                        |
     | (Python v3.7.2)            +---------------------------+-------------------------------+
-    |                            | ``numpy``                 | v1.2.2                        |
+    |                            | ``numpy``                 | v1.21.2                       |
     |                            +---------------------------+-------------------------------+
     |                            | ``matplotlib``            | v3.2.2                        |
     |                            +---------------------------+-------------------------------+
