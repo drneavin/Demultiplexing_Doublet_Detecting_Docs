@@ -4,6 +4,7 @@ ScSplit
 ===========================
 
 .. _ScSplit: https://github.com/jon-xu/scSplit
+.. _preprint: https://www.biorxiv.org/content/10.1101/2022.03.07.483367v1
 
 ScSplit_ is a reference-free demultiplexing software. If you have reference SNP genotypes, it would be better to use a demultiplexing software that can handle reference SNP genotypes (:ref:`Demuxlet <Demuxlet-docs>`, :ref:`Souporcell <Souporcell-docs>` or :ref:`Vireo<Vireo-docs>`)
 
@@ -572,4 +573,4 @@ See :ref:`Combine Results <Combine-docs>`.
 
 Citation
 --------
-If you used the Demuxafy platform for analysis, please reference our paper (REFERENCE) as well as `ScSplit <https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1852-7>`__.
+If you used the Demuxafy platform for analysis, please reference our preprint_ as well as `ScSplit <https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1852-7>`__.

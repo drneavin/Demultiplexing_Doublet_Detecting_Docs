@@ -4,6 +4,7 @@ DoubletFinder
 ===========================
 
 .. _DoubletFinder: https://github.com/chris-mcginnis-ucsf/DoubletFinder
+.. _preprint: https://www.biorxiv.org/content/10.1101/2022.03.07.483367v1
 
 DoubletFinder_ is a transcription-based doublet detection software that uses simulated doublets to find droplets that has a high proportion of neighbors that are doublets.
 We have provided a wrapper script that takes common arguments for DoubletFinder_ and we also provide an example script that you can run manually in R if you prefer.
@@ -202,4 +203,4 @@ See :ref:`Combine Results <Combine-docs>`.
 
 Citation
 --------
-If you used the Demuxafy platform for analysis, please reference our paper (REFERENCE) as well as `DoubletFinder <https://www.sciencedirect.com/science/article/pii/S2405471219300730>`__.
+If you used the Demuxafy platform for analysis, please reference our preprint_ as well as `DoubletFinder <https://www.sciencedirect.com/science/article/pii/S2405471219300730>`__.

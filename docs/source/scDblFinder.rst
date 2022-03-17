@@ -4,6 +4,8 @@ ScDblFinder
 ===========================
 
 .. _ScDblFinder: https://github.com/plger/scDblFinder
+.. _preprint: https://www.biorxiv.org/content/10.1101/2022.03.07.483367v1
+
 
 scDblFinder is a transcriptome-based doublet detecting method that uses doublet simulation from droplets in the dataset to identify doublets.
 We have provided a wrapper script that takes common arguments for ScDblFinder_ and also provide example code for you to run manually if you prefer.
@@ -164,5 +166,5 @@ See :ref:`Combine Results <Combine-docs>`.
 
 Citation
 --------
-If you used the Demuxafy platform for analysis, please reference our paper (REFERENCE) as well as `ScDblFinder <https://github.com/plger/scDblFinder>`__.
+If you used the Demuxafy platform for analysis, please reference our preprint_ as well as `ScDblFinder <https://github.com/plger/scDblFinder>`__.
 

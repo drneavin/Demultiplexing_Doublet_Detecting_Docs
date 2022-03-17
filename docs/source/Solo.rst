@@ -4,6 +4,7 @@ Solo
 ===========================
 
 .. _solo: https://github.com/calico/solo
+.. _preprint: https://www.biorxiv.org/content/10.1101/2022.03.07.483367v1
 
 Solo_ is a transcription-based doublet detecting software that was one of the better transcription-based doublet detecting softwares that we tested (CITATION).
 
@@ -210,4 +211,4 @@ See :ref:`Combine Results <Combine-docs>`.
 
 Citation
 --------
-If you used the Demuxafy platform for analysis, please reference our paper (REFERENCE) as well as `solo <https://www.sciencedirect.com/science/article/pii/S2405471220301952>`__.
+If you used the Demuxafy platform for analysis, please reference our preprint_ as well as `solo <https://www.sciencedirect.com/science/article/pii/S2405471220301952>`__.

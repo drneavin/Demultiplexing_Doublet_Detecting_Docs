@@ -4,6 +4,8 @@ DoubletDetection
 ===========================
 
 .. _DoubletDetection: https://github.com/JonathanShor/DoubletDetection
+.. _preprint: https://www.biorxiv.org/content/10.1101/2022.03.07.483367v1
+
 
 DoubletDetection_ is a transcription-based doublet detection software.
 This was one of the better-performing doublet detecting softwares that we identified in our paper (**CITE**) and it is also relatively fast to run.
@@ -234,4 +236,4 @@ See :ref:`Combine Results <Combine-docs>`.
 
 Citation
 --------
-If you used the Demuxafy platform for analysis, please reference our paper (REFERENCE) as well as `DoubletDetection <https://zenodo.org/record/4359992>`__.
+If you used the Demuxafy platform for analysis, please reference our preprint_ as well as `DoubletDetection <https://zenodo.org/record/4359992>`__.

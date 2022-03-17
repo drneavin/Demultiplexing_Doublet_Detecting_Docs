@@ -4,6 +4,7 @@ Souporcell
 ===========================
 
 .. _Souporcell: https://github.com/wheaton5/souporcell
+.. _preprint: https://www.biorxiv.org/content/10.1101/2022.03.07.483367v1
 
 Souporcell_ is a genotype-free demultiplexing software that does not require you to have SNP genotypes the donors in your multiplexed capture.
 However, it can natively integrate SNP genotypes into the demultiplexing if you have them available for **all** the donors in your pool.
@@ -650,4 +651,4 @@ See :ref:`Combine Results <Combine-docs>`.
 
 Citation
 --------
-If you used the Demuxafy platform for analysis, please reference our paper (REFERENCE) as well as `Souporcell <https://www.nature.com/articles/s41592-020-0820-1>`__.
+If you used the Demuxafy platform for analysis, please reference our preprint_ as well as `Souporcell <https://www.nature.com/articles/s41592-020-0820-1>`__.

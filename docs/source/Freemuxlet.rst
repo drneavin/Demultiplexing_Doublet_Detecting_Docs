@@ -4,6 +4,7 @@ Freemuxlet
 ===========================
 
 .. _Freemuxlet: https://github.com/statgen/popscle
+.. _preprint: https://www.biorxiv.org/content/10.1101/2022.03.07.483367v1
 
 Freemuxlet_ is a genotype-free demultiplexing software that does not require you to have SNP genotypes the donors in your multiplexed capture.
 In fact, it can't natively integrate SNP genotypes into the demultiplexing.
@@ -562,4 +563,4 @@ See :ref:`Combine Results <Combine-docs>`.
 
 Citation
 --------
-If you used the Demuxafy platform for analysis, please reference our paper (REFERENCE) as well as `Freemuxlet <https://github.com/statgen/popscle>`__.
+If you used the Demuxafy platform for analysis, please reference our preprint_ as well as `Freemuxlet <https://github.com/statgen/popscle>`__.

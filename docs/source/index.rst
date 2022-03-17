@@ -9,6 +9,9 @@
 Demuxafy
 =======================================================================
 
+.. _preprint: https://www.biorxiv.org/content/10.1101/2022.03.07.483367v1
+
+
 Reason for this Software
 --------------------------
 Demultiplexing and detecting doublets is an important part of droplet-based scRNA-seq processing pipelines (see additional information and details :ref:`below <index_demuxltiplexing>`).
@@ -128,3 +131,8 @@ This makes these two method types complementary for demultiplexing and doublet r
 Support
 ==================
 If you're having trouble with any part of the Demultiplexing and Doublet Detecting Pipeline, feel free to submit an `issue <https://github.com/drneavin/Demultiplexing_Doublet_Detecting_Docs/issues>`_.
+
+
+Citation
+--------
+If you used the Demuxafy platform for analysis, please reference our preprint_.

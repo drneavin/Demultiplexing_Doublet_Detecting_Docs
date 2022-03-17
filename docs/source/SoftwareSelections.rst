@@ -9,3 +9,5 @@ Based on our analysis of demultiplexing and doublet detecting softwares, we have
 
 After you have run the softwares you selected, we have provided a script that will help merge and summarize the results from ethe softwares together.
 See :ref:`Combine Results <Combine-docs>`.
+
+In the future, we hope to implement additional tools that will assist in software selection.

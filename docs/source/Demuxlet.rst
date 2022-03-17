@@ -1,9 +1,11 @@
 .. _Demuxlet-docs:
 
+
 Demuxlet
 ===========================
 
 .. _Demuxlet: https://github.com/statgen/popscle
+.. _preprint: https://www.biorxiv.org/content/10.1101/2022.03.07.483367v1
 
 Demuxlet_ is a genotype demultiplexing software that requires reference genotypes to be available for each individual in the pool. 
 Therefore, if you don't have reference genotypes, you may want to demultiplex with one of the softwares that do not require reference genotype data
@@ -220,4 +222,4 @@ See :ref:`Combine Results <Combine-docs>`.
 
 Citation
 --------
-If you used the Demuxafy platform for analysis, please reference our paper (REFERENCE) as well as `Demuxlet <https://www.nature.com/articles/nbt.4042>`__.
+If you used the Demuxafy platform for analysis, please reference our preprint_ as well as `Demuxlet <https://www.nature.com/articles/nbt.4042>`__.
