@@ -241,4 +241,4 @@ See :ref:`Combine Results <Combine-docs>`.
 
 Citation
 --------
-If you used the Demuxafy platform for analysis, please reference our pareprint_ as well as `DoubletDecon <https://www.sciencedirect.com/science/article/pii/S2211124719312860>`__.
+If you used the Demuxafy platform for analysis, please reference our preprint_ as well as `DoubletDecon <https://www.sciencedirect.com/science/article/pii/S2211124719312860>`__.

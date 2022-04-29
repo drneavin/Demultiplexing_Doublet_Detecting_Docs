@@ -79,10 +79,10 @@ html_theme = "sphinx_rtd_theme"
 #
 html_theme_options = {
     "navigation_depth": 2,
-    # "logo_only": True,
+    "logo_only": True,
 }
 
-# html_logo = "logo.png"
+html_logo = "_figures/Demuxafy_logo_transparent.png"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
