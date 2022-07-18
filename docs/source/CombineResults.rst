@@ -58,7 +58,7 @@ Providing the possible parameter options:
 
 .. code-block:: bash
 
-  usage: /directflow/SCCGGroupShare/projects/DrewNeavin/Demultiplex_Benchmark/Demultiplexing_Doublet_Detecting_Docs/scripts/Combine_Results.R
+  usage: Combine_Results.R
         [-h] -o OUT [-d DEMUXLET] [-f FREEMUXLET] [-g FREEMUXLET_ASSIGNMENTS]
         [-a FREEMUXLET_CORRELATION_LIMIT] [-s SCSPLIT] [-w SCSPLIT_ASSIGNMENTS]
         [-j SCSPLIT_CORRELATION_LIMIT] [-u SOUPORCELL]

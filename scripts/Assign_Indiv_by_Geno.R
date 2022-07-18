@@ -45,7 +45,9 @@ calculate_DS <- function(GP_df){
 
 pearson_correlation <- function(df, ref_df, clust_df){
     for (col in colnames(df)){
+		print(col)
         for (row in rownames(df)){
+			print(row)
             df[row,col] <- cor(as.numeric(pull(ref_df, col)), as.numeric(pull(clust_df, row)), method = "pearson", use = "complete.obs")
         }
     }
@@ -78,22 +80,22 @@ if (is.na(format_clust)){
 		message("Found GT genotype format in cluster vcf. Will use that metric for cluster correlation.")
 		format_clust = "GT"
 
-		if (any(grepl("\\|",cluster_geno_tidy[1,]))){
+		if (any(grepl("\\|",cluster_geno_tidy[,1]))){
 			separator = "|"
 			message("Detected | separator for GT genotype format in cluster vcf")
-		} else if (any(grepl("/",cluster_geno_tidy[1,]))) {
+		} else if (any(grepl("/",cluster_geno_tidy[,1]))) {
 			separator = "/"
 			message("Detected / separator for GT genotype format in cluster vcf")
 		} else {
 			format_clust = NA
 			message("Can't identify a separator for the GT field in cluster vcf, moving on to using GP.")
 		}
-
-		cluster_geno_tidy <- as_tibble(lapply(cluster_geno_tidy, function(x) {gsub(paste0("0",separator,"0"),0, x)}) %>%
-		                        lapply(., function(x) {gsub(paste0("0",separator,"1"),1, x)}) %>%
-		                        lapply(., function(x) {gsub(paste0("1",separator,"0"),1, x)}) %>%
-		                        lapply(., function(x) {gsub(paste0("1",separator,"1"),2, x)}))
-
+		if (!is.na(format_clust)){
+			cluster_geno_tidy <- as_tibble(lapply(cluster_geno_tidy, function(x) {gsub(paste0("0",separator,"0"),0, x)}) %>%
+									lapply(., function(x) {gsub(paste0("0",separator,"1"),1, x)}) %>%
+									lapply(., function(x) {gsub(paste0("1",separator,"0"),1, x)}) %>%
+									lapply(., function(x) {gsub(paste0("1",separator,"1"),2, x)}))
+		}
 	}
 }
 
@@ -132,10 +134,10 @@ if (is.na(format_ref)){
 		message("Found GT genotype format in reference vcf. Will use that metric for cluster correlation.")
 		format_ref = "GT"
 
-		if (any(grepl("\\|",ref_geno_tidy[1,]))){
+		if (any(grepl("\\|",ref_geno_tidy[,1]))){
 			separator = "|"
 			message("Detected | separator for GT genotype format in reference vcf")
-		} else if (any(grepl("/",ref_geno_tidy[1,]))) {
+		} else if (any(grepl("/",ref_geno_tidy[,1]))) {
 			separator = "/"
 			message("Detected / separator for GT genotype format in reference vcf")
 		} else {
