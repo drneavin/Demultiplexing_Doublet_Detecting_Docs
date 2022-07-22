@@ -5,7 +5,7 @@ suppressMessages(suppressWarnings(library(argparse)))
 
 # create parser object
 parser <- ArgumentParser()
-
+ 
 # specify our desired options 
 # by default ArgumentParser will add an help option 
 parser$add_argument("-r", "--reference_vcf", required = TRUE, type = "character", help="The output directory where results will be saved")

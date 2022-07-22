@@ -4,7 +4,7 @@
 suppressMessages(suppressWarnings(library(argparse)))
 
 # create parser object
-parser <- ArgumentParser()
+parser <- ArgumentParser() 
 
 # specify our desired options 
 # by default ArgumentParser will add an help option 

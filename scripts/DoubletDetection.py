@@ -3,7 +3,7 @@ import argparse
 import os
 
 
-parser = argparse.ArgumentParser(
+parser = argparse.ArgumentParser( 
     description="wrapper for DoubletDetection for doublet detection from transcriptomic data.")
 parser.add_argument("-m", "--counts_matrix", required = True, help = "cell ranger counts matrix directory containing matrix files or full path to matrix.mtx. Can also also provide the 10x h5.")
 parser.add_argument("-b", "--barcodes", required = False, default = None, help = "File containing droplet barcodes. Use barcodes from provided 10x dir by default.")

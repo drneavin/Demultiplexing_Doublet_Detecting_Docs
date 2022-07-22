@@ -8,7 +8,7 @@
 
 Vireo
 ===========================
-
+ 
 .. _Vireo: https://vireosnp.readthedocs.io/en/latest/manual.html
 .. _preprint: https://www.biorxiv.org/content/10.1101/2022.03.07.483367v1
 
