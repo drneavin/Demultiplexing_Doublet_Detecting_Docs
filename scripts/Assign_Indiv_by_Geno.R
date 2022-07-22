@@ -81,10 +81,10 @@ if (is.na(format_clust)){
 		format_clust = "GT"
 
 		if (any(grepl("\\|",cluster_geno_tidy[,1]))){
-			separator = "|"
+			separator = "\\|"
 			message("Detected | separator for GT genotype format in cluster vcf")
 		} else if (any(grepl("/",cluster_geno_tidy[,1]))) {
-			separator = "/"
+			separator = "\\/"
 			message("Detected / separator for GT genotype format in cluster vcf")
 		} else {
 			format_clust = NA

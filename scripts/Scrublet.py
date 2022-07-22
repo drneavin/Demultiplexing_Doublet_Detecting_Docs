@@ -7,6 +7,7 @@ parser = argparse.ArgumentParser(
     description="wrapper for scrublet for doublet detection of transcriptomic data.")
 parser.add_argument("-m", "--counts_matrix", required = True, help = "cell ranger counts matrix directory containing matrix files or full path to matrix.mtx. Can also also provide the 10x h5.")
 parser.add_argument("-b", "--barcodes", required = False, help = "barcodes.tsv or barcodes.tsv.gz from cellranger")
+parser.add_argument("-f", "--filtered_barcodes", required = False, default = None, help = "File containing a filtered list of droplet barcodes. This may be used if you want to use a filtered list of barcodes for doublet detection (ie need to remove droplets that are empty or high in ambient RNA).")
 parser.add_argument("-r", "--sim_doublet_ratio", required = False, default = 2, type = int, help = "Number of doublets to simulate relative to the number of observed transcriptomes.")
 parser.add_argument("-c", "--min_counts", required = False, default = 3, type = int, help = "Used for gene filtering prior to PCA. Genes expressed at fewer than min_counts in fewer than min_cells are excluded.")
 parser.add_argument("-e", "--min_cells", required = False, default = 3, type = int, help = "Used for gene filtering prior to PCA. Genes expressed at fewer than min_counts in fewer than are excluded.")
@@ -58,9 +59,36 @@ if args.barcodes is None:
 		barcodes_df = read10x.read_barcodes(os.path.join(args.counts_matrix ,"barcodes.tsv"))
 	else:
 		print("No barcode file in provided counts matrix directory")
+    exit()
 else:
 	print("Reading in barcodes file")
 	barcodes_df = read10x.read_barcodes(args.barcodes)
+
+
+
+
+if args.filtered_barcodes is None:
+    print("Will not filter barcodes as no barcode filtering file was provided.")
+else:
+    print(not args.filtered_barcodes is None)
+    if os.path.exists(args.filtered_barcodes):
+        print("Filtered barcodes exist.")
+
+        barcodes_filtered_df = read10x.read_barcodes(args.filtered_barcodes)
+        counts_matrix = counts_matrix[barcodes_df['Barcode'].isin(barcodes_filtered_df['Barcode'])]
+        if counts_matrix.shape[0] > 0:
+            print('\nThe original number of barcodes in the counts matrix: {}. \nThe number of barcodes in the user-provided barcode list: {}.\nThe number of barcodes after filtering for user-provided barcodes: {}'.format(barcodes_df.shape[0], barcodes_filtered_df.shape[0], counts_matrix.shape[0]))
+        else:
+            print("There are no barcodes remaining in your dataframe after filtering on the provided --filter_barcodes file.\n\
+            This is what the top your original barcodes looks like:\n {} \
+            \n\nAnd this is what the filtering barcodes look like:\n {} \
+            Please check that the provided filter barcode file is accurate for this data and has the same format.".format(barcodes_df['Barcode'].head, barcodes_filtered_df['Barcode'].head))
+            exit()
+    else:
+        print("Cannot read filtered barcode file, please check the directory path and try again.\nInterpreted path for filtered barcodes file: " + args.barcodes_filtered)
+        exit()
+
+
 
 
 
@@ -79,7 +107,7 @@ if args.scrublet_doublet_threshold is None:
   plt.savefig(os.path.join(args.outdir,'doublet_score_histogram.png'))
   print('Running UMAP...')
   scrub.set_embedding('UMAP', scr.get_umap(scrub.manifold_obs_, 10, min_dist=0.3))
-  print('Done.')
+
   scrub.plot_embedding('UMAP', order_points=True);
   plt.savefig(os.path.join(args.outdir,'UMAP.png'))
 
@@ -88,6 +116,8 @@ if args.scrublet_doublet_threshold is None:
   dataframe = pd.concat([barcodes_df, results, scores], axis=1)
   dataframe.scrublet_DropletType = dataframe.scrublet_DropletType.replace(True, "doublet")
   dataframe.scrublet_DropletType = dataframe.scrublet_DropletType.replace(False, "singlet")
+
+  print("Writing output.\n")
 
   dataframe.to_csv(os.path.join(args.outdir,'scrublet_results.tsv'), sep = "\t", index = False)
 
@@ -109,6 +139,8 @@ else:
   dataframe.scrublet_DropletType = dataframe.scrublet_DropletType.replace(True, "doublet")
   dataframe.scrublet_DropletType = dataframe.scrublet_DropletType.replace(False, "singlet")
   
+  print("Writing results to {}.".format(os.path.join(args.outdir,'scrublet_doublets_singlets.tsv')))
+
   dataframe.to_csv(os.path.join(args.outdir,'scrublet_doublets_singlets.tsv'), sep = "\t", index = False)
 
 
@@ -118,5 +150,9 @@ summary.index.name = 'Classification'
 summary.reset_index(inplace=True)
 summary = summary.rename({'scrublet_DropletType': 'Droplet N'}, axis=1)
 
+print("Writing summary.\n")
+
+print("Writing summary to {}.".format(os.path.join(args.outdir,'scrublet_summary.tsv')))
 summary.to_csv(os.path.join(args.outdir,'scrublet_summary.tsv'), sep = "\t", index = False)
 
+print("Done!")
