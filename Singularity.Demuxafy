@@ -295,7 +295,7 @@ From: continuumio/miniconda3
 
 	### Get the github repo with scripts for workflow ###
 	cd /opt
-		git clone --branch v1.0.3 https://github.com/drneavin/Demultiplexing_Doublet_Detecting_Docs.git
+		git clone --branch v1.0.4 https://github.com/drneavin/Demultiplexing_Doublet_Detecting_Docs.git
                 cd Demultiplexing_Doublet_Detecting_Docs
                 rm -rf references ## Only hosting on  github for people to download if they want, no need to take up extra space in the image
                 rm -rf docs ## doc files, dont need in image		
