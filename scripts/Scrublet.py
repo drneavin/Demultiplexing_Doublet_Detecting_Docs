@@ -59,7 +59,7 @@ if args.barcodes is None:
 		barcodes_df = read10x.read_barcodes(os.path.join(args.counts_matrix ,"barcodes.tsv"))
 	else:
 		print("No barcode file in provided counts matrix directory")
-    exit()
+        exit()
 else:
 	print("Reading in barcodes file")
 	barcodes_df = read10x.read_barcodes(args.barcodes)
