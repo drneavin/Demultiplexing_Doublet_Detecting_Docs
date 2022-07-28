@@ -51,18 +51,18 @@ else:
 
 
 if args.barcodes is None:
-	if os.path.exists(os.path.join(args.counts_matrix, "barcodes.tsv.gz")):
-		print("Reading in barcodes file")
-		barcodes_df = read10x.read_barcodes(os.path.join(args.counts_matrix ,"barcodes.tsv.gz"))
-	elif os.path.exists(os.path.join(args.counts_matrix, "barcodes.tsv")):
-		print("Reading in barcodes file")
-		barcodes_df = read10x.read_barcodes(os.path.join(args.counts_matrix ,"barcodes.tsv"))
-	else:
-		print("No barcode file in provided counts matrix directory")
+    if os.path.exists(os.path.join(args.counts_matrix, "barcodes.tsv.gz")):
+        print("Reading in barcodes file")
+        barcodes_df = read10x.read_barcodes(os.path.join(args.counts_matrix ,"barcodes.tsv.gz"))
+    elif os.path.exists(os.path.join(args.counts_matrix, "barcodes.tsv")):
+        print("Reading in barcodes file")
+        barcodes_df = read10x.read_barcodes(os.path.join(args.counts_matrix ,"barcodes.tsv"))
+    else:
+        print("No barcode file in provided counts matrix directory")
         exit()
 else:
-	print("Reading in barcodes file")
-	barcodes_df = read10x.read_barcodes(args.barcodes)
+    print("Reading in barcodes file")
+    barcodes_df = read10x.read_barcodes(args.barcodes)
 
 
 
