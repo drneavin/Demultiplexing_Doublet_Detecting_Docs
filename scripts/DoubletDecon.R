@@ -45,7 +45,7 @@ processed <- Improved_Seurat_Pre_Process(seurat, num_genes=args$num_genes, write
 
 ## Run Doublet Decon ##
 results <- Main_Doublet_Decon(rawDataFile = processed$newExpressionFile, 
-  groupsFile = processed$newGroupsFile, 
+  groupsFile = data.frame(processed$newGroupsFile), 
   filename = "DoubletDecon_results",
   location = paste0(args$out, "/"),
   fullDataFile = NULL, 
