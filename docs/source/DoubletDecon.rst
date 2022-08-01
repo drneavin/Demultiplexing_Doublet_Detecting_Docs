@@ -133,7 +133,7 @@ You can either run DoubletDecon_ with the wrapper script we have provided or you
         rhop = 0.9,                         ## We recommend testing multiple rhop parameters to find which fits your data the best
         write = TRUE, 
         PMF = TRUE, 
-        useFull = FALSE, 
+        useFull = FALSE,
         heatmap = FALSE, 
         centroids=FALSE, 
         num_doubs=100, 

@@ -37,11 +37,12 @@ From: continuumio/miniconda3
     apt install -y r-base
     apt install -y r-base-dev
     apt install -y  r-cran-devtools
-    apt -y install r-cran-seurat
+#    apt -y install r-cran-seurat
     apt-get update
     apt-get install -y libv8-dev
     apt-get update
     apt install -y ncdu
+    apt install -y libgeos-dev
 
 
 	add-apt-repository 'deb http://security.debian.org/debian-security jessie/updates main'
@@ -164,6 +165,7 @@ From: continuumio/miniconda3
     /opt/conda/envs/py37/bin/pip install h5py
     /opt/conda/envs/py37/bin/pip install xgboost
 	/opt/conda/envs/py37/bin/pip install argparse
+    
 
 	### Install R libraries ###
 	## Base helper packages ##
@@ -175,9 +177,7 @@ From: continuumio/miniconda3
     R --slave -e 'install.packages("remotes", repos = "http://cran.us.r-project.org")'
     R --slave -e 'install.packages("xgboost", repos = "http://cran.us.r-project.org")'
     R --slave -e 'install.packages("argparse", repos = "http://cran.us.r-project.org")'
-#    R --slave -e 'install.packages("https://cran.r-project.org/src/contrib/BH_1.75.0-0.tar.gz", repos=NULL,type="source")'
-    R --slave -e 'remove.packages("Matrix")'
-    R --slave -e 'install.packages("https://cran.r-project.org/src/contrib/Archive/Matrix/Matrix_1.3-2.tar.gz", repos=NULL, type="source")'
+    R --slave -e 'install.packages("https://cran.r-project.org/src/contrib/Archive/Matrix/Matrix_1.3-4.tar.gz", repos=NULL, type="source")'
 
 	# ## Other helper pacages ##
     R --slave -e 'install.packages("hdf5r", repos = "http://cran.us.r-project.org")'
@@ -189,6 +189,8 @@ From: continuumio/miniconda3
 
 	## Single Cell packages ##
     R --slave -e 'install.packages("BH", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'remotes::install_version("SeuratObject", version = "4.0.4")'
+    R --slave -e 'remotes::install_version("Seurat", version = "4.1.0")'
 #    R --slave -e 'install.packages("Seurat", repos = "http://cran.us.r-project.org")'
 
 	# Doublet Detecting packages ##
@@ -196,7 +198,7 @@ From: continuumio/miniconda3
 	R --slave -e 'BiocManager::install("mbkmeans")' ### Depdnency for scDblFinder and scds
     R --slave -e 'devtools::install_github("kostkalab/scds", ref="master")' ### One of the dependencies = SCE so dont need to install separately
     R --slave -e 'BiocManager::install("scDblFinder")'
-    R --slave -e 'devtools::install_github("EDePasquale/DoubletDecon")'
+    R --slave -e 'devtools::install_github("drneavin/DoubletDecon")' ### Forked and changed on August 2, 2022 because of errors with original directory and poor response from author of repo so unlikely to fix
     R --slave -e 'remotes::install_github("chris-mcginnis-ucsf/DoubletFinder")'
 
     

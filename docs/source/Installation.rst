@@ -9,8 +9,8 @@ Just download the singluarity image with:
 
   .. code-block:: bash
 
-    wget https://www.dropbox.com/s/q3hpbqa7gahbrhf/Demuxafy.sif
-    wget https://www.dropbox.com/s/583b8cxko3lc0y1/Demuxafy.sif.md5
+    wget https://www.dropbox.com/s/9g9k5u1xz23k4db/Demuxafy.sif
+    wget https://www.dropbox.com/s/qx0q37aqa0j2gu9/Demuxafy.sif.md5
 
 
 
@@ -47,7 +47,7 @@ If you run into any issues with downloading the image or any issue with running 
 .. admonition:: Demuxafy software versions - for the curious
   :class: dropdown
 
-  Image build date: 11 March, 2022
+  Image build date: 24 July, 2022
  
     +----------------------------+---------------------------+-------------------------------+
     | Software Group             | Software                  | Version                       |
