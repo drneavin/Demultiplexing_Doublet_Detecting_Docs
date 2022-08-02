@@ -649,15 +649,15 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 		if (!("scSplit_Individual_Assignment" %in% columns) & "scSplit_Cluster" %in% colnames(combined_results)){
 			columns <- c(columns, "scSplit_Cluster")
 		}
-		if (!("souporcell_Individual_Assignment" %in% columns) & "souporcell_Cluster" %in% colnames(combined_results)){
-			columns <- c(columns, "souporcell_Cluster")
+		if (!("Souporcell_Individual_Assignment" %in% columns) & "Souporcell_Cluster" %in% colnames(combined_results)){
+			columns <- c(columns, "Souporcell_Cluster")
 		}
 		print(columns)
 		demultiplex_combined_results_summary <- combined_results[,.(N=.N), by = c(columns)]
 		demultiplex_combined_results_summary <- demultiplex_combined_results_summary[order(-N)]
 		fwrite(demultiplex_combined_results_summary, paste0(tools::file_path_sans_ext(args$out),"_demultiplexing_summary.tsv"), sep = "\t", append = FALSE)
-
 	}
+
 	combined_results_summary <- combined_results_summary[order(-N)]
 
 	fwrite(combined_results_summary, paste0(tools::file_path_sans_ext(args$out),"_summary.tsv"), sep = "\t", append = FALSE)
@@ -671,14 +671,31 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 			message("Did not recognize the specified method. Can be one of 'MajoritySinglet', 'AtLeastHalfSinglet', 'AnySinglet' or 'AnyDoublet'. Output does not contain combined software cell type or donor classifications.")
 		} else{
 			### Check if using demultiplexing softwares and pull the individual ids if doing so
+			## Initialize Individual Assignment
+			individual_assignment <- NULL
+
 			if(any(grepl("Individual_Assignment", colnames(combined_results)))){
 
 				individual_assignment_list <- future_apply(combined_results[,.SD, .SDcols = grep("Individual_Assignment", colnames(combined_results), value = TRUE)], 1, function(y) table(y)[!(rownames(table(y)) %in% c("unassigned","doublet"))])
 
 				individual_assignment <- data.table(ID = unlist(lapply(individual_assignment_list, function(y) ifelse(is.null(names(which.max.simple(y[names(y) != "doublet"]))), NA, names(which.max.simple(y[names(y) != "doublet"]))))),
 													N =  unlist(lapply(individual_assignment_list, function(y) ifelse(is.null(names(which.max.simple(y[names(y) != "doublet"]))), NA, max(y[names(y) != "doublet"]))))) ## Need to remove doublet count from table
-			}
+			} else if (length(c(args$demuxlet, args$freemuxlet, args$scSplit, args$souporcell, args$vireo)) == 1) {
+				columns <- c()
+				if (!("Freemuxlet_Individual_Assignment" %in% columns) & "Freemuxlet_Cluster" %in% colnames(combined_results)){
+					columns <- c(columns, "Freemuxlet_Cluster")
+				}
+				if (!("scSplit_Individual_Assignment" %in% columns) & "scSplit_Cluster" %in% colnames(combined_results)){
+					columns <- c(columns, "scSplit_Cluster")
+				}
+				if (!("Souporcell_Individual_Assignment" %in% columns) & "Souporcell_Cluster" %in% colnames(combined_results)){
+					columns <- c(columns, "Souporcell_Cluster")
+				}
+				individual_assignment_list <- future_apply(combined_results[,.SD, .SDcols = columns], 1, function(y) table(y)[!(rownames(table(y)) %in% c("unassigned","doublet"))])
 
+				individual_assignment <- data.table(ID = unlist(lapply(individual_assignment_list, function(y) ifelse(is.null(names(which.max.simple(y[names(y) != "doublet"]))), NA, names(which.max.simple(y[names(y) != "doublet"]))))),
+													N =  unlist(lapply(individual_assignment_list, function(y) ifelse(is.null(names(which.max.simple(y[names(y) != "doublet"]))), NA, max(y[names(y) != "doublet"]))))) ## Need to remove doublet count from table
+			}
 			### Make combined calls dependent on the method selected by the user
 			if (args$method == "MajoritySinglet"){ ### Only call a singlet if majority of softwares call a singlet AND majority of demultiplexing (if present) call the same donor
 				message("Using the 'MajoritySinglet' method to call droplet classification (and donor identity if demultiplexing softwares included).")
@@ -696,7 +713,7 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 			} else if (args$method == "AtLeastHalfSinglet"){ ### Only call a singlet if at least half of softwares call a singlet AND at least half of demultiplexing (if present) call the same donor
 				message("Using the 'AtLeastHalfSinglet' method to call droplet classification (and donor identify if demultiplexing softwares included).")
 			
-				if (any(!is.null(individual_assignment))){
+				if (!is.null(individual_assignment)){
 					### method when have demultiplexing softwares
 					combined_results$AtLeastHalfSinglet_DropletType <- ifelse(rowSums(combined_results[,.SD, .SDcols = grep("DropletType", colnames(combined_results), value = TRUE)] == "singlet") >= length(grep("DropletType", colnames(combined_results)))/2 , "singlet", "doublet")
 					combined_results$AtLeastHalfSinglet_Individual_Assignment <- ifelse(combined_results$AtLeastHalfSinglet_DropletType == "singlet" & !is.na(individual_assignment$ID), individual_assignment$ID, "doublet")
@@ -709,7 +726,7 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 			} else if (args$method == "AnySinglet"){ ### Call a singlet if any softwares calls that droplet a singlet AND using the donor with the most consensus (call doublet if no consensus)
 				message("Using the 'AnySinglet' method to call droplet classification (and donor identify if demultiplexing softwares included).")
 			
-				if (any(!is.null(individual_assignment))){
+				if (!is.null(individual_assignment)){
 					### method when have demultiplexing softwares
 					combined_results$AnySinglet_DropletType <- ifelse(rowSums(combined_results[,.SD, .SDcols = grep("DropletType", colnames(combined_results), value = TRUE)] == "singlet") > 0 & !is.na(individual_assignment$N), "singlet", "doublet")
 					combined_results$AnySinglet_Individual_Assignment <- ifelse(combined_results$AnySinglet_DropletType == "singlet" & !is.na(individual_assignment$ID), individual_assignment$ID, "doublet")
@@ -722,7 +739,7 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 			} else if (args$method == "AnyDoublet"){ ### Call a singlet if all softwares calls that droplet a singlet AND all softwares call the same donor
 				message("Using the 'AnyDoublet' method to call droplet classification (and donor identify if demultiplexing softwares included).")
 			
-				if (any(!is.null(individual_assignment))){
+				if (!is.null(individual_assignment)){
 					### method when have demultiplexing softwares
 					combined_results$AnyDoublet_DropletType <- ifelse(rowSums(combined_results[,.SD, .SDcols = grep("DropletType", colnames(combined_results), value = TRUE)] != "singlet") > 0 | is.na(individual_assignment$N), "doublet", "singlet")
 					combined_results$AnyDoublet_Individual_Assignment <- ifelse(combined_results$AnyDoublet_DropletType == "doublet" | is.na(individual_assignment$ID), "doublet", individual_assignment$ID)
