@@ -31,12 +31,19 @@ This is the data that you will need to have prepare to run Scds_:
 
 	  - If you don't have your data in this format, you can run Scds_ manually in R and load the data in using a method of your choosing.
 
+
+.. admonition:: Optional
+
   - Output directory (``$SCDS_OUTDIR``)
 
     - If you don't provide an ``$SCDS_OUTDIR``, the results will be written to the present working directory.
 
+  - Filtered barcode file
 
+    - A list of barcodes that are a subset of the barcodes in your h5 or matrix.mtx files. This is useful if you have run other QC softwares such as `CellBender <https://cellbender.readthedocs.io/en/stable/index.html>`__ or `DropletQC <https://github.com/powellgenomicslab/DropletQC>`__ to remove empty droplets or droplets with damaged cells.
 
+    - Expectation is that there is no header in this file
+    
 
 Run Scds
 ----------------
@@ -46,13 +53,41 @@ You can either run Scds_ with the wrapper script we have provided or you can run
 
   .. tab:: With Wrapper Script
 
+    To run Scds_ with our wrapper script, simply execute the following in your shell:
 
     .. code-block:: bash
 
 		  singularity exec Demuxafy.sif scds.R -o $SCDS_OUTDIR -t $COUNTS
 
+    .. admonition:: HELP! It says my file/directory doesn't exist!
+      :class: dropdown
+
+      If you receive an error indicating that a file or directory doesn't exist but you are sure that it does, this is likely an issue arising from Singularity.
+      This is easy to fix.
+      The issue and solution are explained in detail in the :ref:`Notes About Singularity Images <Singularity-docs>`
+
+    To see all the parameters that this wrapper script will accept, run:
+
+    .. code-block:: bash
+
+      singularity exec Demuxafy.sif scds.R -h
+
+        usage: scds.R
+              [-h] -o OUT -t TENX_MATRIX [-b BARCODES_FILTERED]
+
+        optional arguments:
+          -h, --help            show this help message and exit
+          -o OUT, --out OUT     The output directory where results will be saved
+          -t TENX_MATRIX, --tenX_matrix TENX_MATRIX
+                                Path to the 10x filtered matrix directory or h5 file.
+          -b BARCODES_FILTERED, --barcodes_filtered BARCODES_FILTERED
+                                Path to a list of filtered barcodes to use for doublet
+                                detection.
+
 
   .. tab:: Run in R
+
+    This section demonstrates how to run Scds_ manually in R.
 
     First, you will have to start R.
     We have built R and all the required software to run Scds_ into the singularity image so you can run it directly from the image.
@@ -119,6 +154,91 @@ You can either run Scds_ with the wrapper script we have provided or you can run
       colnames(summary) <- c("Classification", "Droplet N")
       write_delim(summary, paste0(out,"/scds_doublet_summary.tsv"), "\t")
 
+
+
+  .. tab:: Run in R with Filtered Barcodes
+
+    This section demonstrates how to run Scds_ manually in R and includes code to help filter for a subset of barcodes that are in the single cell data.
+    
+    First, you will have to start R.
+    We have built R and all the required software to run Scds_ into the singularity image so you can run it directly from the image.
+
+    .. code-block:: bash
+
+      singularity exec Demuxafy.sif R
+
+    That will open R in your terminal.
+    Next, you can load all the libraries and run Scds_.
+
+    .. code-block:: R
+
+      .libPaths("/usr/local/lib/R/site-library") ### This is required so that R uses the libraries loaded in the image and not any local libraries
+      library(dplyr)
+      library(tidyr)
+      library(tidyverse)
+      library(scds)
+      library(Seurat)
+      library(SingleCellExperiment)
+
+      ## Set up variables and parameters ##
+      out <- "/path/to/scds/outdir/"
+      tenX_matrix <- "/path/to/counts/matrix/dir/"
+      filtered_barcodes_file <- "/path/to/counts/filtered/barcodes/file.tsv" ## can also be gzipped
+
+      ## Read in data
+      counts <- Read10X(as.character(tenX_matrix), gene.column = 1) ## or Read10X_h5 if using h5 file as input
+
+      ## Read in filtered barcodes file
+      filtered_barcodes <- read_delim(filtered_barcodes_file, delim = "\t", col_names = "Barcodes")
+
+      ## Filter for the barcodes of interest
+      ## Account for possibility that not just single cell data
+        if (is.list(counts)){
+            barcodes_head <- head(colnames(counts[[grep("Gene", names(counts))]]))
+            counts <- counts[[grep("Gene", names(counts))]][, colnames(counts[[grep("Gene", names(counts))]]) %in% filtered_barcodes$Barcodes]
+        } else {
+            barcodes_head <- head(colnames(counts))
+            counts <- counts[, colnames(counts) %in% filtered_barcodes$Barcodes]
+        }
+
+
+      ## Account for possibility that not just single cell data
+      if (is.list(counts)){
+        sce <- SingleCellExperiment(list(counts=counts[[grep("Gene", names(counts))]]))
+      } else {
+        sce <- SingleCellExperiment(list(counts=counts))
+      }
+
+      ## Annotate doublet using binary classification based doublet scoring:
+      sce = bcds(sce, retRes = TRUE, estNdbl=TRUE)
+
+      ## Annotate doublet using co-expression based doublet scoring:
+      try({
+          sce = cxds(sce, retRes = TRUE, estNdbl=TRUE)
+      })
+
+      ### If cxds worked, run hybrid, otherwise use bcds annotations
+      if ("cxds_score" %in% colnames(colData(sce))) {
+          ## Combine both annotations into a hybrid annotation
+          sce = cxds_bcds_hybrid(sce, estNdbl=TRUE)
+          Doublets <- as.data.frame(cbind(rownames(colData(sce)), colData(sce)$hybrid_score, colData(sce)$hybrid_call))
+      } else {
+          print("this pool failed cxds so results are just the bcds calls")
+          Doublets <- as.data.frame(cbind(rownames(colData(sce)), colData(sce)$bcds_score, colData(sce)$bcds_call))
+      }
+
+      ## Doublet scores are now available via colData:
+      colnames(Doublets) <- c("Barcode","scds_score","scds_DropletType")
+      Doublets$scds_DropletType <- gsub("FALSE","singlet",Doublets$scds_DropletType) 
+      Doublets$scds_DropletType <- gsub("TRUE","doublet",Doublets$scds_DropletType)
+
+      message("writing output")
+      write_delim(Doublets, paste0(out,"/scds_doublets_singlets.tsv"), "\t")
+
+
+      summary <- as.data.frame(table(Doublets$scds_DropletType))
+      colnames(summary) <- c("Classification", "Droplet N")
+      write_delim(summary, paste0(out,"/scds_doublet_summary.tsv"), "\t")
 
 
 Scds Results and Interpretation

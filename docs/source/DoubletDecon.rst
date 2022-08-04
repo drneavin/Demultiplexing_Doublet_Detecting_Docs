@@ -48,6 +48,13 @@ You can either run DoubletDecon_ with the wrapper script we have provided or you
 
       singularity exec Demuxafy.sif DoubletDecon.R -o $DOUBLETDECON_OUTDIR -s $SEURAT_RDS
 
+    .. admonition:: HELP! It says my file/directory doesn't exist!
+      :class: dropdown
+
+      If you receive an error indicating that a file or directory doesn't exist but you are sure that it does, this is likely an issue arising from Singularity.
+      This is easy to fix.
+      The issue and solution are explained in detail in the :ref:`Notes About Singularity Images <Singularity-docs>`
+      
     You can provide many other parameters as well which can be seen from running a help request:
 
     .. code-block:: bash
@@ -84,6 +91,7 @@ You can either run DoubletDecon_ with the wrapper script we have provided or you
                               Whether to only compute doublets as 50:50 ratio. Default is to use other ratios as well.
         -u MIN_UNIQ, --min_uniq MIN_UNIQ
                               Minimum number of unique genes to rescue a cluster identified as doublets.
+
 
   .. tab:: Run in R
 
@@ -133,7 +141,7 @@ You can either run DoubletDecon_ with the wrapper script we have provided or you
         rhop = 0.9,                         ## We recommend testing multiple rhop parameters to find which fits your data the best
         write = TRUE, 
         PMF = TRUE, 
-        useFull = FALSE, 
+        useFull = FALSE,
         heatmap = FALSE, 
         centroids=FALSE, 
         num_doubs=100, 

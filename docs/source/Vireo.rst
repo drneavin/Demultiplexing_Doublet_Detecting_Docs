@@ -8,8 +8,8 @@
 
 Vireo
 ===========================
-
-.. _Vireo: https://github.com/statgen/popscle
+ 
+.. _Vireo: https://vireosnp.readthedocs.io/en/latest/manual.html
 .. _preprint: https://www.biorxiv.org/content/10.1101/2022.03.07.483367v1
 
 Vireo is a flexible demultiplexing software that can demutliplex without any reference SNP genotypes, with reference SNP genotypes for a subset of the donors in the pool or no reference SNP genotypes.
@@ -63,6 +63,14 @@ First, you need to count the number of alleles at each SNP in each droplet using
 
 You can alter the ``-p``, ``--minMAF`` and ``--minCOUNT`` parameters to fit your data and your needs.
 We have found these settings to work well with our data.
+
+.. admonition:: HELP! It says my file/directory doesn't exist!
+  :class: dropdown
+
+  If you receive an error indicating that a file or directory doesn't exist but you are sure that it does, this is likely an issue arising from Singularity.
+  This is easy to fix.
+  The issue and solution are explained in detail in the :ref:`Notes About Singularity Images <Singularity-docs>`
+
 
 If the pileup is successful, you will have this new file in your ``$VIREO_OUTDIR``:
 
@@ -122,6 +130,14 @@ We've provided an example command for each of these differing amounts of donor S
 
       singularity exec Demuxafy.sif vireo -c $VIREO_OUTDIR -d $VIREO_OUTDIR/donor_subset.vcf -o $VIREO_OUTDIR -t $FIELD
 
+    .. admonition:: HELP! It says my file/directory doesn't exist!
+      :class: dropdown
+
+      If you receive an error indicating that a file or directory doesn't exist but you are sure that it does, this is likely an issue arising from Singularity.
+      This is easy to fix.
+      The issue and solution are explained in detail in the :ref:`Notes About Singularity Images <Singularity-docs>`
+
+
   .. tab:: With SNP Genotype |br| Data for Some Donors
 
     .. admonition:: STRONGLY Recommended
@@ -144,7 +160,7 @@ We've provided an example command for each of these differing amounts of donor S
 
         .. code-block::
 
-          singularity exec Demuxafy.sif bcftools view $VCF -R $VIREO_OUTDIR/cellSNP.base.vcf.gz -s sample1,sample2 -Ov -o $VIREO_OUTDIR/donor_subset.vcf
+          singularity exec Demuxafy.sif bcftools view $VCF -R $VIREO_OUTDIR/cellSNP.base.vcf.gz -s sample1,sample2 -Ov -o $VIREO_OUTDIR/donor_subset.vcf -N $N
 
         Alternatively, if you have the individuals from the pool in a file with each individuals separated by a new line (``individual_file.tsv``), then you can use ``-S individual_file.tsv``.
 
@@ -163,11 +179,25 @@ We've provided an example command for each of these differing amounts of donor S
 
       singularity exec Demuxafy.sif vireo -c $VIREO_OUTDIR -d $VIREO_OUTDIR/donor_subset.vcf.gz -o $VIREO_OUTDIR -t $FIELD -N $N
 
+    .. admonition:: HELP! It says my file/directory doesn't exist!
+      :class: dropdown
+
+      If you receive an error indicating that a file or directory doesn't exist but you are sure that it does, this is likely an issue arising from Singularity.
+      This is easy to fix.
+      The issue and solution are explained in detail in the :ref:`Notes About Singularity Images <Singularity-docs>`
+
   .. tab:: Without Donor SNP |br| Genotype Data
 
     .. code-block::
 
       singularity exec Demuxafy.sif vireo -c $VIREO_OUTDIR -o $VIREO_OUTDIR -N $N
+
+    .. admonition:: HELP! It says my file/directory doesn't exist!
+      :class: dropdown
+
+      If you receive an error indicating that a file or directory doesn't exist but you are sure that it does, this is likely an issue arising from Singularity.
+      This is easy to fix.
+      The issue and solution are explained in detail in the :ref:`Notes About Singularity Images <Singularity-docs>`
 
 If Vireo_ is successful, you will have these new files in your ``$VIREO_OUTDIR``:
 

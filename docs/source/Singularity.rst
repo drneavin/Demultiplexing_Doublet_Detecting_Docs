@@ -1,3 +1,6 @@
+.. _Singularity-docs:
+
+
 Notes About Singularity Images
 ===============================
 

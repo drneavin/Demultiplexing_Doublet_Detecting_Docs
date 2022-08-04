@@ -5,7 +5,7 @@ suppressMessages(suppressWarnings(library(argparse)))
 
 # create parser object
 parser <- ArgumentParser()
-
+ 
 # specify our desired options 
 # by default ArgumentParser will add an help option 
 parser$add_argument("-r", "--reference_vcf", required = TRUE, type = "character", help="The output directory where results will be saved")
@@ -81,10 +81,10 @@ if (is.na(format_clust)){
 		format_clust = "GT"
 
 		if (any(grepl("\\|",cluster_geno_tidy[,1]))){
-			separator = "|"
+			separator = "\\|"
 			message("Detected | separator for GT genotype format in cluster vcf")
 		} else if (any(grepl("/",cluster_geno_tidy[,1]))) {
-			separator = "/"
+			separator = "\\/"
 			message("Detected / separator for GT genotype format in cluster vcf")
 		} else {
 			format_clust = NA

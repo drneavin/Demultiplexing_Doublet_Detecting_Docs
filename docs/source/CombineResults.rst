@@ -1,9 +1,12 @@
 .. _Combine-docs:
 
-Combining Results
-=================
+Comparing and Combining Results
+==================================
 
-After you have run each of the Demultiplexing and Doublet Detecting softwares you would like, it is helpful to convert them to similar nomenclature and combine the results into a single dataframe.
+.. _preprint: https://www.biorxiv.org/content/10.1101/2022.03.07.483367v1
+
+
+After you have run each of the Demultiplexing and/or Doublet Detecting softwares you would like, it is helpful to convert them to similar nomenclature and combine the results into a single dataframe.
 In addition, we have found it helpful to generate summaries of each of the combinations of softwares identified.
 To help streamline this process, we have provided a script that will easily integrate all the softwares you have run into a single dataframe and can do the following:
 
@@ -404,4 +407,4 @@ Here's a deeper look at the contents of each of these results:
 
 Citation
 --------
-If you used the Demuxafy platform for analysis, please reference our paper (REFERENCE).
+If you used the Demuxafy platform for analysis, please reference our preprint_.

@@ -51,6 +51,13 @@ First, you will need to prepare the bam file so that it only contains high quali
   singularity exec Demuxafy.sif samtools sort -o $SCSPLIT_OUTDIR/filtered_bam_dedup_sorted.bam $SCSPLIT_OUTDIR/filtered_bam_dedup.bam
   singularity exec Demuxafy.sif samtools index $SCSPLIT_OUTDIR/filtered_bam_dedup_sorted.bam
 
+.. admonition:: HELP! It says my file/directory doesn't exist!
+  :class: dropdown
+
+  If you receive an error indicating that a file or directory doesn't exist but you are sure that it does, this is likely an issue arising from Singularity.
+  This is easy to fix.
+  The issue and solution are explained in detail in the :ref:`Notes About Singularity Images <Singularity-docs>`
+
 After running these bam preparation steps, you will have the following files in your ``$SCSPLIT_OUTDIR``:
 
 .. code-block::

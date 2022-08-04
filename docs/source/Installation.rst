@@ -9,8 +9,8 @@ Just download the singluarity image with:
 
   .. code-block:: bash
 
-    wget https://www.dropbox.com/s/q3hpbqa7gahbrhf/Demuxafy.sif
-    wget https://www.dropbox.com/s/583b8cxko3lc0y1/Demuxafy.sif.md5
+    wget https://www.dropbox.com/s/9g9k5u1xz23k4db/Demuxafy.sif
+    wget https://www.dropbox.com/s/qx0q37aqa0j2gu9/Demuxafy.sif.md5
 
 
 
@@ -47,7 +47,7 @@ If you run into any issues with downloading the image or any issue with running 
 .. admonition:: Demuxafy software versions - for the curious
   :class: dropdown
 
-  Image build date: 11 March, 2022
+  Image build date: 3 August, 2022
  
     +----------------------------+---------------------------+-------------------------------+
     | Software Group             | Software                  | Version                       |
@@ -64,11 +64,11 @@ If you run into any issues with downloading the image or any issue with running 
     +----------------------------+---------------------------+-------------------------------+
     | Doublet Detecting          | ``DoubletDecon``          | v1.1.6                        |
     |                            +---------------------------+-------------------------------+
-    |                            | ``DoubletDetection``      | v3.0                          |
+    |                            | ``DoubletDetection``      | v4.2                          |
     |                            +---------------------------+-------------------------------+
     |                            | ``DoubletFinder``         | v2.0.3                        |
     |                            +---------------------------+-------------------------------+
-    |                            | ``scDblFinder``           | v1.8.0                        |
+    |                            | ``scDblFinder``           | v1.10.0                       |
     |                            +---------------------------+-------------------------------+
     |                            | ``scds``                  | v1.9.1                        |
     |                            +---------------------------+-------------------------------+
@@ -92,23 +92,23 @@ If you run into any issues with downloading the image or any issue with running 
     |                            +---------------------------+-------------------------------+
     |                            | ``cellSNP-lite``          | v1.2.2                        |
     +----------------------------+---------------------------+-------------------------------+
-    | R Supporting Packages      | ``argparse``              | v2.1.3                        |
-    | (R v4.1.3)                 +---------------------------+-------------------------------+
-    |                            | ``ComplexHeatmap``        | v2.10.0                       |
+    | R Supporting Packages      | ``argparse``              | v2.1.6                        |
+    | (R v4.2.1)                 +---------------------------+-------------------------------+
+    |                            | ``ComplexHeatmap``        | v2.12.0                       |
     |                            +---------------------------+-------------------------------+
     |                            | ``ComplexUpset``          | v1.3.3                        |
     |                            +---------------------------+-------------------------------+
-    |                            | ``vcfR``                  | v1.12.0                       |
+    |                            | ``vcfR``                  | v1.13.0                       |
     |                            +---------------------------+-------------------------------+
-    |                            | ``Seurat``                | 4.1.0                         |
+    |                            | ``Seurat``                | 4.1.1                         |
     |                            +---------------------------+-------------------------------+
-    |                            | ``SingleCellExperiment``  | v1.16.0                       |
+    |                            | ``SingleCellExperiment``  | v1.18.0                       |
     +----------------------------+---------------------------+-------------------------------+
     | Python Supporting Packages | ``argparse``              | v1.4.0                        |
     | (Python v3.7.2)            +---------------------------+-------------------------------+
-    |                            | ``numpy``                 | v1.21.2                       |
+    |                            | ``numpy``                 | v1.21.5                       |
     |                            +---------------------------+-------------------------------+
-    |                            | ``matplotlib``            | v3.2.2                        |
+    |                            | ``matplotlib``            | v3.5.2                        |
     |                            +---------------------------+-------------------------------+
     |                            | ``pandas``                | v1.3.5                        |
     |                            +---------------------------+-------------------------------+
@@ -118,7 +118,7 @@ If you run into any issues with downloading the image or any issue with running 
     |                            +---------------------------+-------------------------------+
     |                            | ``scvi-tools``            | v0.14.6                       |
     |                            +---------------------------+-------------------------------+
-    |                            | ``umap-learn``            | v0.5.2                        |
+    |                            | ``umap-learn``            | v0.5.3                        |
     +----------------------------+---------------------------+-------------------------------+
 
 
