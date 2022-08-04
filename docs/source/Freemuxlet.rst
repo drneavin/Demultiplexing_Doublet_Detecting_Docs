@@ -54,6 +54,13 @@ First we will need to identify the number of reads from each allele at each of t
 
   singularity exec Demuxafy.sif popscle dsc-pileup --sam $BAM --vcf $VCF --group-list $BARCODES --out $FREEMUXLET_OUTDIR/pileup
 
+.. admonition:: HELP! It says my file/directory doesn't exist!
+  :class: dropdown
+
+  If you receive an error indicating that a file or directory doesn't exist but you are sure that it does, this is likely an issue arising from Singularity.
+  This is easy to fix.
+  The issue and solution are explained in detail in the :ref:`Notes About Singularity Images <Singularity-docs>`
+
 
 If the pileup is successfull, you will have these files in your ``$FREEMUXLET_OUTDIR``:
 
@@ -75,6 +82,13 @@ Once you have run ``popscle pileup``, you can demultiplex your samples with Free
 .. code-block:: bash
 
   singularity exec Demuxafy.sif popscle freemuxlet --plp $FREEMUXLET_OUTDIR/pileup --out $FREEMUXLET_OUTDIR/freemuxlet --group-list $BARCODES --nsample $N
+
+.. admonition:: HELP! It says my file/directory doesn't exist!
+  :class: dropdown
+
+  If you receive an error indicating that a file or directory doesn't exist but you are sure that it does, this is likely an issue arising from Singularity.
+  This is easy to fix.
+  The issue and solution are explained in detail in the :ref:`Notes About Singularity Images <Singularity-docs>`
 
 If freemuxlet is successfull, you will have these new files in your ``$FREEMUXLET_OUTDIR``:
 

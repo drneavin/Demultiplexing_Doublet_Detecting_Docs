@@ -68,6 +68,13 @@ You can run Souporcell_ with or without reference SNP genotypes - follow the ins
 
       singularity exec Demuxafy.sif souporcell_pipeline.py -i $BAM -b $BARCODES -f $FASTA -t $THREADS -o $SOUPORCELL_OUTDIR -k $N --common_variants $VCF
 
+    .. admonition:: HELP! It says my file/directory doesn't exist!
+      :class: dropdown
+
+      If you receive an error indicating that a file or directory doesn't exist but you are sure that it does, this is likely an issue arising from Singularity.
+      This is easy to fix.
+      The issue and solution are explained in detail in the :ref:`Notes About Singularity Images <Singularity-docs>`
+
   .. tab:: With Reference SNP Genotypes
 
     If you have reference SNP genotypes for **all** of your donors, you can run souporcell with the following command, providing an appropriate thread number (``$THREADS``) for your system and listing the donor ids that correspond in the ``$VCF`` file
@@ -75,6 +82,14 @@ You can run Souporcell_ with or without reference SNP genotypes - follow the ins
     .. code-block:: bash
 
       singularity exec Demuxafy.sif souporcell_pipeline.py -i $BAM -b $BARCODES -f $FASTA -t $THREADS -o $SOUPORCELL_OUTDIR -k $N --known_genotypes $VCF --known_genotypes_sample_names donor1 donor donor3 donor4
+
+    .. admonition:: HELP! It says my file/directory doesn't exist!
+      :class: dropdown
+
+      If you receive an error indicating that a file or directory doesn't exist but you are sure that it does, this is likely an issue arising from Singularity.
+      This is easy to fix.
+      The issue and solution are explained in detail in the :ref:`Notes About Singularity Images <Singularity-docs>`
+
 
     .. admonition:: Note
 

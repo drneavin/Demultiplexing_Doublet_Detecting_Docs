@@ -122,6 +122,7 @@ This makes these two method types complementary for demultiplexing and doublet r
    :hidden:
 
    CombineResults
+   NextSteps
 
 .. Reference
 .. ==================

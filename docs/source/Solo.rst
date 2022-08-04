@@ -41,6 +41,13 @@ Run Solo
 
   singularity exec Demuxafy.sif solo -o $SOLO_OUTDIR -e $N_DOUB -j $JSON -d $COUNTS
 
+.. admonition:: HELP! It says my file/directory doesn't exist!
+  :class: dropdown
+
+  If you receive an error indicating that a file or directory doesn't exist but you are sure that it does, this is likely an issue arising from Singularity.
+  This is easy to fix.
+  The issue and solution are explained in detail in the :ref:`Notes About Singularity Images <Singularity-docs>`
+
 Solo_ also has additional parameters that can be seen with:
 
 .. code-block:: bash

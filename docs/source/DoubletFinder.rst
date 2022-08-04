@@ -46,7 +46,14 @@ You can either run DoubletFinder_ with the wrapper script we have provided or yo
     .. code-block:: bash
 
       singularity exec Demuxafy.sif DoubletFinder.R -o $DOUBLETFINDER_OUTDIR -s $SEURAT_RDS -c TRUE -d $DOUBLETS
+      
+    .. admonition:: HELP! It says my file/directory doesn't exist!
+      :class: dropdown
 
+      If you receive an error indicating that a file or directory doesn't exist but you are sure that it does, this is likely an issue arising from Singularity.
+      This is easy to fix.
+      The issue and solution are explained in detail in the :ref:`Notes About Singularity Images <Singularity-docs>`
+      
     You can provide many other parameters as well which can be seen from running a help request:
 
     .. code-block:: bash

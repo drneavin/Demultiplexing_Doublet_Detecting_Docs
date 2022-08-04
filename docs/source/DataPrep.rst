@@ -17,22 +17,64 @@ The demultiplexing and transcriptome-based doublet detecting softwares have diff
 | Doublet Detecting | .. centered:: |:heavy_check_mark:|            | .. centered:: |:heavy_multiplication_x:| |
 +-------------------+-----------------------------------------------+------------------------------------------+
 
-.. NOTE::
-
-  The SNP genotype data can be for multiplexed donors in the pool **OR** it can be publicly available common SNP genotypes which can be downloaded from `1000G <https://www.internationalgenome.org/category/ftp/>`__ (hg19 and hg38) or from `HRC <http://www.haplotype-reference-consortium.org/site>`__ (hg19 only).
-
-  For 1000G, use the instructions at the above link to access the data per your preferences and you can find the required files at the following directories:
-  
-    - The hg19 data is available at ``/ftp/release/``
-    - The hg38 data is available at ``/ftp/release/20130502/supporting/GRCh38_positions/``
 
 You won't need to pre-process the single cell count data unless you are using :ref:`DoubletFinder<doubletfinder-docs>` or :ref:`DoubletDecon<doubletdecon-docs>` which need QC-filtered and normalized counts (for example with `Seurat <https://satijalab.org/seurat/articles/pbmc3k_tutorial.html>`__).
 
 For the demultiplexing softwares, you should filter the SNP genotypes that you will use.
 
 
-SNP Genotype Pre-processing
+SNP Genotype Data
 ---------------------------
+
+
+.. NOTE::
+
+  The SNP genotype data can be for multiplexed donors in the pool **OR** it can be publicly available common SNP genotypes.
+
+  We provide instructions on how to access or prepare these data here.
+
+
+Pulblicly Available SNP Genotype Data
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We have provided common SNP vcf files that we have generated on both GRCh37 and GRCh38 and with a variety of filtering and 'chr' encoding.
+These can be downloaded using the following links:
+
++------------------------+----------------------+--------------------------------+------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| .. centered:: Minor    | .. centered:: Genome | .. centered:: Region           | .. centered:: Chr Encoding   | .. centered:: vcf File                                                                                                                                            | .. centered:: md5sum File                                                                                                                                                 |
+| .. centered:: Allele   |                      | .. centered:: Filtering        |                              |                                                                                                                                                                   |                                                                                                                                                                           |
+| .. centered:: Frequency|                      |                                |                              |                                                                                                                                                                   |                                                                                                                                                                           |
++========================+======================+================================+==============================+===================================================================================================================================================================+===========================================================================================================================================================================+
+| .. centered:: 1%       | .. centered:: GRCh37 | .. centered:: Genes            |  .. centered:: No 'chr'      | .. centered:: `GRCh37_1000G_MAF0.01_GeneFiltered_NoChr.vcf <https://www.dropbox.com/s/rce452zoawd0eee/GRCh37_1000G_MAF0.01_GeneFiltered_NoChr.vcf>`__             | .. centered:: `GRCh37_1000G_MAF0.01_GeneFiltered_NoChr.vcf.md5 <https://www.dropbox.com/s/jrfb287hux6ehtg/GRCh37_1000G_MAF0.01_GeneFiltered_NoChr.vcf.md5>`__             |
+|                        |                      |                                +------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|                        |                      |                                | .. centered:: 'chr' encoding | .. centered:: `GRCh37_1000G_MAF0.01_GeneFiltered_ChrEncoding.vcf <https://www.dropbox.com/s/qrn6df1i1wxukxn/GRCh37_1000G_MAF0.01_GeneFiltered_ChrEncoding.vcf>`__ | .. centered:: `GRCh37_1000G_MAF0.01_GeneFiltered_ChrEncoding.vcf.md5 <https://www.dropbox.com/s/on47saot3d2cgij/GRCh37_1000G_MAF0.01_GeneFiltered_ChrEncoding.vcf.md5>`__ |
+|                        |                      +--------------------------------+------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|                        |                      | .. centered:: Exons            |  .. centered:: No 'chr'      | .. centered:: `GRCh37_1000G_MAF0.01_ExonFiltered_NoChr.vcf <https://www.dropbox.com/s/fcempba0u0xwz2q/GRCh37_1000G_MAF0.01_ExonFiltered_NoChr.vcf>`__             | .. centered:: `GRCh37_1000G_MAF0.01_ExonFiltered_NoChr.vcf.md5 <https://www.dropbox.com/s/t4kucrvg4h3bkpj/GRCh37_1000G_MAF0.01_ExonFiltered_NoChr.vcf.md5>`__             |
+|                        |                      |                                +------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|                        |                      |                                | .. centered:: 'chr' encoding | .. centered:: `GRCh37_1000G_MAF0.01_ExonFiltered_ChrEncoding.vcf <https://www.dropbox.com/s/qa6qbxoodwrpl32/GRCh37_1000G_MAF0.01_ExonFiltered_ChrEncoding.vcf>`__ | .. centered:: `GRCh37_1000G_MAF0.01_ExonFiltered_ChrEncoding.vcf.md5 <https://www.dropbox.com/s/0ra5c19mta40aq9/GRCh37_1000G_MAF0.01_ExonFiltered_ChrEncoding.vcf.md5>`__ |
+|                        +----------------------+--------------------------------+------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|                        | .. centered:: GRCh38 | .. centered:: Genes            |  .. centered:: No 'chr'      | .. centered:: `GRCh38_1000G_MAF0.01_GeneFiltered_NoChr.vcf <https://www.dropbox.com/s/4nmm344g4j7pou4/GRCh38_1000G_MAF0.01_GeneFiltered_NoChr.vcf>`__             | .. centered:: `GRCh38_1000G_MAF0.01_GeneFiltered_NoChr.vcf.md5 <https://www.dropbox.com/s/izwp3l8oqwrt9dn/GRCh38_1000G_MAF0.01_GeneFiltered_NoChr.vcf.md5>`__             |
+|                        |                      |                                +------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|                        |                      |                                | .. centered:: 'chr' encoding | .. centered:: `GRCh38_1000G_MAF0.01_GeneFiltered_ChrEncoding.vcf <https://www.dropbox.com/s/ycfxs407sqgoori/GRCh38_1000G_MAF0.01_GeneFiltered_ChrEncoding.vcf>`__ | .. centered:: `GRCh38_1000G_MAF0.01_GeneFiltered_ChrEncoding.vcf.md5 <https://www.dropbox.com/s/77opxja1cgaq994/GRCh38_1000G_MAF0.01_GeneFiltered_ChrEncoding.vcf.md5>`__ |
+|                        |                      +--------------------------------+------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|                        |                      | .. centered:: Exons            |  .. centered:: No 'chr'      | .. centered:: `GRCh38_1000G_MAF0.01_ExonFiltered_NoChr.vcf <https://www.dropbox.com/s/myyhcvhlxb0touq/GRCh38_1000G_MAF0.01_ExonFiltered_NoChr.vcf>`__             | .. centered:: `GRCh38_1000G_MAF0.01_ExonFiltered_NoChr.vcf.md5 <https://www.dropbox.com/s/yv9johlb3ogrbks/GRCh38_1000G_MAF0.01_ExonFiltered_NoChr.vcf.md5>`__             |
+|                        |                      |                                +------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|                        |                      |                                | .. centered:: 'chr' encoding | .. centered:: `GRCh38_1000G_MAF0.01_ExonFiltered_ChrEncoding.vcf <https://www.dropbox.com/s/1akkxa7s9u485ka/GRCh38_1000G_MAF0.01_ExonFiltered_ChrEncoding.vcf>`__ | .. centered:: `GRCh38_1000G_MAF0.01_ExonFiltered_ChrEncoding.vcf.md5 <https://www.dropbox.com/s/aobteqk3z820ckn/GRCh38_1000G_MAF0.01_ExonFiltered_ChrEncoding.vcf.md5>`__ |
++------------------------+----------------------+--------------------------------+------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+Of course, you can further filter these to a 5% minor allele frequency if you would prefer.
+
+You can also download SNP genotype data and process it yourself from `1000G <https://www.internationalgenome.org/category/ftp/>`__ (hg19 and hg38) or `HRC <http://www.haplotype-reference-consortium.org/site>`__ (hg19 only).
+
+For 1000G, use the instructions at the above link to access the data per your preferences and you can find the required files at the following directories:
+
+  - The hg19 data is available at ``/ftp/release/``
+  - The hg38 data is available at ``/ftp/release/20130502/supporting/GRCh38_positions/``
+
+
+Preparing your own SNP Genotype Data
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 It is best to filter the SNP genotypes for common SNPs (generally > 1% or > 5% minor allele frequency) that overlap exons.
 Here we provide an example of how to do this filtering. 
 We built the required softwares into the singularity image so you can run these filtering steps with the image.
@@ -75,7 +117,7 @@ Next, filter for the SNPs that overlap exons.
 
 Test Dataset
 ------------
-In addition, we have provided test data that you can use.
+In addition, we have provided a test dataset that you can use.
 
 .. admonition:: Information
   :class: important
