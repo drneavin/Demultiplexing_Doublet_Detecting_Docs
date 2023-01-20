@@ -158,6 +158,32 @@ You can download the dataset with one of the following commands:
 
       Files TestData4PipelineFull.tar.gz.md5 and downloaded_TestData4PipelineFull.tar.gz.md5 are identical
 
+    Finally, you can access the data by unzipping the file:
+
+    .. code-block:: bash
+
+      tar -xvf TestData4PipelineFull.tar.gz
+
+    This should unzip the `TestData4PipelineFull` directory where you will have the following file structure:
+
+    .. code-block:: bash
+
+      TestData4PipelineFull
+      ├── donor_list.txt
+      ├── individuals_list_dir
+      │   └── test_dataset.txt
+      ├── samplesheet.txt
+      ├── test_dataset
+      │   ├── outs
+      │   │   └── filtered_gene_bc_matrices
+      │   │       └── Homo_sapiens_GRCh38p10
+      │   │           ├── barcodes.tsv
+      │   │           ├── genes.tsv
+      │   │           └── matrix.mtx
+      │   ├── possorted_genome_bam.bam
+      │   └── possorted_genome_bam.bam.bai
+      └── test_dataset.vcf
+
 
   .. tab:: Reduced Dataset
 
@@ -181,6 +207,32 @@ You can download the dataset with one of the following commands:
 
       Files TestData4PipelineSmall.tar.gz.md5 and downloaded_TestData4PipelineSmall.tar.gz.md5 are identical
 
+    Finally, you can access the data by unzipping the file:
+
+    .. code-block:: bash
+
+      tar -xvf TestData4PipelineFull.tar.gz
+
+    This should unzip the `TestData4PipelineSmall` directory where you will have the following file structure:
+
+    .. code-block:: bash
+
+      TestData4PipelineSmall
+      ├── donor_list.txt
+      ├── individuals_list_dir
+      │   └── test_dataset.txt
+      ├── ls
+      ├── samplesheet.txt
+      ├── test_dataset
+      │   └── outs
+      │       ├── filtered_gene_bc_matrices
+      │       │   └── Homo_sapiens_GRCh38p10
+      │       │       ├── barcodes.tsv
+      │       │       ├── genes.tsv
+      │       │       └── matrix.mtx
+      │       ├── pooled.sorted.bam
+      │       └── pooled.sorted.bam.bai
+      └── test_dataset.vcf
 
 Seurat Object
 ^^^^^^^^^^^^^^
@@ -207,6 +259,22 @@ That should return the following statement indicating that the two md5sums are i
 
 	Files TestData_Seurat.rds.md5 and downloaded_TestData_Seurat.rds.md5 are identical
 
+The `TestData_Seurat.rds` can then be used directly as input for the :ref:`DoubletFinder<doubletfinder-docs>` and :ref:`DoubletDecon<doubletdecon-docs>` tutorials.
+You can also load the `TestData_Seurat.rds` into `R` to see the seurat object by first opening R:
+
+.. code-block:: bash
+
+  singularity exec Demuxafy.sif R
+
+Then read it in with:
+
+.. code-block:: R
+
+  seurat <- readRDS(TestData_Seurat.rds)
+
+
 .. Note:: 
   We have used this dataset for each of the tutorials.
   The example tables in the *Results and Interpretation* sections of each tutorial are the results from this dataset.
+
+
