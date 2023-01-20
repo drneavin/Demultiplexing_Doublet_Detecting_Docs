@@ -164,7 +164,7 @@ You can download the dataset with one of the following commands:
 
       tar -xvf TestData4PipelineFull.tar.gz
 
-    This should unzip the `TestData4PipelineFull` directory where you will have the following file structure:
+    This should unzip the ``TestData4PipelineFull`` directory where you will have the following file structure:
 
     .. code-block:: bash
 
@@ -213,7 +213,7 @@ You can download the dataset with one of the following commands:
 
       tar -xvf TestData4PipelineFull.tar.gz
 
-    This should unzip the `TestData4PipelineSmall` directory where you will have the following file structure:
+    This should unzip the ``TestData4PipelineSmall`` directory where you will have the following file structure:
 
     .. code-block:: bash
 
@@ -259,8 +259,8 @@ That should return the following statement indicating that the two md5sums are i
 
 	Files TestData_Seurat.rds.md5 and downloaded_TestData_Seurat.rds.md5 are identical
 
-The `TestData_Seurat.rds` can then be used directly as input for the :ref:`DoubletFinder<doubletfinder-docs>` and :ref:`DoubletDecon<doubletdecon-docs>` tutorials.
-You can also load the `TestData_Seurat.rds` into `R` to see the seurat object by first opening R:
+The ``TestData_Seurat.rds`` can then be used directly as input for the :ref:`DoubletFinder<doubletfinder-docs>` and :ref:`DoubletDecon<doubletdecon-docs>` tutorials.
+You can also load the ``TestData_Seurat.rds`` into ``R`` to see the seurat object by first opening R:
 
 .. code-block:: bash
 
