@@ -1,202 +1,55 @@
-.. _Combine-docs:
+Tutorial
+==========
 
-Comparing and Combining Results
-==================================
+In this tutorial, we'll analyze the :ref:`Test Dataset <TestData>` which contains 13 multiplexed donors and ~20,982 droplets.
 
-.. _preprint: https://www.biorxiv.org/content/10.1101/2022.03.07.483367v1
-
-
-After you have run each of the Demultiplexing and/or Doublet Detecting softwares you would like, it is helpful to convert them to similar nomenclature and combine the results into a single dataframe.
-In addition, we have found it helpful to generate summaries of each of the combinations of softwares identified.
-To help streamline this process, we have provided a script that will easily integrate all the softwares you have run into a single dataframe and can do the following:
-
-  #. Generate a dataframe that has all the software assignments per droplet in the pool
-
-    - A tab-separated dataframe with the droplet singlet-doublet classification and the individual assignment (for demultiplexing softwares) per droplet
-
-  #. Generate an upset plot that shows the droplet classificaitons by each software and the final classifications 
-
-  #. Generate a droplet type summary file
-
-    - Provides the number of droplets classified for each combination of droplet classifications by each software
-
-  #. Generate demultiplexing individual assignment summary file
-
-    - Provides the number of droplets classified for each combination of individual assignment droplet classifications by each software
-
-  #. If individuals have not been assigned to each cluster for reference-free demultiplexing softwares, will create a common assignment across all demultiplexing softwares for easy comparison
-
-  #. Combined final droplet assignment from all softwares included
-
-    - Uses one of four intersectional methods to combine software assignments together into a single combined assignment per barcode
-
-and to generate a summary file for all the software combinations and if you ran demultiplexing softwares, it will also generate a demultiplexing summary file for the individual and cluster assignments from the demultiplexing softwares.
+This tutorial will take you through the typical steps for demultiplexing data with Demuxafy. 
+The process would be the same for non-multiplexed data for doublet detection but would be a different combination of softwares.
+1. Select appropriate software combination
+1. Run each selected software
+1. Combine the results and call a final assignment for each droplet
 
 
-Data
------
-In order to use our script to combine the results from the various demultiplexing and doublet detecting softwares, you need the following:
+Selecting Software Combination
+-------------------------------
+First, we'll identify the softwares we should run using the :ref:`Software Selection Tool <SoftwareSelection-docs>`.
 
-.. admonition:: Required
-  :class: important
+Since we have a genetically multiplexed sample with reference SNP genotypes for each sample in the pool and less than 16 donors, we will use the following recommended softwares:
 
-  - Output directory (``$OUTDIR``)
+  - :ref:`Demuxlet <Demuxlet-docs>`
+  - :ref:`Souporcell <Souporcell-docs>`
+  - :ref:`Vireo <Vireo-docs>`
+  - :ref:`Scds <scds-docs>`
 
-  - Path to results of each of the softwares you would like to merge into a single dataframe.
 
-    - You need to provide the path to at least one software result, otherwise, it will not run.
+
+
+Run Each Software
+-------------------------------
+
+Demuxlet
+^^^^^^^^^
+
+
+Souporcell
+^^^^^^^^^
+
+
+
+Vireo
+^^^^^^^^^
+
+
+
+Scds
+^^^^^^^^^
+
+
+
 
 
 Merging Results with Combine_Results.R
 --------------------------------------
-
-The script has multiple options to provide the paths to each of the software results you would like to run.
-To see each of the options, simply run:
-
-.. code-block:: bash
-
-  singularity exec Demuxafy.sif Combine_Results.R -h
-
-Providing the possible parameter options:
-
-.. code-block:: bash
-
-  usage: Combine_Results.R
-        [-h] -o OUT [-d DEMUXLET] [-f FREEMUXLET] [-g FREEMUXLET_ASSIGNMENTS]
-        [-a FREEMUXLET_CORRELATION_LIMIT] [-s SCSPLIT] [-w SCSPLIT_ASSIGNMENTS]
-        [-j SCSPLIT_CORRELATION_LIMIT] [-u SOUPORCELL]
-        [-x SOUPORCELL_ASSIGNMENTS] [-k SOUPORCELL_CORRELATION_LIMIT]
-        [-v VIREO] [-e DOUBLETDECON] [-t DOUBLETDETECTION] [-i DOUBLETFINDER]
-        [-n SCDBLFINDER] [-c SCDS] [-r SCRUBLET] [-l SOLO] [-b REF]
-        [-p PCT_AGREEMENT] [-m METHOD]
-
-  optional arguments:
-    -h, --help            show this help message and exit
-    -o OUT, --out OUT     The file where results will be saved
-    -d DEMUXLET, --demuxlet DEMUXLET
-                          Path to demuxlet results. Only use this option if you
-                          want to include the demuxlet results.
-    -f FREEMUXLET, --freemuxlet FREEMUXLET
-                          Path to freemuxlet results. Only use this option if
-                          you want to include the freemuxlet results.
-    -g FREEMUXLET_ASSIGNMENTS, --freemuxlet_assignments FREEMUXLET_ASSIGNMENTS
-                          Path to freemuxlet cluster-to-individual assignments.
-                          Only use this option if have used reference SNP
-                          genotypes to assign individuals to clusters for the
-                          freemuxlet results.
-    -a FREEMUXLET_CORRELATION_LIMIT, --freemuxlet_correlation_limit FREEMUXLET_CORRELATION_LIMIT
-                          The minimum correlation between the cluster and the
-                          individual SNP genotypes which should be considered as
-                          a valid assignment. If you want no limit, use 0.
-                          Default is 0.7.
-    -s SCSPLIT, --scSplit SCSPLIT
-                          Path to scSplit results. Only use this option if you
-                          want to include the scSplit results.
-    -w SCSPLIT_ASSIGNMENTS, --scSplit_assignments SCSPLIT_ASSIGNMENTS
-                          Path to scSplit cluster-to-individual assignments.
-                          Only use this option if you have used reference SNP
-                          genotypes to assign individuals to clusters for the
-                          scSplit results.
-    -j SCSPLIT_CORRELATION_LIMIT, --scSplit_correlation_limit SCSPLIT_CORRELATION_LIMIT
-                          The minimum correlation between the cluster and the
-                          individual SNP genotypes which should be considered as
-                          a valid assignment. If you want no limit, use 0.
-                          Default is 0.7.
-    -u SOUPORCELL, --souporcell SOUPORCELL
-                          Path to souporcell results. Only use this option if
-                          you want to include the souporcell results.
-    -x SOUPORCELL_ASSIGNMENTS, --souporcell_assignments SOUPORCELL_ASSIGNMENTS
-                          Path to souporcell cluster-to-individual assignments.
-                          Only use this option if you have used reference SNP
-                          genotypes to assign individuals to clusters for the
-                          souporcell results.
-    -k SOUPORCELL_CORRELATION_LIMIT, --souporcell_correlation_limit SOUPORCELL_CORRELATION_LIMIT
-                          The minimum correlation between the cluster and the
-                          individual SNP genotypes which should be considered as
-                          a valid assignment. If you want no limit, use 0.
-                          Default is 0.7.
-    -v VIREO, --vireo VIREO
-                          Path to vireo results. Only use this option if you
-                          want to include the vireo results.
-    -e DOUBLETDECON, --DoubletDecon DOUBLETDECON
-                          Path to DoubletDecon results. Only use this option if
-                          you want to include the DoubletDecon results.
-    -t DOUBLETDETECTION, --DoubletDetection DOUBLETDETECTION
-                          Path to DoubletDetection results. Only use this option
-                          if you want to include the DoubletDetection results.
-    -i DOUBLETFINDER, --DoubletFinder DOUBLETFINDER
-                          Path to DoubletFinder results. Only use this option if
-                          you want to include the DoubletFinder results.
-    -n SCDBLFINDER, --scDblFinder SCDBLFINDER
-                          Path to scDblFinder results. Only use this option if
-                          you want to include the scDblFinder results.
-    -c SCDS, --scds SCDS  Path to scds results. Only use this option if you want
-                          to include the scds results.
-    -r SCRUBLET, --scrublet SCRUBLET
-                          Path to scrublet results. Only use this option if you
-                          want to include the scrublet results.
-    -l SOLO, --solo SOLO  Path to solo results. Only use this option if you want
-                          to include the solo results.
-    -b REF, --ref REF     Which demultiplexing software to use as a reference
-                          for individuals when you do not have assignment key
-                          for all demultiplexing method. Options are 'Demuxlet',
-                          'Freemuxlet', 'scSplit', 'Souporcell' and 'Vireo'. If
-                          blank when assignment keys are missing, default
-                          softwares to use if present are Vireo, then Demuxlet,
-                          then Freemuxlet, then Souporcell, then scSplit.
-    -p PCT_AGREEMENT, --pct_agreement PCT_AGREEMENT
-                          The proportion of a cluster that match the 'ref'
-                          assignment to assign that cluster the individual
-                          assignment from the reference. Can be between 0.5 and
-                          1. Default is 0.9.
-    -m METHOD, --method METHOD
-                          Combination method. Options are 'MajoritySinglet'.
-                          'AtLeastHalfSinglet', 'AnySinglet' or 'AnyDoublet'. We
-                          have found that 'MajoritySinglet' provides the most
-                          accurate results in most situations and therefore
-                          recommend this method. See https://demultiplexing-
-                          doublet-detecting-
-                          docs.readthedocs.io/en/latest/CombineResults.html for
-                          detailed explanation of each intersectional method.
-                          Leave blank if you just want all the softwares to be
-                          merged into a single dataframe.
-
-
-  
-.. admonition:: Combination Methods - Additional Information
-  :class: dropdown
-
-  There are four options for making combined droplet type (singlet or doublet) and individual assignment from the softwares used:
-
-    - MajoritySinglet
-
-      - If more than half of the softwares identify a droplet as a singlet, it is classified as a singlet.
-
-      - If more than half the demultiplexing softwares identify the same indivdual, that assignment is used for the droplet.
-
-      - We have found 
-
-    - AtLeastHalfSinglet
-
-      - If at least half of the softwares identify a droplet as a singlet, it is classified as a singlet.
-
-      - If at least half the demultiplexing softwares identify the same indivdual, that assignment is used for the droplet.
-
-    - AnySinglet
-
-      - If this droplet is identified as a singlet by any software, the droplet is classified as a singlet.
-
-      - In other words, a doublet is only called if all softwares identified that droplet as a doublet.
-
-    - AnyDoublet
-
-      - A droplet is classified as a singlet only if all softwares identify it as a singlet.
-
-      - In other words, a doublet is called if any software identifies that droplet as a doublet.
-
-
-
-
 
 An example command that combines :ref:`Demuxlet <Demuxlet-docs>` results, :ref:`Souporcell <Souporcell-docs>` results, :ref:`Solo <Solo-docs>` results and :ref:`Scds <scds-docs>` results would look like this:
 There are a two different options for using this script:
@@ -217,7 +70,7 @@ First, let's assign the variables that will be used to execute each step.
       OUTDIR=/path/to/output/combined
       DEMUXLET_OUTDIR=/path/to/output/demuxlet
       SOUPORCELL_OUTDIR=/path/to/output/souporcell
-      SOLO_OUTDIR=/path/to/output/solo
+      VIREO_OUTDIR=/path/to/output/vireo
       SCDS_OUTDIR=/path/to/output/scds
 
 
@@ -237,24 +90,8 @@ First, let's assign the variables that will be used to execute each step.
         --scds $SCDS_OUTDIR \
         --method "MajoritySinglet" ## there are other methods that can also be used, please see the help message above for the other options
 
-  .. tab:: Combine Results
-
-    The other option is to just combine the results together without instersectional joint calls on the assignment and droplet type for each droplet.
-
-    .. code-block:: bash
-
-      singularity exec Demuxafy.sif Combine_Results.R \
-        -o $OUTDIR/combined_results.tsv \
-        --demuxlet $DEMUXLET_OUTDIR \
-        --souporcell $SOUPORCELL_OUTDIR \
-        --solo $SOLO_OUTDIR \
-        --scds $SCDS_OUTDIR
 
 
-.. admonition:: Note
-
-  The path to the directories will work if the file names are the expected file names based on the example tutorials.
-  However, if you used a different file naming convention or changed the names, you can also provide the full path to the exact file for each software.
 
 
 Results and Interpretation
@@ -270,12 +107,7 @@ Here, we show the results for the above example that also provides combined call
   ├── combined_results_summary.tsv
   ├── combined_results.tsv
   └── combined_results_w_combined_assignments.tsv
-
-.. admonition:: Note
-
-  - You will only have the ``combined_results_demultiplexing_summary.tsv`` file if you included demultiplexing softwares.
-
-  - And you will only have the ``combined_results_w_combined_assignments.tsv`` file if you ran it with ``--method``
+  
 
 Here's a deeper look at the contents of each of these results:
 
@@ -423,8 +255,3 @@ Here's a deeper look at the contents of each of these results:
     | ...                     | ...                     | ...                             | ...                     | ...                               | ...                     | ...                   | ...                     | ...                     | ...               | ...                             | ...                                  |
     +-------------------------+-------------------------+---------------------------------+-------------------------+-----------------------------------+-------------------------+-----------------------+-------------------------+-------------------------+-------------------+---------------------------------+--------------------------------------+
 
-
-
-Citation
---------
-If you used the Demuxafy platform for analysis, please reference our preprint_.

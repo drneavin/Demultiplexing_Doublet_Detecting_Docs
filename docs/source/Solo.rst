@@ -36,6 +36,24 @@ This is the data that you will need to have prepare to run Solo_:
 
 Run Solo
 ----------------
+First, let's assign the variables that will be used to execute each step.
+
+.. admonition:: Example Variable Settings
+  :class: grey
+
+    Below is an example of the variables that we can set up to be used in the command below.
+    These are files provided as a :ref:`test dataset <TestData>` available in the :ref:`Data Preparation Documentation <DataPrep-docs>`
+    Please replace paths with the full path to data on your system.
+
+    .. code-block:: bash
+
+      N_DOUB=3200
+      SOLO_OUTDIR=/path/to/output/solo
+      COUNTS=/path/to/TestData4PipelineFull/test_dataset/outs/filtered_gene_bc_matrices/Homo_sapiens_GRCh38p10/
+      BARCODES=/path/to/TestData4PipelineFull/test_dataset/outs/filtered_gene_bc_matrices/Homo_sapiens_GRCh38p10/barcodes.tsv
+      JSON=/path/to/solo_model.json
+
+
 
 .. code-block:: bash
 
@@ -95,7 +113,7 @@ If Solo_ runs correctly, you should have the following files and directory struc
 
 .. code-block::
 
-  .
+  /path/to/output/solo
   ├── classifier
   │   ├── attr.pkl
   │   ├── model_params.pt
@@ -136,7 +154,7 @@ If successful, you should have two new files in your ``$SOLO_OUTDIR``:
 .. code-block::
   :emphasize-lines: 21,22
 
-  .
+  /path/to/output/solo
   ├── classifier
   │   ├── attr.pkl
   │   ├── model_params.pt

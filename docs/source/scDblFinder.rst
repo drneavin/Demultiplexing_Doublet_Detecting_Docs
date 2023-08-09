@@ -50,6 +50,20 @@ You can either run ScDblFinder_ with the wrapper script we have provided or you 
 .. tabs::
 
   .. tab:: With Wrapper Script
+    First, let's assign the variables that will be used to execute each step.
+
+    .. admonition:: Example Variable Settings
+      :class: grey
+
+        Below is an example of the variables that we can set up to be used in the command below.
+        These are files provided as a :ref:`test dataset <TestData>` available in the :ref:`Data Preparation Documentation <DataPrep-docs>`
+        Please replace paths with the full path to data on your system.
+
+        .. code-block:: bash
+
+          COUNTS=/path/to/TestData4PipelineFull/test_dataset/outs/filtered_gene_bc_matrices/Homo_sapiens_GRCh38p10/
+          SCDBLFINDER_OUTDIR=/path/to/output/scDblFinder
+
 
     To run ScDblFinder_ with our wrapper script, simply execute the following in your shell:
     
@@ -218,7 +232,7 @@ After running the ScDblFinder_ with the wrapper script or manually you should ha
 
 .. code-block:: bash
 
-	.
+	/path/to/output/scDblFinder
 	├── scDblFinder_doublets_singlets.tsv
 	└── scDblFinder_doublet_summary.tsv
 

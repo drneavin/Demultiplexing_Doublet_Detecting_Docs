@@ -58,6 +58,21 @@ In addition, we provide an example for filtering the single cell matrix to a sub
 
   .. tab:: With Wrapper Script
 
+    First, let's assign the variables that will be used to execute each step.
+
+    .. admonition:: Example Variable Settings
+      :class: grey
+
+      Below is an example of the variables that we can set up to be used in the command below.
+      These are files provided as a :ref:`test dataset <TestData>` available in the :ref:`Data Preparation Documentation <DataPrep-docs>`
+      Please replace paths with the full path to data on your system.
+
+      .. code-block:: bash
+
+        SCRUBLET_OUTDIR=/path/to/output/scrublet
+        COUNTS=/path/to/TestData4PipelineFull/test_dataset/outs/filtered_gene_bc_matrices/Homo_sapiens_GRCh38p10/
+
+
     To run Scrublet_ with our wrapper script, simply execute the following in your shell:
 
     .. code-block:: bash
@@ -312,7 +327,7 @@ After running the Scrublet_, you will have four files in the ``$SCRUBLET_OUTDIR`
 
 .. code-block::
 
-  .
+  /path/to/output/scrublet
   ├── doublet_score_histogram.png
   ├── scrublet_results.tsv
   ├── scrublet_summary.tsv

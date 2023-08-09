@@ -44,6 +44,22 @@ You can either run DoubletDecon_ with the wrapper script we have provided or you
       You can estimate that number with our **doublet calculator**
       The *rhop* parameter can be set with ``-r`` or ``--rhop`` in the command below.
 
+    First, let's assign the variables that will be used to execute each step.
+
+    .. admonition:: Example Variable Settings
+      :class: grey
+
+      Below is an example of the variables that we can set up to be used in the command below.
+      These are files provided as a :ref:`test dataset <TestData>` available in the :ref:`Data Preparation Documentation <DataPrep-docs>`
+      Please replace paths with the full path to data on your system.
+
+      .. code-block:: bash
+
+        DOUBLETDECON_OUTDIR=/path/to/output/DoubletDecon
+        SEURAT_RDS=/path/to/TestData_Seurat.rds
+
+
+
     .. code-block:: bash
 
       singularity exec Demuxafy.sif DoubletDecon.R -o $DOUBLETDECON_OUTDIR -s $SEURAT_RDS
@@ -183,7 +199,7 @@ After running the DoubletDecon_, you will have multiple files in the ``$DOUBLETD
 
 .. code-block:: bash
 
-  .
+  /path/to/output/DoubletDecon
   ├── data_processed_DoubletDecon_results.txt
   ├── data_processed_reclust_DoubletDecon_results.txt
   ├── DoubletDecon_doublets_singlets.tsv

@@ -6,6 +6,16 @@
 	background: #dbfaf4
  }
 
+
+ .rst-content .todo .admonition-title {
+	background: #626263
+ }
+ 
+ .rst-content .todo {
+	background: #d4d5d5
+ }
+
+
  
  /* override table no-wrap */
 .wy-table-responsive table td, .wy-table-responsive table th {
@@ -19,4 +29,51 @@
 .wy-table td:first-child,
 .wy-table th:first-child {
     border-left-width: 1px;
+}
+
+
+:root {
+    --mainNavColor: #e6e4de;
+    --navbarHeight: 4rem;
+    --linkColor: #5580bb;
+
+
+    &[data-mode="dark"],
+    &[data-mode="darkest"] {
+      --linkColor: #5580bb;
+    }
+}
+
+
+nav {
+    background-color: var(--mainNavColor);
+    box-sizing: border-box;
+    padding: 0rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    h1 {
+      flex-grow: 4;
+      font-size: 40rem;
+      margin: 0;
+      padding: 0 0 0 0rem;
+      line-height: 40;
+    }
+}
+
+.logo {color: #5580bb}
+
+.rst-versions{
+    border-top:solid 10px #5580bb;
+}
+
+.wy-side-nav-search {
+    background: #5580bb;
+}
+.wy-nav-side {
+    background: #5580bb;
+}
+.rst-versions .rst-current-version {
+    background: #5580bb;
 }

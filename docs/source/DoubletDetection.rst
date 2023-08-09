@@ -55,6 +55,21 @@ In addition, we provide an example for filtering the single cell matrix to a sub
 
   .. tab:: With Wrapper Script
 
+    First, let's assign the variables that will be used to execute each step.
+
+    .. admonition:: Example Variable Settings
+      :class: grey
+
+      Below is an example of the variables that we can set up to be used in the command below.
+      These are files provided as a :ref:`test dataset <TestData>` available in the :ref:`Data Preparation Documentation <DataPrep-docs>`
+      Please replace paths with the full path to data on your system.
+
+      .. code-block:: bash
+
+        DOUBLETDETECTION_OUTDIR=/path/to/output/DoubletDetection
+        COUNTS=/path/to/TestData4PipelineFull/test_dataset/outs/filtered_gene_bc_matrices/Homo_sapiens_GRCh38p10/
+
+
     .. code-block:: bash
 
       singularity exec Demuxafy.sif DoubletDetection.py -m $COUNTS -o $DOUBLETDETECTION_OUTDIR
@@ -319,7 +334,7 @@ After running the DoubletDetection_, you will have multiple files in the ``$DOUB
 
 .. code-block:: bash
 
-  .
+  /path/to/output/DoubletDetection
   ├── convergence_test.pdf
   ├── DoubletDetection_doublets_singlets.tsv
   ├── DoubletDetection_summary.tsv
