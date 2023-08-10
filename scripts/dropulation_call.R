@@ -13,6 +13,9 @@ parser$add_argument("-o", "--assign", required = TRUE, help="The dropulation ass
 parser$add_argument("-s", "--doublet", required = TRUE, type = "character", help = "The dropulation doublet calls.")
 parser$add_argument("-c", "--out", required = TRUE, type = "logical", help = "Whether sctransform was used for normalization.")
 
+# get command line options, if help option encountered print help and exit,
+# otherwise if options not found on command line then set defaults, 
+args <- parser$parse_args()
 
 suppressMessages(suppressWarnings(library(tidyverse)))
 suppressMessages(suppressWarnings(library(data.table)))
