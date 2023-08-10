@@ -13,9 +13,6 @@ parser$add_argument("-o", "--assign", required = TRUE, help="The dropulation ass
 parser$add_argument("-s", "--doublet", required = TRUE, type = "character", help = "The dropulation doublet calls.")
 parser$add_argument("-c", "--out", required = TRUE, type = "logical", help = "Whether sctransform was used for normalization.")
 
-singletFile <- args[1]
-doubletFile <- args[2]
-outMapFile <- args[3]
 
 suppressMessages(suppressWarnings(library(tidyverse)))
 suppressMessages(suppressWarnings(library(data.table)))
