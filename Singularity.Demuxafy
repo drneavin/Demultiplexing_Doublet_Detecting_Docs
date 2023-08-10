@@ -332,4 +332,3 @@ From: continuumio/miniconda3
 
     conda clean --all 
 
-    export PATH=/opt:/usr/games:/opt/samtools-1.16.1/samtools:/opt/bcftools-1.16:/opt/conda/envs/py37/bin:/opt/conda/bin:/opt/Demultiplexing_Doublet_Detecting_Docs/scripts:opt/Demultiplexing_Doublet_Detecting_Docs/mods:/opt/bedtools2/bin:opt/vcflib/bin:/opt/vcflib/scripts:/opt/souporcell:/opt/souporcell/troublet/target/release:/opt/minimap2-2.7:/root/.cargo/bin:/opt/freebayes/scripts:/opt/popscle/bin/:/opt/conda/envs/py37/lib/python3.7/site-packages/scSplit/:$PATH

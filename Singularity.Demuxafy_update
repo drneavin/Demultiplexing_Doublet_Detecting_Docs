@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: drneavin/demuxafy
+From: drneavin/demuxafy:v2.0.1
 
 %labels
     Author = Drew Neavin
@@ -14,8 +14,7 @@ From: drneavin/demuxafy
 %post 
 ### Add in demuxalot and dropulation tools 
 ## demuxalot
-
-pip install demuxalot
+/opt/conda/envs/py37/bin/pip install demuxalot
 
 
 ## dropulation
@@ -24,13 +23,19 @@ wget https://github.com/broadinstitute/Drop-seq/releases/download/v2.5.4/Drop-se
 unzip Drop-seq_tools-2.5.4.zip
 
 
+## Install java (for dropulation)
+apt-get install libc6-i386 libc6-x32 libxi6 libxtst6 -y
+wget https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.deb
+sudo dpkg -i jdk-17_linux-x64_bin.deb
+
+
 ### Remove and reisntall Demuxafy
 rm -rf /opt/Demultiplexing_Doublet_Detecting_Docs
 
 ### Get the github repo with scripts for workflow ###
 cd /opt
-#   git clone  --branch v1.0.2 https://github.com/drneavin/Demultiplexing_Doublet_Detecting_Docs.git
-    git clone  --branch main https://github.com/drneavin/Demultiplexing_Doublet_Detecting_Docs.git
+    git clone  --branch v2.1.0 https://github.com/drneavin/Demultiplexing_Doublet_Detecting_Docs.git
+#    git clone  --branch main https://github.com/drneavin/Demultiplexing_Doublet_Detecting_Docs.git
         cd Demultiplexing_Doublet_Detecting_Docs
         rm -rf references ## Only hosting on  github for people to download if they want, no need to take up extra space in the image
         rm -rf docs ## doc files, dont need in image
