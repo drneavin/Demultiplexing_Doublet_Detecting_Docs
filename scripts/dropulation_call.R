@@ -11,7 +11,7 @@ parser <- ArgumentParser()
 # by default ArgumentParser will add an help option 
 parser$add_argument("-o", "--assign", required = TRUE, help="The dropulation assignment results.")
 parser$add_argument("-s", "--doublet", required = TRUE, type = "character", help = "The dropulation doublet calls.")
-parser$add_argument("-c", "--out", required = TRUE, type = "logical", help = "Whether sctransform was used for normalization.")
+parser$add_argument("-c", "--out", required = TRUE, type = "character", help = "Whether sctransform was used for normalization.")
 
 # get command line options, if help option encountered print help and exit,
 # otherwise if options not found on command line then set defaults, 
@@ -21,8 +21,8 @@ suppressMessages(suppressWarnings(library(tidyverse)))
 suppressMessages(suppressWarnings(library(data.table)))
 
 
-createDonorMap<-function (args$assign, doubletFile, outMapFile, fdrThreshold=0.05, doubletPvalueThreshold=0.9) {
-    a=read.table(args$assign, header=T, stringsAsFactors = F, sep="\t")
+createDonorMap<-function (assign, doubletFile, outMapFile, fdrThreshold=0.05, doubletPvalueThreshold=0.9) {
+    a=read.table(assign, header=T, stringsAsFactors = F, sep="\t")
     b=read.table(doubletFile, header=T, stringsAsFactors = F, sep="\t")
     
     confidentAssignmentCells=a[a$FDR_pvalue<=fdrThreshold,"cell"]
@@ -50,5 +50,5 @@ createDonorMap<-function (args$assign, doubletFile, outMapFile, fdrThreshold=0.0
 }
 
 
-createDonorMap(args$assign, args$doublet, parser$out)
+createDonorMap(args$assign, args$doublet, args$out)
 

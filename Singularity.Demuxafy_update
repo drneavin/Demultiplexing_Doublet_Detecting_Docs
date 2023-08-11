@@ -24,9 +24,16 @@ unzip Drop-seq_tools-2.5.4.zip
 
 
 ## Install java (for dropulation)
-apt-get install libc6-i386 libc6-x32 libxi6 libxtst6 -y
-wget https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.deb
-sudo dpkg -i jdk-17_linux-x64_bin.deb
+# apt-get install libc6-i386 libc6-x32 libxi6 libxtst6 -y
+# wget https://download.oracle.com/java/20/latest/jdk-20_linux-x64_bin.deb
+# dpkg -i jdk-20_linux-x64_bin.deb
+
+# apt-get update
+# apt-get install -y openjdk-11-jdk
+## dependency: libasound2
+apt-get install -y libasound2
+wget https://download.bell-sw.com/java/11.0.20+8/bellsoft-jdk11.0.20+8-linux-amd64.deb
+dpkg -i bellsoft-jdk11.0.20+8-linux-amd64.deb
 
 
 ### Remove and reisntall Demuxafy
