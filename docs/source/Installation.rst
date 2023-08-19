@@ -5,12 +5,12 @@ We have  provided all the softwares in a singularity image which provides contin
 The only thing to note before you download this image is that the image is **~6.5Gb** so, depending on the internet speed, it will take **~15-30 min to download**.
 The good news is that you should only need to do this once unless updates are made to the scripts or image.
 
-Just download the singluarity image with:
+Just download the singlularity image with:
 
   .. code-block:: bash
 
-    wget https://www.dropbox.com/s/vpezjhxj9ek609x/Demuxafy.sif
-    wget https://www.dropbox.com/s/m275g7scncinn0e/Demuxafy.sif.md5
+    wget -O Demuxafy.sif https://www.dropbox.com/scl/fi/r53gyc40ssy4g7solhtnz/Demuxafy.sif?rlkey=ilc3edrvu6mv1di2gdxeao01v
+    wget -O Demuxafy.sif.md5 https://www.dropbox.com/scl/fi/wseim74xibperw1o8yp2c/Demuxafy.sif.md5?rlkey=gv9s5o4la8ipdbpnbbi119zn2
 
 
 
