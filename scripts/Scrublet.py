@@ -2,6 +2,7 @@
 import argparse
 import sys
 import os
+import scanpy
 
 parser = argparse.ArgumentParser(
     description="wrapper for scrublet for doublet detection of transcriptomic data.")

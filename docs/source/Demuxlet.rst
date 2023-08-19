@@ -49,6 +49,25 @@ This is the data that you will need to have prepare to run Demuxlet_:
 
 Run Demuxlet
 ------------
+First, let's assign the variables that will be used to execute each step.
+
+.. admonition:: Example Variable Settings
+  :class: grey
+
+    Below is an example of the variables that we can set up to be used in the command below.
+    These are files provided as a :ref:`test dataset <TestData>` available in the :ref:`Data Preparation Documentation <DataPrep-docs>`
+    Please replace paths with the full path to data on your system.
+
+    .. code-block:: bash
+
+      VCF=/path/to/TestData4PipelineFull/test_dataset.vcf
+      BARCODES=/path/to/TestData4PipelineFull/test_dataset/outs/filtered_gene_bc_matrices/Homo_sapiens_GRCh38p10/barcodes.tsv
+      BAM=/path/to/test_dataset/possorted_genome_bam.bam
+      DEMUXLET_OUTDIR=/path/to/output/demuxlet
+      FIELD='GP' ## this might also be GT depending on the fields in your vcf  
+      INDS=/path/to/TestData4PipelineFull/donor_list.txt ### optional
+
+
 Popscle Pileup
 ^^^^^^^^^^^^^^
 First we will need to identify the number of reads from each allele at each SNP location:
@@ -93,7 +112,7 @@ If the pileup is successful, you will have these files in your ``$DEMUXLET_OUTDI
 
 .. code-block:: bash
 
-  .
+  /path/to/output/demuxlet
   ├── pileup.cel.gz
   ├── pileup.plp.gz
   ├── pileup.umi.gz
@@ -151,7 +170,7 @@ If demuxlet is successful, you will have these new files in your ``$DEMUXLET_OUT
 .. code-block:: bash
   :emphasize-lines: 2
 
-  .
+  /path/to/output/demuxlet
   ├── demuxlet.best
   ├── pileup.cel.gz
   ├── pileup.plp.gz
@@ -256,3 +275,7 @@ See :ref:`Combine Results <Combine-docs>`.
 Citation
 --------
 If you used the Demuxafy platform for analysis, please reference our preprint_ as well as `Demuxlet <https://www.nature.com/articles/nbt.4042>`__.
+
+
+
+

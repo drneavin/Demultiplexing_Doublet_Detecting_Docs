@@ -8,9 +8,9 @@ parser <- ArgumentParser()
  
 # specify our desired options 
 # by default ArgumentParser will add an help option 
-parser$add_argument("-r", "--reference_vcf", required = TRUE, type = "character", help="The output directory where results will be saved")
-parser$add_argument("-c", "--cluster_vcf", required = TRUE, type = "character", help = "A QC, normalized seurat object with classifications/clusters as Idents().")
-parser$add_argument("-o", "--outdir", required = TRUE, type = "character", help = "Number  of genes to use in \'Improved_Seurat_Pre_Process\' function.")
+parser$add_argument("-r", "--reference_vcf", required = TRUE, type = "character", help="The reference vcf (snp genotyped).")
+parser$add_argument("-c", "--cluster_vcf", required = TRUE, type = "character", help = "The vcf of the snps for each cluster.")
+parser$add_argument("-o", "--outdir", required = TRUE, type = "character", help = "The output directory where results will be saved.")
 
 # get command line options, if help option encountered print help and exit,
 # otherwise if options not found on command line then set defaults, 

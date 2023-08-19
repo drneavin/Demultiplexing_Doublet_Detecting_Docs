@@ -40,6 +40,24 @@ This is the data that you will need to have prepared to run ScSplit_:
 
 Run ScSplit
 -----------
+First, let's assign the variables that will be used to execute each step.
+
+.. admonition:: Example Variable Settings
+  :class: grey
+
+    Below is an example of the variables that we can set up to be used in the command below.
+    These are files provided as a :ref:`test dataset <TestData>` available in the :ref:`Data Preparation Documentation <DataPrep-docs>`
+    Please replace paths with the full path to data on your system.
+
+    .. code-block:: bash
+
+      BARCODES=/path/to/TestData4PipelineFull/test_dataset/outs/filtered_gene_bc_matrices/Homo_sapiens_GRCh38p10/barcodes.tsv
+      BAM=/path/to/test_dataset/possorted_genome_bam.bam
+      SCSPLIT_OUTDIR=/path/to/output/scscplit
+      N=14
+      VCF=/path/to/TestData4PipelineFull/test_dataset.vcf ### optional
+
+
 Prepare Bam file
 ^^^^^^^^^^^^^^^^
 First, you will need to prepare the bam file so that it only contains high quality, primarily mapped reads without any PCR duplicated reads.
@@ -62,7 +80,7 @@ After running these bam preparation steps, you will have the following files in 
 
 .. code-block::
 
-  .
+  /path/to/output/scscplit
   ├── filtered_bam.bam
   ├── filtered_bam_dedup.bam
   ├── filtered_bam_dedup_sorted.bam
@@ -84,7 +102,7 @@ After running these SNV calling steps, you will have the following new files in 
 .. code-block::
   :emphasize-lines: 5,6,7
 
-  .
+  /path/to/output/scscplit
   ├── filtered_bam.bam
   ├── filtered_bam_dedup.bam
   ├── filtered_bam_dedup_sorted.bam
@@ -109,7 +127,7 @@ After running these demultiplexing steps, you will have the following new result
 .. code-block::
   :emphasize-lines: 9,10,11,12,13,14,15,16
   
-  .
+  /path/to/output/scscplit
   ├── alt_filtered.csv
   ├── filtered_bam.bam
   ├── filtered_bam_dedup.bam

@@ -88,6 +88,12 @@ This makes these two method types complementary for demultiplexing and doublet r
    Singularity
    Contact
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Tutorial
+   :hidden:
+   
+   Tutorial
 
 .. toctree::
    :maxdepth: 2
@@ -95,7 +101,9 @@ This makes these two method types complementary for demultiplexing and doublet r
    :hidden:
 
    DemultiplexingSoftwares
+   Demuxalot
    Demuxlet
+   Dropulation
    Freemuxlet
    scSplit
    Souporcell

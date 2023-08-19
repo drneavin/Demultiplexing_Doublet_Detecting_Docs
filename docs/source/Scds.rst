@@ -53,6 +53,21 @@ You can either run Scds_ with the wrapper script we have provided or you can run
 
   .. tab:: With Wrapper Script
 
+    First, let's assign the variables that will be used to execute each step.
+
+    .. admonition:: Example Variable Settings
+      :class: grey
+
+      Below is an example of the variables that we can set up to be used in the command below.
+      These are files provided as a :ref:`test dataset <TestData>` available in the :ref:`Data Preparation Documentation <DataPrep-docs>`
+      Please replace paths with the full path to data on your system.
+
+      .. code-block:: bash
+
+        SCDS_OUTDIR=/path/to/output/scds
+        COUNTS=/path/to/TestData4PipelineFull/test_dataset/outs/filtered_gene_bc_matrices/Homo_sapiens_GRCh38p10/
+
+
     To run Scds_ with our wrapper script, simply execute the following in your shell:
 
     .. code-block:: bash
@@ -247,7 +262,7 @@ After running the Scds_ with the wrapper script or manually you should have two 
 
 .. code-block:: bash
 
-	.
+	/path/to/output/scds
 	├── scds_doublets_singlets.tsv
 	└── scds_doublet_summary.tsv
 

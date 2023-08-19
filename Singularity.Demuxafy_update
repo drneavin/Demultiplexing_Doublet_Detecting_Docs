@@ -1,0 +1,53 @@
+Bootstrap: docker
+From: drneavin/demuxafy:v2.0.1
+
+%labels
+    Author = Drew Neavin
+    Image_version = 2.1.0
+
+%environment
+    export PATH=/opt:/usr/games:/opt/samtools-1.16.1:/opt/bcftools-1.16:/opt/conda/envs/py37/bin:/opt/conda/bin:/opt/Demultiplexing_Doublet_Detecting_Docs/scripts:opt/Demultiplexing_Doublet_Detecting_Docs/mods:/opt/bedtools2/bin:opt/vcflib/bin:/opt/vcflib/scripts:/opt/souporcell:/opt/souporcell/troublet/target/release:/opt/minimap2-2.7:/root/.cargo/bin:/opt/freebayes/scripts:/opt/popscle/bin/:/opt/conda/envs/py37/lib/python3.7/site-packages/scSplit/:/opt/Drop-seq_tools-2.5.4/:$PATH
+    export PYTHONPATH=/opt/conda/envs/py37/lib/python3.7/site-packages/
+    export LC_ALL=C 
+
+
+%post 
+### Add in demuxalot and dropulation tools 
+## demuxalot
+/opt/conda/envs/py37/bin/pip install demuxalot
+
+
+## dropulation
+cd opt
+wget https://github.com/broadinstitute/Drop-seq/releases/download/v2.5.4/Drop-seq_tools-2.5.4.zip
+unzip Drop-seq_tools-2.5.4.zip
+
+
+## Install java (for dropulation)
+# apt-get install libc6-i386 libc6-x32 libxi6 libxtst6 -y
+# wget https://download.oracle.com/java/20/latest/jdk-20_linux-x64_bin.deb
+# dpkg -i jdk-20_linux-x64_bin.deb
+
+# apt-get update
+# apt-get install -y openjdk-11-jdk
+## dependency: libasound2
+apt-get install -y libasound2
+wget https://download.bell-sw.com/java/11.0.20+8/bellsoft-jdk11.0.20+8-linux-amd64.deb
+dpkg -i bellsoft-jdk11.0.20+8-linux-amd64.deb
+
+
+### Remove and reisntall Demuxafy
+rm -rf /opt/Demultiplexing_Doublet_Detecting_Docs
+
+### Get the github repo with scripts for workflow ###
+cd /opt
+    git clone  --branch v2.1.0 https://github.com/drneavin/Demultiplexing_Doublet_Detecting_Docs.git
+#    git clone  --branch main https://github.com/drneavin/Demultiplexing_Doublet_Detecting_Docs.git
+        cd Demultiplexing_Doublet_Detecting_Docs
+        rm -rf references ## Only hosting on  github for people to download if they want, no need to take up extra space in the image
+        rm -rf docs ## doc files, dont need in image
+
+
+### Make scripts executable ###
+chmod 777 -R /opt/Demultiplexing_Doublet_Detecting_Docs/scripts
+

@@ -53,7 +53,25 @@ This is the data that you will need to have prepare to run Souporcell_:
 
 
 Run Souporcell
---------------
+---------------
+First, let's assign the variables that will be used to execute each step.
+
+.. admonition:: Example Variable Settings
+  :class: grey
+
+    Below is an example of the variables that we can set up to be used in the command below.
+    These are files provided as a :ref:`test dataset <TestData>` available in the :ref:`Data Preparation Documentation <DataPrep-docs>`
+    Please replace paths with the full path to data on your system.
+
+    .. code-block:: bash
+
+      VCF=/path/to/TestData4PipelineFull/test_dataset.vcf
+      BARCODES=/path/to/TestData4PipelineFull/test_dataset/outs/filtered_gene_bc_matrices/Homo_sapiens_GRCh38p10/barcodes.tsv
+      BAM=/path/to/test_dataset/possorted_genome_bam.bam
+      SOUPORCELL_OUTDIR=/path/to/output/souporcell
+      N=14
+
+
 You can run Souporcell_ with or without reference SNP genotypes - follow the instructions for each bellow:
 
 
@@ -104,7 +122,7 @@ If Souporcell_ is successful, you will have these files in your ``$SOUPORCELL_OU
 
 .. code-block:: bash
 
-  .
+  /path/to/output/souporcell
   ├── alt.mtx
   ├── ambient_rna.txt
   ├── cluster_genotypes.vcf
@@ -197,7 +215,7 @@ If the souporcell summary is successful, you will have this new file in your ``$
 .. code-block:: bash
   :emphasize-lines: 21
 
-  .
+  /path/to/output/souporcell
   ├── alt.mtx
   ├── ambient_rna.txt
   ├── cluster_genotypes.vcf
@@ -523,7 +541,7 @@ If the souporcell summary is successful, you will have this new file in your ``$
 .. code-block:: bash
   :emphasize-lines: 15,16,19,20
 
-  .
+  /path/to/output/souporcell
   ├── alt.mtx
   ├── ambient_rna.txt
   ├── cluster_genotypes.vcf

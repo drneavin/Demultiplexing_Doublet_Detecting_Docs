@@ -46,6 +46,24 @@ This is the data that you will need to have prepare to run Freemuxlet_:
 
 Run Freemuxlet
 --------------
+First, let's assign the variables that will be used to execute each step.
+
+.. admonition:: Example Variable Settings
+  :class: grey
+
+    Below is an example of the variables that we can set up to be used in the command below.
+    These are files provided as a :ref:`test dataset <TestData>` available in the :ref:`Data Preparation Documentation <DataPrep-docs>`
+    Please replace paths with the full path to data on your system.
+
+    .. code-block:: bash
+
+      VCF=/path/to/TestData4PipelineFull/test_dataset.vcf
+      BARCODES=/path/to/TestData4PipelineFull/test_dataset/outs/filtered_gene_bc_matrices/Homo_sapiens_GRCh38p10/barcodes.tsv
+      BAM=/path/to/test_dataset/possorted_genome_bam.bam
+      FREEMUXLET_OUTDIR=/path/to/output/freemuxlet
+      N=14
+
+
 Popscle Pileup
 ^^^^^^^^^^^^^^^^
 First we will need to identify the number of reads from each allele at each of the common SNP location:
@@ -66,7 +84,7 @@ If the pileup is successfull, you will have these files in your ``$FREEMUXLET_OU
 
 .. code-block:: bash
 
-  .
+  /path/to/output/freemuxlet
   ├── pileup.cel.gz
   ├── pileup.plp.gz
   ├── pileup.umi.gz
@@ -95,7 +113,7 @@ If freemuxlet is successfull, you will have these new files in your ``$FREEMUXLE
 .. code-block:: bash
   :emphasize-lines: 2,3,4
 
-  .
+  /path/to/output/freemuxlet
   ├── freemuxlet.clust1.samples.gz
   ├── freemuxlet.clust1.vcf.gz
   ├── freemuxlet.lmix
@@ -458,7 +476,7 @@ After correlating the reference SNP genotypes with the cluster SNP genotypes usi
 .. code-block::
   :emphasize-lines: 6,11,12
 
-  .
+  /path/to/output/freemuxlet
   ├── freemuxlet.clust1.samples.gz
   ├── freemuxlet.clust1.vcf.gz
   ├── freemuxlet.lmix

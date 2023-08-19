@@ -1,3 +1,5 @@
+.. _DataPrep-docs:
+
 Data Preparation
 ================
 
@@ -115,9 +117,12 @@ Next, filter for the SNPs that overlap exons.
 
 
 
+.. _TestData:
+
 Test Dataset
 ------------
 In addition, we have provided a test dataset that you can use.
+Find the data that can be downloaded below along with some information about the data.
 
 .. admonition:: Information
   :class: important
@@ -169,9 +174,7 @@ You can download the dataset with one of the following commands:
     .. code-block:: bash
 
       TestData4PipelineFull
-      ├── donor_list.txt
-      ├── individuals_list_dir
-      │   └── test_dataset.txt
+      ├── donor_list.txt 
       ├── samplesheet.txt
       ├── test_dataset
       │   ├── outs
@@ -221,7 +224,6 @@ You can download the dataset with one of the following commands:
       ├── donor_list.txt
       ├── individuals_list_dir
       │   └── test_dataset.txt
-      ├── ls
       ├── samplesheet.txt
       ├── test_dataset
       │   └── outs

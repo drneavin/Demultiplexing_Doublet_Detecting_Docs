@@ -28,7 +28,7 @@ This is the data that you will need to have preparede to run DoubletFinder_:
 
   - Expected number of doublets (``$DOUBLETS``)
 
-    - This can be calculated based on the number of droplets captured using our **doublet calculator**
+    - This can be calculated based on the number of droplets captured using our `Doublet Estimation Calculator <test.html>`__
 
 
 
@@ -42,6 +42,11 @@ You can either run DoubletFinder_ with the wrapper script we have provided or yo
 
   .. tab:: With Wrapper Script
 
+    .. code-block:: bash
+
+      DOUBLETFINDER_OUTDIR=/path/to/output/DoubletFinder
+      SEURAT_RDS=/path/to/TestData_Seurat.rds
+      DOUBLETS=3200
 
     .. code-block:: bash
 
@@ -149,7 +154,7 @@ After running the DoubletFinder_, you will have multiple files in the ``$DOUBLET
 
 .. code-block:: bash
 
-	.
+	/path/to/output/DoubletFinder
 	├── DoubletFinder_doublets_singlets.tsv
 	├── DoubletFinder_doublet_summary.tsv
 	└── pKvBCmetric.png

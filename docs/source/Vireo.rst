@@ -53,6 +53,24 @@ This is the data that you will need to have preparede to run Vireo_:
 
 Run Vireo
 ------------
+First, let's assign the variables that will be used to execute each step.
+
+.. admonition:: Example Variable Settings
+  :class: todo
+
+    Below is an example of the variables that we can set up to be used in the command below.
+    These are files provided as a :ref:`test dataset <TestData>` available in the :ref:`Data Preparation Documentation <DataPrep-docs>`
+    Please replace paths with the full path to data on your system.
+
+    .. code-block:: bash
+
+      BARCODES=/path/to/TestData4PipelineFull/test_dataset/outs/filtered_gene_bc_matrices/Homo_sapiens_GRCh38p10/barcodes.tsv
+      BAM=/path/to/test_dataset/possorted_genome_bam.bam
+      VIREO_OUTDIR=/path/to/output/vireo
+      VCF=/path/to/TestData4PipelineFull/test_dataset.vcf 
+      N=14 ## optional
+
+
 CellSNP Pileup
 ^^^^^^^^^^^^^^
 First, you need to count the number of alleles at each SNP in each droplet using cellSNP-lite:
@@ -76,7 +94,7 @@ If the pileup is successful, you will have this new file in your ``$VIREO_OUTDIR
 
 .. code-block:: bash
 
-	.
+	/path/to/output/vireo
 	├── cellSNP.base.vcf.gz
 	├── cellSNP.samples.tsv
 	├── cellSNP.tag.AD.mtx
@@ -204,7 +222,7 @@ If Vireo_ is successful, you will have these new files in your ``$VIREO_OUTDIR``
 .. code-block:: bash
   :emphasize-lines: 7,8,9,10,11,12,13
 
-  .
+  /path/to/output/vireo
   ├── cellSNP.base.vcf
   ├── cellSNP.samples.tsv
   ├── cellSNP.tag.AD.mtx
