@@ -7,6 +7,9 @@ suppressMessages(suppressWarnings(library(tidyverse)))
 suppressMessages(suppressWarnings(library(future.apply)))
 suppressMessages(suppressWarnings(library(ComplexUpset)))
 suppressMessages(suppressWarnings(library(RColorBrewer)))
+suppressMessages(suppressWarnings(library(crayon)))
+
+
 
  
 # create parser object
@@ -15,7 +18,9 @@ parser <- ArgumentParser()
 # specify our desired options 
 # by default ArgumentParser will add an help option 
 parser$add_argument("-o", "--out", required = TRUE, type = "character", help="The file where results will be saved")
+parser$add_argument("-z", "--demuxalot", required = FALSE, type = "character", default = NULL, help = "Path to demuxalot results. Only use this option if you want to include the demuxalot results.")
 parser$add_argument("-d", "--demuxlet", required = FALSE, type = "character", default = NULL, help = "Path to demuxlet results. Only use this option if you want to include the demuxlet results.")
+parser$add_argument("-q", "--dropulation", required = FALSE, type = "character", default = NULL, help = "Path to dropulation results. Only use this option if you want to include the dropulation results.")
 parser$add_argument("-f", "--freemuxlet", required = FALSE, type = "character", default=NULL, help = "Path to freemuxlet results. Only use this option if you want to include the freemuxlet results.")
 parser$add_argument("-g", "--freemuxlet_assignments", required = FALSE, type = "character", default=NULL, help = "Path to freemuxlet cluster-to-individual assignments. Only use this option if have used reference SNP genotypes to assign individuals to clusters for the freemuxlet results.")
 parser$add_argument("-a", "--freemuxlet_correlation_limit", required = FALSE, type = "double", default=0.7, help = "The minimum correlation between the cluster and the individual SNP genotypes which should be considered as a valid assignment. If you want no limit, use 0. Default is 0.7.")
@@ -33,7 +38,7 @@ parser$add_argument("-n", "--scDblFinder", required = FALSE, type = "character",
 parser$add_argument("-c", "--scds", required = FALSE, type = "character", default=NULL, help = "Path to scds results. Only use this option if you want to include the scds results.")
 parser$add_argument("-r", "--scrublet", required = FALSE, type = "character", default=NULL, help = "Path to scrublet results. Only use this option if you want to include the scrublet results.")
 parser$add_argument("-l", "--solo", required = FALSE, type = "character", default=NULL, help = "Path to solo results. Only use this option if you want to include the solo results.")
-parser$add_argument("-b", "--ref", required = FALSE, type = "character", default=NULL, help = "Which demultiplexing software to use as a reference for individuals when you do not have assignment key for all demultiplexing method. Options are 'Demuxlet', 'Freemuxlet', 'scSplit', 'Souporcell' and 'Vireo'. If blank when assignment keys are missing, default softwares to use if present are Vireo, then Demuxlet, then Freemuxlet, then Souporcell, then scSplit.")
+parser$add_argument("-b", "--ref", required = FALSE, type = "character", default=NULL, help = "Which demultiplexing software to use as a reference for individuals when you do not have assignment key for all demultiplexing method. Options are 'Demuxlet', 'Freemuxlet', 'scSplit', 'Souporcell' and 'Vireo'. If blank when assignment keys are missing, default softwares to use if present are Demuxalot, then Vireo, then Demuxlet, then Freemuxlet, then Souporcell, then Dropulation, then scSplit.")
 parser$add_argument("-p", "--pct_agreement", required = FALSE, type = "double", default=0.7, help = "The proportion of a cluster that match the 'ref' assignment to assign that cluster the individual assignment from the reference. Can be between 0.5 and 1. Default is 0.9.")
 parser$add_argument("-m", "--method", required = FALSE, type = "character", default=NULL, help = "Combination method. Options are 'MajoritySinglet'. 'AtLeastHalfSinglet', 'AnySinglet' or 'AnyDoublet'. We have found that 'MajoritySinglet' provides the most accurate results in most situations and therefore recommend this method. See https://demultiplexing-doublet-detecting-docs.readthedocs.io/en/latest/CombineResults.html for detailed explanation of each intersectional method. Leave blank if you just want all the softwares to be merged into a single dataframe.")
                                         
@@ -82,23 +87,52 @@ if (!dir.exists(gsub(basename(args$out), "", args$out))){
 
 
 ### Check to make sure user has provided at least two softwares to combine ###
-if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(args$scSplit), !is.null(args$souporcell), !is.null(args$vireo),!is.null(args$DoubletDecon), !is.null(args$DoubletDetection), !is.null(args$DoubletFinder), !is.null(args$scDblFinder), !is.null(args$scds), !is.null(args$scrublet), !is.null(args$solo)))) < 1){
+if (length(which(c(!is.null(args$demuxalot), !is.null(args$demuxlet), !is.null(args$dropulation), !is.null(args$freemuxlet), !is.null(args$scSplit), !is.null(args$souporcell), !is.null(args$vireo),!is.null(args$DoubletDecon), !is.null(args$DoubletDetection), !is.null(args$DoubletFinder), !is.null(args$scDblFinder), !is.null(args$scds), !is.null(args$scrublet), !is.null(args$solo)))) < 1){
 	message("You didn't provide any software results to combine. Please try again - this time providing at least one inputs.")
 	q()
-} else{
+} else {
 	### Make a list to store the results that will be combined in ###
 	results_list <- list()
+
+
+	if (!is.null(args$demuxalot)){
+
+		### Read in Demuxalot Results ###
+		message("Reading in demuxalot results.")
+		if (file_test("-f", args$demuxalot)){
+			results_list[["Demuxalot"]] <- fread(args$demuxalot, sep = "\t")
+		} else {
+			demuxalot <- list.files(args$demuxalot, pattern = "assignments.tsv.gz")
+			demuxalot_refined <- list.files(args$demuxalot, pattern = "assignments_refined.tsv.gz")
+			if (length(demuxalot_refined) == 1){
+				results_list[["Demuxalot"]] <- fread(paste0(args$demuxalot, "/", demuxalot_refined), sep = "\t")
+			} else if (length(demuxalot) == 1){
+				results_list[["Demuxalot"]] <- fread(paste0(args$demuxalot, "/", demuxalot), sep = "\t")
+			} else {
+				message("Can't read in the demuxalot report either from the file you provided or to find the 'assignments.tsv.gz' or the 'assignments_refined.tsv.gz' file in the directory you provided. Please double check your path and provide the full path to the demuxlet file. Exiting.")
+				q()
+			}
+		}
+
+
+		### Update dataframe to just be categories of interest
+		colnames(results_list[["Demuxalot"]]) <- c("Barcode", "Demuxalot_Individual_Assignment")
+		results_list[["Demuxalot"]]$Demuxalot_Individual_Assignment <- ifelse(grepl("\\+", results_list[["Demuxalot"]]$Demuxalot_Individual_Assignment), "doublet", results_list[["Demuxalot"]]$Demuxalot_Individual_Assignment)
+		results_list[["Demuxalot"]]$Demuxalot_DropletType  <- ifelse(results_list[["Demuxalot"]]$Demuxalot_Individual_Assignment == "doublet", "doublet", "singlet")
+
+	}
+
 
 	if (!is.null(args$demuxlet)){
 
 		### Read in Demuxlet Results ###
 		message("Reading in demuxlet results.")
 		if (file_test("-f", args$demuxlet)){
-				results_list[["demuxlet"]] <- fread(args$demuxlet, sep = "\t")
+				results_list[["Demuxlet"]] <- fread(args$demuxlet, sep = "\t")
 		} else {
 			demuxlet <- list.files(args$demuxlet, pattern = ".best")
 			if (length(demuxlet) == 1){
-				results_list[["demuxlet"]] <- fread(paste0(args$demuxlet, "/", demuxlet), sep = "\t")
+				results_list[["Demuxlet"]] <- fread(paste0(args$demuxlet, "/", demuxlet), sep = "\t")
 			} else {
 				message("Can't read in the demuxlet report either from the file you provided or to find the '*.best' file in the directory you provided. Please double check your path and provide the full path to the demuxlet file. Exiting.")
 				q()
@@ -106,15 +140,38 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 		}
 
 		### Update dataframe to just be categories of interest
-		results_list[["demuxlet"]] <- results_list[["demuxlet"]][,c("BARCODE", "DROPLET.TYPE", "BEST.GUESS")]
-		colnames(results_list[["demuxlet"]]) <- c("Barcode", "Demuxlet_DropletType", "Demuxlet_Individual_Assignment")
+		results_list[["Demuxlet"]] <- results_list[["Demuxlet"]][,c("BARCODE", "DROPLET.TYPE", "BEST.GUESS")]
+		colnames(results_list[["Demuxlet"]]) <- c("Barcode", "Demuxlet_DropletType", "Demuxlet_Individual_Assignment")
 
 		### update Demuxlet_DropletType  column SNG and DBL ###
-		results_list[["demuxlet"]]$Demuxlet_DropletType  <- gsub("SNG", "singlet", results_list[["demuxlet"]]$Demuxlet_DropletType) %>% gsub("DBL", "doublet", .) %>% gsub("AMB", "unassigned", .)
+		results_list[["Demuxlet"]]$Demuxlet_DropletType  <- gsub("SNG", "singlet", results_list[["Demuxlet"]]$Demuxlet_DropletType) %>% gsub("DBL", "doublet", .) %>% gsub("AMB", "unassigned", .)
 
 		### Update Individual column to be individual or doublet or ambiguous/unassigned ###
-		results_list[["demuxlet"]]$Demuxlet_Individual_Assignment <- ifelse(results_list[["demuxlet"]]$Demuxlet_DropletType  == "doublet", "doublet",
-																		ifelse(results_list[["demuxlet"]]$Demuxlet_DropletType  == "unassigned", "unassigned", gsub(",.+,.\\..+","",results_list[["demuxlet"]]$Demuxlet_Individual_Assignment)))
+		results_list[["Demuxlet"]]$Demuxlet_Individual_Assignment <- ifelse(results_list[["Demuxlet"]]$Demuxlet_DropletType  == "doublet", "doublet",
+																		ifelse(results_list[["Demuxlet"]]$Demuxlet_DropletType  == "unassigned", "unassigned", gsub(",.+,.\\..+","",results_list[["Demuxlet"]]$Demuxlet_Individual_Assignment)))
+
+	}
+
+
+	if (!is.null(args$dropulation)){
+
+		### Read in Dropulation Results ###
+		message("Reading in dropulation results.")
+		if (file_test("-f", args$dropulation)){
+				results_list[["Dropulation"]] <- fread(args$dropulation, sep = "\t")
+		} else {
+			dropulation <- list.files(args$dropulation, pattern = "updated_assignments.tsv.gz")
+			if (length(dropulation) == 1){
+				results_list[["Dropulation"]] <- fread(paste0(args$dropulation, "/", dropulation), sep = "\t")
+			} else {
+				message("Can't read in the dropulation results either from the file you provided or to find the 'updated_assignments.tsv.gz' file in the directory you provided. Please double check your path and provide the full path to the dropulation file. Exiting.")
+				q()
+			}
+		}
+
+		### Update dataframe to just be categories of interest
+		results_list[["Dropulation"]] <- results_list[["Dropulation"]][,c("Barcode", "dropulation_DropletType", "dropulation_Assignment")]
+		colnames(results_list[["Dropulation"]]) <- c("Barcode", "Dropulation_DropletType", "Dropulation_Individual_Assignment")
 
 	}
 
@@ -137,7 +194,7 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 		results_list[["Freemuxlet"]] <- results_list[["Freemuxlet"]][,c("BARCODE", "DROPLET.TYPE", "BEST.GUESS")]
 		colnames(results_list[["Freemuxlet"]]) <- c("Barcode", "Freemuxlet_DropletType", "Freemuxlet_Cluster")
 
-		### update Demuxlet_DropletType  column SNG and DBL ###
+		### update Freemuxlet_DropletType  column SNG and DBL ###
 		results_list[["Freemuxlet"]]$Freemuxlet_DropletType  <- gsub("SNG", "singlet", results_list[["Freemuxlet"]]$Freemuxlet_DropletType ) %>% gsub("DBL", "doublet", .) %>% gsub("AMB", "unassigned", .)
 
 		### Update Individual column to be individual or doublet or ambiguous/unassigned ###
@@ -360,6 +417,11 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 			results_assignments_list[["Freemuxlet"]] <- results_assignments_list[["Freemuxlet"]][Freemuxlet_Cluster != "unassigned"]
 			
 			if ("Correlation" %in% colnames(results_assignments_list[["Freemuxlet"]])){
+				if  (nrow(results_assignments_list[["Freemuxlet"]][Correlation < args$freemuxlet_correlation_limit]) > 0) {
+					cat(yellow(bold("WARNING:") %+% " Some or all of the Freemuxlet cluster correlations assignments are <= " %+% as.character(args$freemuxlet_correlation_limit) %+% " and won't be included in the final assignments.\nPlease lower the --freemuxlet_correlation_limit if you want to include them.\nHere's a list of the low correlation cluster <-> genotype mappings:\n"))
+					print(results_assignments_list[["Freemuxlet"]][Correlation < args$freemuxlet_correlation_limit])
+				}
+
 				results_assignments_list[["Freemuxlet"]] <- results_assignments_list[["Freemuxlet"]][Correlation > args$freemuxlet_correlation_limit]
 				results_assignments_list[["Freemuxlet"]]$Correlation <- NULL
 			}
@@ -374,7 +436,7 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 
 			### check for excessive NA after joining ###
 			if (length(which(is.na(results_list[["Freemuxlet"]]$Freemuxlet_Individual_Assignment)))/nrow(results_list[["Freemuxlet"]]) >= 0.5){
-				message("WARNING: There are more than 50% NA assignments after joining the cluster-to-individual assignments for freemuxlet. Please double check you files if this is unexpected.")
+				cat(yellow(bold("WARNING:") %+% " There are more than 50% NA assignments after joining the cluster-to-individual assignments for freemuxlet. Please double check you files if this is unexpected.\n"))
 			}
 		}
 
@@ -388,7 +450,7 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 					results_assignments_list[["scSplit"]] <- fread(paste0(args$scSplit_assignments, "/Genotype_ID_key.txt"), sep = "\t")
 				},
 				error = function(e) {
-					message("Can't read in the scSplit cluster-to-indiviudal assignments report either from the file you provided or to find the 'Genotype_ID_key.tsv' file in the directory you provided. Please double check your path and provide the full path to the scSplit cluster-to-indiviudal key file. Exiting.")
+					cat(red(bold("ERROR:") %+% " Can't read in the scSplit cluster-to-indiviudal assignments report either from the file you provided or to find the 'Genotype_ID_key.tsv' file in the directory you provided. Please double check your path and provide the full path to the scSplit cluster-to-indiviudal key file. Exiting.\n"))
 					q()
 				})
 			}
@@ -409,6 +471,12 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 			results_assignments_list[["scSplit"]] <- results_assignments_list[["scSplit"]][scSplit_Cluster != "unassigned"]
 
 			if ("Correlation" %in% colnames(results_assignments_list[["scSplit"]])){
+				
+				if (nrow(results_assignments_list[["scSplit"]][Correlation < args$scSplit_correlation_limit]) > 0) {
+					cat(yellow(bold("WARNING:") %+% " Some or all of the scSplit cluster correlations assignments are <= " %+% as.character(args$scSplit_correlation_limit) %+% " and won't be included in the final assignments.\nPlease lower the --scSplit_correlation_limit if you want to include them.\nHere's a list of the low correlation cluster <-> genotype mappings:\n"))
+					print(results_assignments_list[["scSplit"]][Correlation < args$scSplit_correlation_limit])
+				}
+
 				results_assignments_list[["scSplit"]] <- results_assignments_list[["scSplit"]][Correlation > args$scSplit_correlation_limit]
 				results_assignments_list[["scSplit"]]$Correlation <- NULL
 			}
@@ -422,7 +490,7 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 
 			### check for excessive NA after joining ###
 			if (length(which(is.na(results_list[["scSplit"]]$Freemuxlet_Individual_Assignment)))/nrow(results_list[["scSplit"]]) >= 0.5){
-				message("WARNING: There are more than 50% NA assignments after joining the cluster-to-individual assignments for scSplit. Please double check you files if this is unexpected.")
+				cat(yellow(bold("WARNING:") %+% " There are more than 50% NA assignments after joining the cluster-to-individual assignments for scSplit. Please double check you files if this is unexpected.\n"))
 			}
 		}
 
@@ -435,7 +503,7 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 					results_assignments_list[["Souporcell"]] <- fread(paste0(args$souporcell_assignments, "/Genotype_ID_key.txt"), sep = "\t")
 				},
 				error = function(e) {
-					message("Can't read in the souporcell cluster-to-indiviudal assignments report either from the file you provided or to find the 'Genotype_ID_key.tsv' file in the directory you provided. Please double check your path and provide the full path to the souporcell cluster-to-indiviudal key file. Exiting.")
+					cat(red(bold("ERROR:") %+% " Can't read in the souporcell cluster-to-indiviudal assignments report either from the file you provided or to find the 'Genotype_ID_key.tsv' file in the directory you provided. Please double check your path and provide the full path to the souporcell cluster-to-indiviudal key file. Exiting.\n"))
 					q()
 				})
 			}
@@ -456,6 +524,11 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 			results_assignments_list[["Souporcell"]] <- results_assignments_list[["Souporcell"]][Souporcell_Cluster != "unassigned"]
 			
 			if ("Correlation" %in% colnames(results_assignments_list[["Souporcell"]])){
+				if  (nrow(results_assignments_list[["Souporcell"]][Correlation < args$souporcell_correlation_limit]) > 0) {
+					cat(yellow(bold("WARNING:") %+% " Some or all of the Souporcell cluster correlations assignments are <= " %+% as.character(args$souporcell_correlation_limit) %+% " and won't be included in the final assignments.\nPlease lower the --souporcell_correlation_limit if you want to include them.\nHere's a list of the low correlation cluster <-> genotype mappings:\n"))
+					print(results_assignments_list[["Souporcell"]][Correlation < args$souporcell_correlation_limit])
+				}
+
 				results_assignments_list[["Souporcell"]] <- results_assignments_list[["Souporcell"]][Correlation > args$souporcell_correlation_limit]
 				results_assignments_list[["Souporcell"]]$Correlation <- NULL
 			}
@@ -469,15 +542,14 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 
 			### check for excessive NA after joining ###
 			if (length(which(is.na(results_list[["Souporcell"]]$Freemuxlet_Individual_Assignment)))/nrow(results_list[["Souporcell"]]) >= 0.5){
-				message("WARNING: There are more than 50% NA assignments after joining the cluster-to-individual assignments for souporcell. Please double check your files if this is unexpected.")
+				cat(yellow(bold("WARNING:") %+% " There are more than 50% NA assignments after joining the cluster-to-individual assignments for souporcell. Please double check your files if this is unexpected.\n"))
 			}
-			print(results_list[["Souporcell"]] )
 		}
 
 	}
 
 	message("\nCombining results.\n")
-	combined_results <- reduce(results_list, left_join)
+	combined_results <- suppressMessages(reduce(results_list, left_join))
 
 
 
@@ -486,7 +558,7 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 	update_assignments <- FALSE
 
 
-	if (length(c(args$demuxlet, args$freemuxlet, args$scSplit, args$souporcell, args$vireo)) > 1) {
+	if (length(c(args$demuxalot, args$demuxlet, args$dropulation, args$freemuxlet, args$scSplit, args$souporcell, args$vireo)) > 1) {
 
 
 		if (("Souporcell_Cluster" %in% colnames(combined_results)) & !("Souporcell_Individual_Assignment" %in% colnames(combined_results))){
@@ -538,7 +610,9 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 				message("Couldn't find data for ", args$ref, " from your input. Please double check that you provided results from ", args$ref, " when you submitted this code.")
 			}
 		} else {
-			if ("Vireo_Individual_Assignment" %in% colnames(combined_results)) {
+			if ("Demuxalot_Individual_Assignment" %in% colnames(combined_results)) {
+				ref <- "Demuxalot"
+			} else if ("Vireo_Individual_Assignment" %in% colnames(combined_results)) {
 				ref <- "Vireo"
 			} else if ("Demuxlet_Individual_Assignment" %in% colnames(combined_results)) {
 				ref <- "Demuxlet"
@@ -546,6 +620,8 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 				ref <- "Freemuxlet"
 			} else if ("Souporcell_Individual_Assignment" %in% colnames(combined_results)) {
 				ref <- "Souporcell"
+			} else if ("Dropulation_Individual_Assignment" %in% colnames(combined_results)) {
+				ref <- "Dropulation"
 			} else if ("scSplit_Individual_Assignment" %in% colnames(combined_results)) {
 				ref <- "scSplit"
 			} else if ("Freemuxlet_Cluster" %in% colnames(combined_results)) {
@@ -555,7 +631,7 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 			} else if ("scSplit_Cluster" %in% colnames(combined_results)) {
 				ref <- "scSplit"
 			}
-			message("Using ", ref, " as individual assignment reference for assignment standardization.")
+			cat("Using " %+% green(ref) %+% " as individual assignment reference for assignment standardization.\n")
 		}
 
 		### Fix cluster_assign_cols if was one of the softwares without an individual assignment
@@ -622,13 +698,12 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 			results_list[[software]][[paste0(software, "_Individual_Assignment")]] <- ifelse(is.na(results_list[[software]][[paste0(software, "_Individual_Assignment")]]), "doublet", results_list[[software]][[paste0(software, "_Individual_Assignment")]])
 			results_list[[software]][[paste0(software, "_DropletType")]] <- ifelse(results_list[[software]][[paste0(software, "_Individual_Assignment")]] == "doublet", "doublet", results_list[[software]][[paste0(software, "_DropletType")]])
 		}
-		combined_results <- reduce(results_list, left_join)
+		combined_results <- suppressMessages(reduce(results_list, left_join))
 
-	} else if (is.null(args$demuxlet) & is.null(args$vireo) & length(cluster_no_assign) == 1){
+	} else if (is.null(args$demuxalot) & is.null(args$demuxlet) & is.null(args$dropulation) & is.null(args$vireo) & length(cluster_no_assign) == 1){
 		### If only had one software => make clusters into assignments if assignments aren't there
 		results_list[[cluster_no_assign[1]]][[paste0(cluster_no_assign[1], "_Individual_Assignment")]] <-  results_list[[cluster_no_assign[1]]][[paste0(cluster_no_assign[1], "_Cluster")]]
-		combined_results <- reduce(results_list, left_join)
-	
+		combined_results <- suppressMessages(reduce(results_list, left_join))
 	}
 
 
@@ -641,7 +716,7 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 	message("\nMaking and writing summary files.\n")
 	combined_results_summary <- combined_results[,.(N=.N), by = c(grep("DropletType",colnames(combined_results), value = TRUE))]
 
-	if (!is.null(args$demuxlet) | !is.null(args$freemuxlet) | !is.null(args$scSplit) | !is.null(args$souporcell) | !is.null(args$vireo)){
+	if (!is.null(args$demuxalot) | !is.null(args$demuxlet) | !is.null(args$dropulation) | !is.null(args$freemuxlet) | !is.null(args$scSplit) | !is.null(args$souporcell) | !is.null(args$vireo)){
 		columns <- grep("Individual_Assignment", colnames(combined_results), value = TRUE)
 		if (!("Freemuxlet_Individual_Assignment" %in% columns) & "Freemuxlet_Cluster" %in% colnames(combined_results)){
 			columns <- c(columns, "Freemuxlet_Cluster")
@@ -652,7 +727,7 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 		if (!("Souporcell_Individual_Assignment" %in% columns) & "Souporcell_Cluster" %in% colnames(combined_results)){
 			columns <- c(columns, "Souporcell_Cluster")
 		}
-		print(columns)
+		# print(columns)
 		demultiplex_combined_results_summary <- combined_results[,.(N=.N), by = c(columns)]
 		demultiplex_combined_results_summary <- demultiplex_combined_results_summary[order(-N)]
 		fwrite(demultiplex_combined_results_summary, paste0(tools::file_path_sans_ext(args$out),"_demultiplexing_summary.tsv"), sep = "\t", append = FALSE)
@@ -680,7 +755,7 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 
 				individual_assignment <- data.table(ID = unlist(lapply(individual_assignment_list, function(y) ifelse(is.null(names(which.max.simple(y[names(y) != "doublet"]))), NA, names(which.max.simple(y[names(y) != "doublet"]))))),
 													N =  unlist(lapply(individual_assignment_list, function(y) ifelse(is.null(names(which.max.simple(y[names(y) != "doublet"]))), NA, max(y[names(y) != "doublet"]))))) ## Need to remove doublet count from table
-			} else if (length(c(args$demuxlet, args$freemuxlet, args$scSplit, args$souporcell, args$vireo)) == 1) {
+			} else if (length(c(args$demuxalot, args$demuxlet, args$dropulation, args$freemuxlet, args$scSplit, args$souporcell, args$vireo)) == 1) {
 				columns <- c()
 				if (!("Freemuxlet_Individual_Assignment" %in% columns) & "Freemuxlet_Cluster" %in% colnames(combined_results)){
 					columns <- c(columns, "Freemuxlet_Cluster")
@@ -755,113 +830,122 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 	fwrite(combined_results, paste0(tools::file_path_sans_ext(args$out),"_w_combined_assignments.tsv"), sep = "\t", append = FALSE)
 	}
 
-	##### Make an upset plot for the results to visualize the agreement between different softwares #####
-	### First check whether common assignments present (if they are, then will color by common assignment in the upset bar plots) ###
-	if (any(colnames(combined_results) %in% c("AnyDoublet_Individual_Assignment", "AnySinglet_Individual_Assignment", "AtLeastHalfSinglet_Individual_Assignment", "MajoritySinglet_Individual_Assignment"))){
-		## Dataframe with each software singlet (1), doublet (0) designations + column for individual assignment
-		upset_df <- data.frame(combined_results[,.SD, .SDcols = grep("DropletType", colnames(combined_results), value = TRUE)])
-		upset_df <- upset_df[, !(colnames(upset_df) %in% c("MajoritySinglet_DropletType", "AtLeastHalfSinglet", "AnySinglet_DropletType", "AnyDoublet_DropletType"))]
-		upset_df <- as.data.frame(1*(upset_df == "singlet"))
-		colnames(upset_df) <- gsub("_DropletType", "", colnames(upset_df))
-		softwares_ordered <- rev(c("Demuxlet", "Freemuxlet", "scSplit", "Souporcell", "Vireo", "DoubletDecon", "DoubletDetection", "DoubletFinder", "scDblFinder", "scds", "scrublet", "solo"))
-		columns <- softwares_ordered[softwares_ordered %in% colnames(upset_df)]
-		upset_df <- upset_df[,c(columns)]
-
-		upset_df$Final_Individual_Assignment <- as.vector(combined_results[,.SD, .SDcols = (colnames(combined_results) %in% c("AnySinglet_Individual_Assignment", "AtLeastHalfSinglet_Individual_Assignment", "AnyDoublet_Individual_Assignment", "MajoritySinglet_Individual_Assignment"))][[1]])
-		upset_df$Final_Individual_Assignment <- factor(upset_df$Final_Individual_Assignment, c(sort(unique(upset_df$Final_Individual_Assignment)[!(unique(upset_df$Final_Individual_Assignment) %in% c("doublet", "unassigned"))]), "doublet", "unassigned"))
+	if (length(c(args$demuxalot, args$demuxlet, args$dropulation, args$freemuxlet, args$scSplit, args$souporcell, args$vireo, args$DoubletDecon, args$DoubletDetection, args$DoubletFinder, args$scDblFinder, args$scds, args$scrublet, args$solo)) > 1) {
 
 
-		colourCount = length(unique(upset_df$Final_Individual_Assignment)[!unique(upset_df$Final_Individual_Assignment) %in% c("unassigned", "doublet")])
-		getPalette = colorRampPalette(c("#f44336", "#e81e63", "#9c27b0", "#673ab7", "#3f51b5", "#2196f3", "#03a9f4", "#00bcd4", "#009688", "#4caf50", "#8bc34a", "#cddc39", "#ffeb3b","#ffc107", "#ff9800", "#ff5722", "#795548"))
+		##### Make an upset plot for the results to visualize the agreement between different softwares #####
+		### First check whether common assignments present (if they are, then will color by common assignment in the upset bar plots) ###
+		if (any(colnames(combined_results) %in% c("AnyDoublet_Individual_Assignment", "AnySinglet_Individual_Assignment", "AtLeastHalfSinglet_Individual_Assignment", "MajoritySinglet_Individual_Assignment"))){
+			## Dataframe with each software singlet (1), doublet (0) designations + column for individual assignment
+			upset_df <- data.frame(combined_results[,.SD, .SDcols = grep("DropletType", colnames(combined_results), value = TRUE)])
+			upset_df <- upset_df[, !(colnames(upset_df) %in% c("MajoritySinglet_DropletType", "AtLeastHalfSinglet", "AnySinglet_DropletType", "AnyDoublet_DropletType"))]
+			upset_df <- as.data.frame(1*(upset_df == "singlet"))
+			colnames(upset_df) <- gsub("_DropletType", "", colnames(upset_df))
+			softwares_ordered <- rev(c("Demuxalot", "Demuxlet", "Dropulation", "Freemuxlet", "scSplit", "Souporcell", "Vireo", "DoubletDecon", "DoubletDetection", "DoubletFinder", "scDblFinder", "scds", "scrublet", "solo"))
+			columns <- softwares_ordered[softwares_ordered %in% colnames(upset_df)]
+			upset_df <- upset_df[,c(columns)]
 
-		colors <- getPalette(colourCount)
-		names(colors) <- unique(upset_df$Final_Individual_Assignment)[!unique(upset_df$Final_Individual_Assignment) %in% c("unassigned", "doublet")]
+			upset_df$Final_Individual_Assignment <- as.vector(combined_results[,.SD, .SDcols = (colnames(combined_results) %in% c("AnySinglet_Individual_Assignment", "AtLeastHalfSinglet_Individual_Assignment", "AnyDoublet_Individual_Assignment", "MajoritySinglet_Individual_Assignment"))][[1]])
+			upset_df$Final_Individual_Assignment <- factor(upset_df$Final_Individual_Assignment, c(sort(unique(upset_df$Final_Individual_Assignment)[!(unique(upset_df$Final_Individual_Assignment) %in% c("doublet", "unassigned"))]), "doublet", "unassigned"))
 
-		if ("doublet" %in% unique(upset_df$Final_Individual_Assignment)){
-			colors <- c(colors, doublet = "#000000")
+
+			colourCount = length(unique(upset_df$Final_Individual_Assignment)[!unique(upset_df$Final_Individual_Assignment) %in% c("unassigned", "doublet")])
+			getPalette = colorRampPalette(c("#f44336", "#e81e63", "#9c27b0", "#673ab7", "#3f51b5", "#2196f3", "#03a9f4", "#00bcd4", "#009688", "#4caf50", "#8bc34a", "#cddc39", "#ffeb3b","#ffc107", "#ff9800", "#ff5722", "#795548"))
+
+			colors <- getPalette(colourCount)
+			names(colors) <- unique(upset_df$Final_Individual_Assignment)[!unique(upset_df$Final_Individual_Assignment) %in% c("unassigned", "doublet")]
+
+			if ("doublet" %in% unique(upset_df$Final_Individual_Assignment)){
+				colors <- c(colors, doublet = "#000000")
+			}
+			if ("unassigned" %in% unique(upset_df$Final_Individual_Assignment)){
+				colors <- c(colors, unassigned = "grey70")
+			}
+
+			pUpset <- upset(upset_df,
+				columns,
+				# set_sizes=TRUE, 
+				sort_sets=FALSE,
+				name="Singlet Classifications",
+				set_sizes=(
+					upset_set_size()
+					+ ylab('Number Singlets')
+					+ theme(axis.text.x=element_text(angle=90))
+				),
+				base_annotations=list(
+					'Intersection size'=intersection_size(
+						counts=FALSE,
+						mapping=aes(fill=Final_Individual_Assignment)
+					) +
+						ylab('Number Droplets') +
+						scale_fill_manual(values = colors, name = "Final\nIndividual\nAssignment")
+				),
+				width_ratio=0.1
+			)
+
+			message("\nMaking figures of software and final assignments.\n")
+
+			pdf(file= paste0(tools::file_path_sans_ext(args$out),"_Singlets_upset_donor_assignment.pdf"), height = 5, width = 10) # or other device
+			print(pUpset)
+			dev.off()
+
+
 		}
-		if ("unassigned" %in% unique(upset_df$Final_Individual_Assignment)){
-			colors <- c(colors, unassigned = "grey70")
-		}
-
-		pUpset <- upset(upset_df,
-			columns,
-			# set_sizes=TRUE, 
-			sort_sets=FALSE,
-			name="Singlet Classifications",
-			set_sizes=(
-				upset_set_size()
-				+ ylab('Number Singlets')
-				+ theme(axis.text.x=element_text(angle=90))
-    		),
-			base_annotations=list(
-				'Intersection size'=intersection_size(
-					counts=FALSE,
-					mapping=aes(fill=Final_Individual_Assignment)
-				) +
-					ylab('Number Droplets') +
-					scale_fill_manual(values = colors, name = "Final\nIndividual\nAssignment")
-			),
-			width_ratio=0.1
-		)
-
-		message("\nMaking figures of software and final assignments.\n")
-
-		pdf(file= paste0(tools::file_path_sans_ext(args$out),"Singlets_upset.pdf"), height = 5, width = 10) # or other device
-		print(pUpset)
-		dev.off()
-
-
-	} else if (any(colnames(combined_results) %in% c("MajoritySinglet_DropletType", "AtLeastHalfSinglet_DropletType", "AnySinglet_DropletType", "AnyDoublet_DropletType"))){
-		## Dataframe with each software singlet (1), doublet (0) designations
-		upset_df <- data.frame(combined_results[,.SD, .SDcols = grep("DropletType", colnames(combined_results), value = TRUE)])
-		upset_df <- upset_df[, !(colnames(upset_df) %in% c("MajoritySinglet_DropletType", "AtLeastHalfSinglet_DropletType", "AnySinglet_DropletType", "AnyDoublet_DropletType"))]
-		upset_df <- as.data.frame(1*(upset_df == "singlet"))
-		colnames(upset_df) <- gsub("_DropletType", "", colnames(upset_df))
-		softwares_ordered <- rev(c("Demuxlet", "Freemuxlet", "scSplit", "Souporcell", "Vireo", "DoubletDecon", "DoubletDetection", "DoubletFinder", "scDblFinder", "scds", "scrublet", "solo"))
-		columns <- softwares_ordered[softwares_ordered %in% colnames(upset_df)]
-		upset_df <- upset_df[,c(columns)]
-
-		upset_df$Final_Assignment <- as.vector(combined_results[,.SD, .SDcols = (colnames(combined_results) %in% c("MajoritySinglet_DropletType", "AtLeastHalfSinglet_DropletType", "AnySinglet_DropletType", "AnyDoublet_DropletType"))][[1]])
-		upset_df$Final_Assignment <- factor(upset_df$Final_Assignment, c(sort(unique(upset_df$Final_Assignment)[!(unique(upset_df$Final_Assignment) %in% c("doublet", "unassigned"))]), "doublet", "unassigned"))
-
-
-		colourCount = length(unique(upset_df$Final_Assignment))
-		getPalette = colorRampPalette(c("#f44336", "#e81e63", "#9c27b0", "#673ab7", "#3f51b5", "#2196f3", "#03a9f4", "#00bcd4", "#009688", "#4caf50", "#8bc34a", "#cddc39", "#ffeb3b","#ffc107", "#ff9800", "#ff5722", "#795548", "#9e9e9e", "#607d8b", "#000000",))
-
-		pUpset <- upset(upset_df,
-			columns,
-			sort_sets=FALSE,
-			name="Singlet Classifications",
-			set_sizes=(
-				upset_set_size()
-				+ ylab('Number Singlets')
-				+ theme(axis.text.x=element_text(angle=90))
-    		),
-			base_annotations=list(
-				'Intersection size'=intersection_size(
-					counts=FALSE,
-					mapping=aes(fill=Final_Assignment)
-				) +
-					ylab('Number Droplets') +
-					scale_fill_manual(values = getPalette(colourCount), name = "Final\nAssignment")
-			),
-			width_ratio=0.1
-		)
 		
-		message("\nMaking figures of software and final assignments.\n")
+		if (any(colnames(combined_results) %in% c("MajoritySinglet_DropletType", "AtLeastHalfSinglet_DropletType", "AnySinglet_DropletType", "AnyDoublet_DropletType"))){
+			## Dataframe with each software singlet (1), doublet (0) designations
+			upset_df <- data.frame(combined_results[,.SD, .SDcols = grep("DropletType", colnames(combined_results), value = TRUE)])
+			upset_df <- upset_df[, !(colnames(upset_df) %in% c("MajoritySinglet_DropletType", "AtLeastHalfSinglet_DropletType", "AnySinglet_DropletType", "AnyDoublet_DropletType"))]
+			upset_df <- as.data.frame(1*(upset_df == "singlet"))
+			colnames(upset_df) <- gsub("_DropletType", "", colnames(upset_df))
+			softwares_ordered <- rev(c("Demuxalot", "Demuxlet", "Dropulation", "Freemuxlet", "scSplit", "Souporcell", "Vireo", "DoubletDecon", "DoubletDetection", "DoubletFinder", "scDblFinder", "scds", "scrublet", "solo"))
+			columns <- softwares_ordered[softwares_ordered %in% colnames(upset_df)]
+			upset_df <- upset_df[,c(columns)]
 
-		pdf(file= paste0(tools::file_path_sans_ext(args$out),"Singlets_upset.pdf"), height = 5, width = 10) # or other device
-		print(pUpset)
-		dev.off()
+			upset_df$Final_Assignment <- as.vector(combined_results[,.SD, .SDcols = (colnames(combined_results) %in% c("MajoritySinglet_DropletType", "AtLeastHalfSinglet_DropletType", "AnySinglet_DropletType", "AnyDoublet_DropletType"))][[1]])
+			upset_df$Final_Assignment <- factor(upset_df$Final_Assignment, c(sort(unique(upset_df$Final_Assignment)[!(unique(upset_df$Final_Assignment) %in% c("doublet", "unassigned"))]), "doublet", "unassigned"))
 
-	} else {
-		## Dataframe with each software singlet (1), doublet (0) designations
+
+			colourCount = length(unique(upset_df$Final_Assignment))
+			getPalette = colorRampPalette(c("#f44336", "#e81e63", "#9c27b0", "#673ab7", "#3f51b5", "#2196f3", "#03a9f4", "#00bcd4", "#009688", "#4caf50", "#8bc34a", "#cddc39", "#ffeb3b","#ffc107", "#ff9800", "#ff5722", "#795548", "#9e9e9e", "#607d8b", "#000000"))
+
+			if ("unassigned" %in% unique(upset_df$Final_Individual_Assignment)){
+				colors <- c(colors, unassigned = "grey70")
+			}
+
+			pUpset <- upset(upset_df,
+				columns,
+				sort_sets=FALSE,
+				name="Singlet Classifications",
+				set_sizes=(
+					upset_set_size()
+					+ ylab('Number Singlets')
+					+ theme(axis.text.x=element_text(angle=90))
+				),
+				base_annotations=list(
+					'Intersection size'=intersection_size(
+						counts=FALSE,
+						mapping=aes(fill=Final_Assignment)
+					) +
+						ylab('Number Droplets') +
+						scale_fill_manual(values = getPalette(colourCount), name = "Final\nAssignment")
+				),
+				width_ratio=0.1
+			)
+			
+			message("\nMaking figures of software and final assignments.\n")
+
+			pdf(file= paste0(tools::file_path_sans_ext(args$out),"_Singlets_upset_droplet_type.pdf"), height = 5, width = 10) # or other device
+			print(pUpset)
+			dev.off()
+		}
+
+		## Plot overlap of each of the methods without final calls
 		upset_df <- data.frame(combined_results[,.SD, .SDcols = grep("DropletType", colnames(combined_results), value = TRUE)])
 		upset_df <- upset_df[, !(colnames(upset_df) %in% c("MajoritySinglet_DropletType", "AtLeastHalfSinglet_DropletType", "AnySinglet_DropletType", "AnyDoublet_DropletType"))]
 		upset_df <- as.data.frame(1*(upset_df == "singlet"))
 		colnames(upset_df) <- gsub("_DropletType", "", colnames(upset_df))
-		softwares_ordered <- rev(c("Demuxlet", "Freemuxlet", "scSplit", "Souporcell", "Vireo", "DoubletDecon", "DoubletDetection", "DoubletFinder", "scDblFinder", "scds", "scrublet", "solo"))
+		softwares_ordered <- rev(c("Demuxalot", "Demuxlet", "Dropulation", "Freemuxlet", "scSplit", "Souporcell", "Vireo", "DoubletDecon", "DoubletDetection", "DoubletFinder", "scDblFinder", "scds", "scrublet", "solo"))
 		columns <- softwares_ordered[softwares_ordered %in% colnames(upset_df)]
 		upset_df <- upset_df[,c(columns)]
 
@@ -873,7 +957,7 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 				upset_set_size()
 				+ ylab('Number Singlets')
 				+ theme(axis.text.x=element_text(angle=90))
-    		),
+			),
 			base_annotations=list(
 				'Intersection size'=intersection_size(
 					counts=FALSE
@@ -884,12 +968,70 @@ if (length(which(c(!is.null(args$demuxlet), !is.null(args$freemuxlet), !is.null(
 
 		message("\nMaking figures of final assignments.\n")
 
-		pdf(file= paste0(tools::file_path_sans_ext(args$out),"Singlets_upset.pdf"), height = 5, width = 10) # or other device
+		pdf(file= paste0(tools::file_path_sans_ext(args$out),"_Singlets_upset.pdf"), height = 5, width = 10) # or other device
 		print(pUpset)
 		dev.off()
 
-	}
+	} else if (length(c(args$demuxalot, args$demuxlet, args$dropulation, args$freemuxlet, args$scSplit, args$souporcell, args$vireo, args$DoubletDecon, args$DoubletDetection, args$DoubletFinder, args$scDblFinder, args$scds, args$scrublet, args$solo)) == 1){
 
+		if (length(c(args$demuxalot, args$demuxlet, args$dropulation, args$freemuxlet, args$scSplit, args$souporcell, args$vireo) == 1)){
+
+			assignment_column <- paste0(names(results_list), "_Individual_Assignment")
+			droplettype_column <- paste0(names(results_list), "_DropletType")
+
+
+			combined_results$Final_Individual_Assignment <- combined_results[,..assignment_column]
+			combined_results$Final_DropletType <- combined_results[,..droplettype_column]
+
+			colourCount = length(unique(combined_results$Final_Individual_Assignment))
+			getPalette = colorRampPalette(c("#f44336", "#e81e63", "#9c27b0", "#673ab7", "#3f51b5", "#2196f3", "#03a9f4", "#00bcd4", "#009688", "#4caf50", "#8bc34a", "#cddc39", "#ffeb3b","#ffc107", "#ff9800", "#ff5722", "#795548", "#9e9e9e", "#607d8b"))
+
+			if ("doublet" %in% unique(combined_results$Final_Individual_Assignment)){
+				colors <- c(colors, doublet = "#000000")
+			}
+			if ("unassigned" %in% unique(combined_results$Final_Individual_Assignment)){
+				colors <- c(colors, unassigned = "grey70")
+			}
+
+			pBarplot <- ggplot(combined_results, aes(factor(combined_results$Final_DropletType, levels = c("singlet", "doublet", "unassigned")), fill = combined_results$Final_Individual_Assignment)) +
+				geom_bar() +
+				theme_classic() +
+				xlab(NULL) +
+				ylab("Number Droplets") +
+				scale_fill_manual(values = getPalette(colourCount), name = "Final\nAssignment") +
+				ggtitle(names(results_list)) +
+  				theme(plot.title = element_text(hjust = 0.5))
+
+				ggsave(pBarplot, filename = paste0(tools::file_path_sans_ext(args$out),"_Singlets_barplot_donor_assignment.pdf"), height = 5, width = 4)
+
+		} else if (length(c(args$DoubletDecon, args$DoubletDetection, args$DoubletFinder, args$scDblFinder, args$scds, args$scrublet, args$solo)) == 1) {
+			droplettype_column <- paste0(names(results_list), "_DropletType")
+
+			combined_results$Final_DropletType <- combined_results[,..droplettype_column]
+
+			colourCount = length(unique(combined_results$Final_Individual_Assignment))
+			getPalette = colorRampPalette(c("#f44336", "#e81e63", "#9c27b0", "#673ab7", "#3f51b5", "#2196f3", "#03a9f4", "#00bcd4", "#009688", "#4caf50", "#8bc34a", "#cddc39", "#ffeb3b","#ffc107", "#ff9800", "#ff5722", "#795548", "#9e9e9e", "#607d8b"))
+
+			if ("doublet" %in% unique(combined_results$Final_DropletType)){
+				colors <- c(colors, doublet = "#000000")
+			}
+			if ("unassigned" %in% unique(combined_results$Final_DropletType)){
+				colors <- c(colors, unassigned = "grey70")
+			}
+
+			pBarplot <- ggplot(combined_results, aes(factor(combined_results$Final_DropletType, levels = c("singlet", "doublet", "unassigned")))) +
+				geom_bar() +
+				theme_classic() +
+				xlab(NULL) +
+				ylab("Number Droplets") +
+				ggtitle(names(results_list)) +
+  				theme(plot.title = element_text(hjust = 0.5))
+
+				ggsave(pBarplot, filename = paste0(tools::file_path_sans_ext(args$out),"_Singlets_barplot.pdf"), height = 5, width = 4)
+
+		}
+
+	}
 
 	message("\nDone!\n")
 }

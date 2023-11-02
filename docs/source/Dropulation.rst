@@ -74,6 +74,11 @@ First, let's assign the variables that will be used to execute each step.
 
 Bam Annotation
 ^^^^^^^^^^^^^^^^^^^^
+.. admonition:: |:stopwatch:| Expected Resource Usage
+  :class: note
+
+  ~4h using a total of 3Gb memory when using 12 thread for the full :ref:`Test Dataset <TestData>` which contains ~20,982 droplets of 13 multiplexed donors,
+
 You will most likely need to annotate your bam using ``TagReadWithGeneFunction`` (unless you have already annotated your bam with this function).
 Please note that the ``\`` at the end of each line is purely for readability to put a separate parameter argument on each line.
 
@@ -96,6 +101,11 @@ If the bam annotation is successful, you will have these new files in your ``$DR
 
 Dropulation Assignment
 ^^^^^^^^^^^^^^^^^^^^^^^^^
+.. admonition:: |:stopwatch:| Expected Resource Usage
+  :class: note
+
+  ~1.5h using a total of 5Gb memory when using 16 thread for the full :ref:`Test Dataset <TestData>` which contains ~20,982 droplets of 13 multiplexed donors,
+
 First, we will identify the most likely singlet donor for each droplet.
 
 .. admonition:: Note
@@ -108,7 +118,7 @@ Please note that the ``\`` at the end of each line is purely for readability to 
 
 .. code-block:: bash
 
-  AssignCellsToSamples --CELL_BC_FILE $BARCODES \
+  singularity exec Demuxafy.sif AssignCellsToSamples --CELL_BC_FILE $BARCODES \
             --INPUT_BAM $DROPULATION_OUTDIR/possorted_genome_bam_dropulation_tag.bam \
             --OUTPUT $DROPULATION_OUTDIR/assignments.tsv.gz \
             --VCF $VCF \
@@ -133,6 +143,11 @@ If the bam annotation is successful, you will have these new files in your ``$DR
 
 Dropulation Doublet
 ^^^^^^^^^^^^^^^^^^^^^^^^^
+.. admonition:: |:stopwatch:| Expected Resource Usage
+  :class: note
+
+  ~1.5h using a total of 5Gb memory when using 16 thread for the full :ref:`Test Dataset <TestData>` which contains ~20,982 droplets of 13 multiplexed donors,
+
 Next, we will identify the likelihoods of each droplet being a doublet.
 
 .. admonition:: Note
@@ -145,7 +160,7 @@ Please note that the ``\`` at the end of each line is purely for readability to 
 
 .. code-block:: bash
 
-  DetectDoublets --CELL_BC_FILE $BARCODES \
+  singularity exec Demuxafy.sif DetectDoublets --CELL_BC_FILE $BARCODES \
             --INPUT_BAM $DROPULATION_OUTDIR/possorted_genome_bam_dropulation_tag.bam \
             --OUTPUT $DROPULATION_OUTDIR/likelihoods.tsv.gz \
             --VCF $VCF \
@@ -164,7 +179,7 @@ Please note that the ``\`` at the end of each line is purely for readability to 
 
 .. code-block:: bash
 
-  Rscript dropulation_call.R --assign $DROPULATION_OUTDIR/assignments.tsv.gz \
+  singularity exec Demuxafy.sif dropulation_call.R --assign $DROPULATION_OUTDIR/assignments.tsv.gz \
                              --doublet $DROPULATION_OUTDIR/likelihoods.tsv.gz \
                              --out $DROPULATION_OUTDIR/updated_assignments.tsv.gz
 
@@ -198,35 +213,35 @@ which will return:
   +-----------------+--------------+
   | Classification  | Assignment N |
   +=================+==============+
-  | 113_113         | 1334         |
+  | 113_113         | 1327         |
   +-----------------+--------------+
-  | 349_350         | 1458         |
+  | 349_350         | 1440         |
   +-----------------+--------------+
-  | 352_353         | 1607         |
+  | 352_353         | 1562         |
   +-----------------+--------------+
-  | 39_39           | 1297         |
+  | 39_39           | 1255         |
   +-----------------+--------------+
-  | 40_40           | 1078         |
+  | 40_40           | 1082         |
   +-----------------+--------------+
-  | 41_41           | 1127         |
+  | 41_41           | 1122         |
   +-----------------+--------------+
-  | 42_42           | 1419         |
+  | 42_42           | 1365         |
   +-----------------+--------------+
-  | 43_43           | 1553         |
+  | 43_43           | 1546         |
   +-----------------+--------------+
-  | 465_466         | 1094         |
+  | 465_466         | 1084         |
   +-----------------+--------------+
-  | 596_597         | 1255         |
+  | 596_597         | 1258         |
   +-----------------+--------------+
-  | 597_598         | 1517         |
+  | 597_598         | 1515         |
   +-----------------+--------------+
-  | 632_633         | 868          |
+  | 632_633         | 815          |
   +-----------------+--------------+
-  | 633_634         | 960          |
+  | 633_634         | 892          |
   +-----------------+--------------+
-  | 660_661         | 1362         |
+  | 660_661         | 1364         |
   +-----------------+--------------+
-  | doublet         | 3053         |
+  | doublet         | 3355         |
   +-----------------+--------------+
 
 

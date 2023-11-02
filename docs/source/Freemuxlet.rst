@@ -66,6 +66,12 @@ First, let's assign the variables that will be used to execute each step.
 
 Popscle Pileup
 ^^^^^^^^^^^^^^^^
+.. admonition:: |:stopwatch:| Expected Resource Usage
+  :class: note
+
+  ~3-4h using a total of 91Gb memory when using 5 threads for the full :ref:`Test Dataset <TestData>` which contains ~20,982 droplets of 13 multiplexed donors,
+
+
 First we will need to identify the number of reads from each allele at each of the common SNP location:
 
 .. code-block:: bash
@@ -95,6 +101,14 @@ Additional details about outputs are available below in the :ref:`Freemuxlet Res
 
 Popscle Freemuxlet
 ^^^^^^^^^^^^^^^^^^
+.. admonition:: |:stopwatch:| Expected Resource Usage
+  :class: note
+
+  ~9min using a total of 4Gb memory when using 1 thread for the full :ref:`Test Dataset <TestData>` which contains ~20,982 droplets of 13 multiplexed donors,
+
+First we will need to identify the number of reads from each allele at each SNP location.
+
+
 Once you have run ``popscle pileup``, you can demultiplex your samples with Freemuxlet_:
 
 .. code-block:: bash

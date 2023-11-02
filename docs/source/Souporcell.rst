@@ -69,8 +69,15 @@ First, let's assign the variables that will be used to execute each step.
       BARCODES=/path/to/TestData4PipelineFull/test_dataset/outs/filtered_gene_bc_matrices/Homo_sapiens_GRCh38p10/barcodes.tsv
       BAM=/path/to/test_dataset/possorted_genome_bam.bam
       SOUPORCELL_OUTDIR=/path/to/output/souporcell
-      N=14
+      N=13
 
+
+Run Souporcell Pipeline
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. admonition:: |:stopwatch:| Expected Resource Usage
+  :class: note
+
+  ~37h using a total of 45Gb memory when using 5 threads for the full :ref:`Test Dataset <TestData>` which contains ~20,982 droplets of 13 multiplexed donors,
 
 You can run Souporcell_ with or without reference SNP genotypes - follow the instructions for each bellow:
 

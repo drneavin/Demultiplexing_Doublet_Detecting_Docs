@@ -13,12 +13,24 @@ The process would be the same for non-multiplexed data for doublet detection but
 Selecting Software Combination
 -------------------------------
 First, we'll identify the softwares we should run using the :ref:`Software Selection Tool <SoftwareSelection-docs>`.
+Start by entering the required information about the single-cell run into the :ref:`Software Selection Tool <SoftwareSelection-docs>`.
+This sample is genetically multiplexed with reference SNP genotypes for each sample in the pool and 13 donors.
+When we enter that information and press "SUBMIT", we can see the recommended method combination in the table below:
 
-Since we have a genetically multiplexed sample with reference SNP genotypes for each sample in the pool and less than 16 donors, we will use the following recommended softwares:
+.. image:: _figures/software_selection_tutorial.png
 
-  - :ref:`Demuxlet <Demuxlet-docs>`
-  - :ref:`Souporcell <Souporcell-docs>`
-  - :ref:`Vireo <Vireo-docs>`
+.. admonition:: Note
+
+  If you want to compare different capture characteristics for experimental design, the recommendations and expected doublet numbers will be maintained in the table for easy comparison.
+
+Per the recommendations we will run the following methods before combining them:
+
+Scds + ScDblFinder + DoubletDetection + Dropulation + Demuxalot (refined)
+
+  - :ref:`Demuxalot (refined) <Demuxalot-docs>`
+  - :ref:`Dropulation <Dropulation-docs>`
+  - :ref:`DoubletDetection <DoubletDetection-docs>`
+  - :ref:`ScDblFinder <scDblFinder-docs>`
   - :ref:`Scds <scds-docs>`
 
 
@@ -26,18 +38,25 @@ Since we have a genetically multiplexed sample with reference SNP genotypes for 
 
 Run Each Software
 -------------------------------
-
-Demuxlet
-^^^^^^^^^
-
-
-Souporcell
-^^^^^^^^^
+We will first run each software before combining them and calling final assignments for each droplet based on the annotations from each software.
+Please note that even though they are listed in sequence here, we run them in parallel since none of them are dependent on the other
 
 
+Demuxalot (refined)
+^^^^^^^^^^^^^^^^^^^^^
 
-Vireo
-^^^^^^^^^
+
+Dropulation
+^^^^^^^^^^^^
+
+
+
+DoubletDetection
+^^^^^^^^^^^^^^^^^^
+
+
+ScDblFinder
+^^^^^^^^^^^^^^
 
 
 

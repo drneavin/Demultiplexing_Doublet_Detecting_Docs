@@ -36,6 +36,11 @@ This is the data that you will need to have prepare to run Solo_:
 
 Run Solo
 ----------------
+.. admonition:: |:stopwatch:| Expected Resource Usage
+  :class: note
+
+  ~12h using a total of 26Gb memory when using 1 thread for the full :ref:`Test Dataset <TestData>` which contains ~20,982 droplets of 13 multiplexed donors,
+
 First, let's assign the variables that will be used to execute each step.
 
 .. admonition:: Example Variable Settings
