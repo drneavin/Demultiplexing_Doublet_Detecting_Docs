@@ -1,0 +1,285 @@
+<!Doctype Html>
+<Html>
+<Head>
+<link rel="stylesheet" href="myStyle_v2.css">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<Title>
+Doublets|Singlets
+</Title>
+</Head>
+<Body>
+<!--<a style="color:white;width: 302px;height: 32px;" href="https://demultiplexing-doublet-detecting-docs.readthedocs.io/en/latest/index.html"><i class="fa fa-home">Home</i></a> -->
+&emsp;&emsp;&emsp;&emsp;<button style="padding:-5px; height:50px;width:100px;margin: 5px 5px;" class="w3-btn w3-orange w3-xlarge">
+<a href="https://demultiplexing-doublet-detecting-docs.readthedocs.io/en/latest/index.html"><i class="w3-margin-left fa fa-home">&nbsp;Home</i></a></button>
+<h1>Demuxafy Software Selector and Doublet Estimator</h1><br>
+<div class="main">
+<div class="div1">
+<p>You can use this to estimate the expected number of doublets and singlets based on the number of droplets captured. Moreover, you can also look into the recommended set of softwares that are best for your dataset. This can be helpful with experimental planning and post capture quality control processing.
+Please let us know if there are additional features that you can think will help make this tool useful.<br>
+</p>
+	<label>Number of cells captured!</label>
+		<div class="hover-text">&#9432;<span class="tooltip-text" id="top">Number of cells captured!</span></div>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+		<input type="number" id="droplets"  onfocus="this.value=''" placeholder="Total Cells captured"></br>
+	<label for="tech">Technology used</label>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<select name="tech" id="tech" style="width:185px;height:25px;">
+			<option value="10x">10X</option>
+			<option value="10x_ht">10X HT</option>
+			<option value="parse">Parse</option>
+			<option value="smart_seq">Smart-Seq</option>
+			<option value="scale_bio">Scale Bio</option>
+			<option value="drop_seq">Drop-Seq</option>
+			<option value="hive">HIVE</option>
+			<option value="smart_seq_2">Smart-Seq2</option>
+			<option value="smart_seq_3">Smart-Seq3</option>
+		</select></br>
+	<label for="data_multiplexed_label">Sample is genetically multiplexed?</label><div class="hover-text">&#9432;<span class="tooltip-text" id="top">Sample is genetically multiplexed?</span></div>&emsp;
+		<select name="data_multiplexed" id="data_multiplexed_select" style="width:185px;height:25px;"
+		onchange="if (this.selectedIndex==1)
+		{
+			document.getElementById('individuals').style.visibility='visible';
+			document.getElementById('individuals_label').style.visibility='visible';
+			document.getElementById('refernce_genotype_label').style.visibility='visible';
+			document.getElementById('refernce_genotype_label_tooltip').style.visibility='visible';
+			document.getElementById('refernce_genotype_select').style.visibility='visible';
+		}else {
+			document.getElementById('individuals').style.visibility='hidden';
+			document.getElementById('individuals_label').style.visibility='hidden';
+			document.getElementById('refernce_genotype_label').style.visibility='hidden';
+			document.getElementById('refernce_genotype_label_tooltip').style.visibility='hidden';
+			document.getElementById('refernce_genotype_select').style.visibility='hidden';
+			document.getElementById('refernce_genotype_select').style.visibility='hidden';
+			document.getElementById('refernce_genotype_select').value='NA';
+			document.getElementById('individuals').value='';
+			};">
+		  <option value="NA">Please select</option>
+		  <option value="Yes">Yes</option>
+		  <option value="No">No</option>
+		</select><br>
+
+		<label id="individuals_label" style="visibility:hidden;">Number Of individuals multiplexed</label>&emsp;&emsp;&nbsp;
+		<input type="number" id="individuals" size="30" onfocus="this.value=''" placeholder="Number of Individuals" style="visibility:hidden;"><br>
+		<label id="refernce_genotype_label" style="visibility:hidden;">Reference genotype?</label>
+		<label id="refernce_genotype_label_tooltip" style="visibility:hidden;color:white;font-size:17px;"><div class="hover-text">&#9432;<span class="tooltip-text" id="top">Reference genotype available?</span></div></label>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;
+		<select name="refernce_genotype" id="refernce_genotype_select" style="visibility:hidden;width:185px;height:25px;">
+			<option value="NA">Please select</option>
+			<option value="Yes">Yes</option>
+			<option value="No">No</option>
+		</select><br><br>
+		<center><button onclick="myFunction()">SUBMIT</button></center>
+</div>
+<div class="div3">
+<!-- <label>Reccomended Software:</label>&emsp;&emsp;<textarea id="reccomended_software" name="reccomended_software" rows="4" cols="50" style="font-size:20px;width:400px; height:80px;"></textarea><br><br> -->
+<center>
+<table id="myTable" style="width:100%">
+  <tr>
+    <th>Num of Droplets captured</th>
+	<th>Technology used</th>
+	<th>Expected Singlets<div class="hover-text">&#9432;<span class="tooltip-text" id="top">True single cells</span></div></th>
+    <th>Expected Doublets<div class="hover-text">&#9432;<span class="tooltip-text" id="top">Technical artifacts in data when two (or more) cells are mistaken as a single cell are known as “doublets”</span></div></th>
+    <th>Doublets Rate<div class="hover-text">&#9432;<span class="tooltip-text" id="top">The doublet rate (i.e., the proportion of doublets) in a scRNA-seq experiment depends on the throughput and protocol.</span></div></th>
+	<th>Recommended Software</th>
+	<th>Genetically Multiplexed?</th>
+	<th>Reference Genotype?</th>
+	<th>Number of Individuals</th>
+  </tr>
+
+</table>
+</center>
+<!--
+<label>Num of Droplets captured:</label> <input id="numDroplets" placeholder="Droplets" readonly>&emsp;&emsp;
+<label>Expected Doublets:</label> <input id="doublets" placeholder="Doublets" readonly><br><br>
+<label>Expected Singlets:</label>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<input id="singlets" placeholder="Singlets" readonly>&emsp;&emsp;
+<label>Doublets Rate:</label>&emsp;&emsp;&emsp;&emsp;<input id="doublet_rate" placeholder="Doublet Rate" readonly><br><br>
+-->
+
+<br>
+<p>References:<br> https://kb.10xgenomics.com/hc/en-us/articles/360001378811-What-is-the-maximum-number-of-cells-that-can-be-profiled- <br>
+	https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4481139/#:~:text=In%20Drop%2DSeq%2C%20across%20four,tested%20(under%20the%20assumption%20that <br>
+	https://perkinelmer-appliedgenomics.com/home/applications/ngs-workflows/hive-clx-single-cell-rnaseq-solution/ </p>
+</div>
+</div>
+<script>
+function myFunction() {
+  var n = parseInt(document.getElementById("droplets").value);
+  if (document.getElementById("droplets").value== "")
+  {
+  	alert("Please enter number of cells");
+  	document.getElementById("numDroplets").value = "";
+  	document.getElementById("doublets").value = "";
+  	document.getElementById("singlets").value = "";
+	document.getElementById("reccomended_software").value = "";
+  	return false;
+  }
+
+  //document.getElementById("numDroplets").value = n;
+  //var numDoublets = ((Math.pow(n, 2))*0.008)/1000
+  //document.getElementById("doublets").value = numDoublets.toFixed(2);
+  //var numSinglets = n - numDoublets
+  //document.getElementById("singlets").value = numSinglets;
+  //var doubletRate = (numDoublets/n)*100
+  //document.getElementById("doublet_rate").value = doubletRate + '%';
+
+  if (document.getElementById("tech").value=="10x")
+  {
+	var numDoublets = ((Math.pow(n, 2))*0.008)/1000
+	var numSinglets = n - numDoublets
+	var doubletRate = (numDoublets/n)*100
+  }
+  else if (document.getElementById("tech").value=="10x_ht")
+  {
+	var numDoublets = ((Math.pow(n, 2))*0.004)/1000
+	var numSinglets = n - numDoublets
+	var doubletRate = (numDoublets/n)*100
+  }
+  else if (document.getElementById("tech").value=="parse")
+  {
+	var numDoublets = n*0.03
+	var numSinglets = n - numDoublets
+	var doubletRate = (numDoublets/n)*100
+  }
+  else if (document.getElementById("tech").value=="scale_bio")
+  {
+	var numDoublets = n*0.047
+	var numSinglets = n - numDoublets
+	var doubletRate = (numDoublets/n)*100
+  }
+  else if (document.getElementById("tech").value=="drop_seq")
+  {
+	var numDoublets = 14.1 + 1.1 * Math.pow(10, -5) * Math.pow(n, 2)
+	var numSinglets = n - numDoublets
+	var doubletRate = (numDoublets/n)*100
+  }
+  else if (document.getElementById("tech").value=="hive")
+  {
+	var numDoublets = -50.5 + 1.1 * Math.pow(10, -5) * Math.pow(n, 2)
+	var numSinglets = n - numDoublets
+	var doubletRate = (numDoublets/n)*100
+  }
+  else
+  {
+	var numDoublets = 0
+	var numSinglets = n - numDoublets
+	var doubletRate = (numDoublets/n)*100
+  }
+
+
+
+  var selectList = document.getElementById('refernce_genotype_select').value;
+  if (document.getElementById("data_multiplexed_select").value== "Yes" && document.getElementById("individuals").value=="")
+  {
+  	alert("Please enter number of Individuals");
+  	document.getElementById("numDroplets").value = "";
+  	document.getElementById("doublets").value = "";
+  	document.getElementById("singlets").value = "";
+	document.getElementById("reccomended_software").value = "";
+  	return false;
+  }
+  if (document.getElementById("refernce_genotype_select").value== "NA" && document.getElementById("individuals").value!="" && document.getElementById("data_multiplexed_select").value== "Yes")
+  {
+  	alert("Please select refernce Genotype");
+  	document.getElementById("numDroplets").value = "";
+  	document.getElementById("doublets").value = "";
+  	document.getElementById("singlets").value = "";
+	document.getElementById("reccomended_software").value = "";
+  	return false;
+  }
+
+  if (document.getElementById("refernce_genotype_select").value!= "NA" && document.getElementById("individuals").value=="")
+  {
+  	alert("Please enter number of Individuals");
+  	document.getElementById("numDroplets").value = "";
+  	document.getElementById("doublets").value = "";
+  	document.getElementById("singlets").value = "";
+	document.getElementById("reccomended_software").value = "";
+  	return false;
+  }
+  console.log(selectList);
+
+  var table = document.getElementById("myTable");
+  var row = table.insertRow(1);
+  var cell1 = row.insertCell(0);
+  var cell2 = row.insertCell(1);
+  var cell3 = row.insertCell(2);
+  var cell4 = row.insertCell(3);
+  var cell5 = row.insertCell(4);
+  var cell6 = row.insertCell(5);
+  var cell7 = row.insertCell(6);
+  var cell8 = row.insertCell(7);
+  var cell9 = row.insertCell(8);
+  cell1.innerHTML = n;
+  cell2.innerHTML = document.getElementById("tech").value;
+  cell3.innerHTML = numSinglets.toFixed();
+  cell4.innerHTML = numDoublets.toFixed(2);
+  cell5.innerHTML = doubletRate.toFixed(2) + '%';
+  cell7.innerHTML = document.getElementById("data_multiplexed_select").value
+  if (document.getElementById("individuals").value==""){
+	cell9.innerHTML = "NA"
+  }
+  else
+  {
+	cell9.innerHTML = document.getElementById("individuals").value
+  }
+
+  if (document.getElementById("data_multiplexed_select").value=="No"){
+	cell8.innerHTML = "NA"
+  }
+  else
+  {
+	cell8.innerHTML = selectList
+  }
+
+
+  console.log(document.getElementById("data_multiplexed_select").value);
+	if (document.getElementById("individuals").value=="" && document.getElementById("droplets").value< 2000){
+	//document.getElementById("reccomended_software").value = "scds + DoubletDetection + solo";
+	cell6.innerHTML = "DoubletFinder + Scrublet + Scds + ScDblFinder";
+  }
+  else if (document.getElementById("individuals").value=="" && document.getElementById("droplets").value>= 2000 && document.getElementById("droplets").value<= 10000 ){
+	//document.getElementById("reccomended_software").value = "scds + DoubletDetection + solo";
+	cell6.innerHTML = "Scds + ScDblFinder OR Scrublet + Scds + ScDblFinder";
+  }
+	else if (document.getElementById("individuals").value=="" && document.getElementById("droplets").value> 10000 && document.getElementById("droplets").value<= 20000 ){
+	//document.getElementById("reccomended_software").value = "scds + DoubletDetection + solo";
+	cell6.innerHTML = "Scrublet + Scds + ScDblFinder + DoubletDetection";
+  }
+  else if (document.getElementById("individuals").value=="" && document.getElementById("droplets").value> 20000){
+	//document.getElementById("reccomended_software").value = "scds + solo + DoubletDetection + scDblFinder";
+	cell6.innerHTML = "Scrublet + Scds + DoubletDetection + solo";
+	}
+  else if (selectList=="Yes" && document.getElementById("individuals").value< 5){
+	//document.getElementById("reccomended_software").value = "Demuxlet/Freemuxlet + Vireo + Souporcell + scds";
+	cell6.innerHTML = "DoubletFinder + Scds + ScDblFinder + Vireo + Demuxalot(refined)";
+  }
+	else if (selectList=="Yes" && document.getElementById("individuals").value>= 5 && document.getElementById("individuals").value<= 20){
+	//document.getElementById("reccomended_software").value = "Demuxlet/Freemuxlet + Vireo + Souporcell + scds";
+	cell6.innerHTML = "Scds + ScDblFinder + DoubletDetection + Dropulation + Demuxalot(refined)";
+  }
+  else if (selectList=="Yes" && document.getElementById("individuals").value> 20){
+	//document.getElementById("reccomended_software").value = "Demuxlet + Freemuxlet + Vireo + Souporcell";
+	cell6.innerHTML = "Dropulation + Demuxalot(refined)";
+  }
+ else if (selectList=="No" && document.getElementById("individuals").value< 5){
+	//document.getElementById("reccomended_software").value = "Demuxlet + Vireo + Souporcell + scDblFinder";
+	cell6.innerHTML = "DoubletFinder + Scds + ScDblFinder + Souporcell + Vireo";
+  }
+	else if (selectList=="No" && document.getElementById("individuals").value>= 5 && document.getElementById("individuals").value<= 20){
+ 	//document.getElementById("reccomended_software").value = "Demuxlet + Vireo + Souporcell + scDblFinder";
+ 	cell6.innerHTML = "Scds + ScDblFinder + DoubletDetection + Souporcell + Vireo";
+   }
+ else if (selectList=="No" && document.getElementById("individuals").value> 20){
+	//document.getElementById("reccomended_software").value = "Freemuxlet + Vireo + Souporcell + scds or scDblFinder";
+	cell6.innerHTML = "Vireo";
+  }
+  // else
+  // {
+	// //document.getElementById("reccomended_software").value = "scds + scDblFinder";
+	// cell6.innerHTML = "scds + scDblFinder";
+  // }
+
+}
+
+</script>
+</Body>
+</Html>

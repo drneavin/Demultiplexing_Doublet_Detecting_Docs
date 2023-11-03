@@ -1,0 +1,170 @@
+@import url('https://fonts.googleapis.com/css?family=Gotu&display=swap');
+
+
+body {
+  background-color: white;
+  font-family: sans-serif;
+  color: white;
+  /*background-image: url("pic2.jpg");
+  background-repeat: repeat;
+  background-size: cover;
+  background-position: center;*/
+  width: 100%;
+  margin: 0 auto;
+  background-image: url("demuxafy_moretransparent.png");
+  /*background-size: 1600px 500px;
+  background-position: 0px 0px;*/
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.9;
+}
+
+label {
+	font-size: 22px;
+	font-weight: bold;
+	color: black;
+}
+input {
+	border: 0;
+	padding: 10px 20px;
+	font-size: 12px;
+	border-radius: 0px;
+	margin: 5px;
+	size: 5px;
+}
+h2 {
+	text-align: center;
+}
+button {
+	padding: 10px;
+	width: 150px;
+	margin: 10px 0;
+	font-size: 20px;
+	border: 0;
+	background-color: grey;
+}
+button:focus, button:hover {
+	background-color: black;
+	color: white;
+}
+p {
+	text-align: center;
+	color: #4181B0;
+	font-size:15px
+}
+
+h1 {
+	margin: 0 0 20px 0;
+	padding: 0px;
+	text-align: center;
+	color: #4181B0;
+}
+table{border: 1px solid black;
+  color:black;
+  text-align: center;
+  overflow-y:scroll;
+  height:200px;
+  display:block;}
+
+ th, td {
+  border: 1px solid black;
+  color:black;
+  text-align: center;
+}
+span {
+	display: block;
+	overflow: hidden;
+	padding: 0px 4px 0px 6px;
+        }
+.main{
+        width: 800px;
+        min-width: 900px;
+		min-height: 600px;
+    }
+
+.div1 {
+  float: left;
+  width: 89.6%;
+  height: 44%;
+  top: 12%;
+  left:5%;
+  right:5%;
+  margin: 0 auto;
+  /* background:#e3e3e3; */
+  position: absolute;
+  min-width: 400px;
+  padding: 0px 20px;
+}
+.div2 {
+  float: left;
+  padding: 50px;
+  width: 25%;
+  height: 25%;
+  top: 10%;
+  left: 65%;
+  margin: 0 auto;
+  position: absolute;
+  /*background:#e3e3e3;*/
+  min-width: 200px;
+}
+.div3 {
+  float: left;
+  padding: 15px 20px;
+  width: 89.6%;
+  height: 1%;
+  top: 56.5%;
+  left: 5%;
+  margin: 0 auto;
+  position: absolute;
+  /*background:#e3e3e3; */
+  min-height: 350px;
+}
+
+.tooltip-text {
+  visibility: hidden;
+  position: absolute;
+  z-index: 1;
+  width: 150px;
+  color: white;
+  font-size: 12px;
+  background-color: #192733;
+  border-radius: 10px;
+  padding: 10px 15px 10px 15px;
+}
+
+.hover-text:hover .tooltip-text {
+  visibility: visible;
+}
+
+#top {
+  top: -40px;
+  left: -50%;
+}
+.hover-text {
+  position: relative;
+  display: inline-block;
+  margin: 5px;
+  font-family: Arial;
+  text-align: center;
+  color: black;
+}
+
+.watermarked {
+  position: relative;
+}
+
+.watermarked:after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  background-image: url("http://placehold.it/100x100/09f/fff.png");
+  background-size: 100px 100px;
+  background-position: 30px 30px;
+  background-repeat: no-repeat;
+  opacity: 0.7;
+}
