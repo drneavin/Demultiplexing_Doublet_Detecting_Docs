@@ -9,7 +9,9 @@ We described some of the best combinations of methods in our manuscript for demu
 However, we acknowledge that each dataset is different and may have unique characteristics that make other softwares more suited.
 Therefore, we have developed Demuxafy to enable each user to choose and run the demultiplexing and doublet detecting analyses of their choice smoothly and efficiently.
 
-.. figure:: _figures/Demuxafy.png
+.. figure:: _figures/demuxafy_overview.png
+    :align: center
+    :figwidth: 500px
 
     **Figure 1: Demuxafy** | Demuxafy provides a simple framework for demultiplexing and classifying doublets in a wide range of droplet-based scRNA-seq captures.
 
@@ -65,5 +67,5 @@ This makes these two method types complementary for demultiplexing and doublet r
 
 
 Support
-==================
+-------------
 If you're having trouble with any part of the Demultiplexing and Doublet Detecting Pipeline, feel free to submit an `issue <https://github.com/drneavin/Demultiplexing_Doublet_Detecting_Docs/issues>`_.

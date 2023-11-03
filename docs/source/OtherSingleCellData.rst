@@ -1,4 +1,4 @@
-Considerations for Other Single Cell Data Types
+Other Single Cell Data Types
 ===============================================
 
 This workflow was designed for demultiplexing and detecting doublets in scRNA-seq data.
@@ -36,10 +36,7 @@ Additionally, the SNPs should be filtered by SNPs overlapping **peak locations**
 You may even want to filter the SNPs further if you still have many after filtering on minor allele frequency and peak location.
 We typically aim for ~250,000 SNP.
 Regardless, since UMI tags aren't used for snATAC-seq data, demultiplexing can take a lot of memory and time.
-
-In addition, the following flags are required for each of the following softwares to effectively process snATAC-seq data.
-
-**Souporcell**
+We have only found success in snATAC-seq data with souporcell but it requires the following flag to effectively process snATAC-seq data:
 
 - ``--no_umi True``
 
@@ -58,9 +55,9 @@ Combined snRNA-seq + snATAC-seq
 
 Demultiplexing Softwares
 ^^^^^^^^^^^^^^^^^^^^^^^^
-We have noticed a higher percentage of ambient RNA from our combined snRNA-seq + scATAC-seq experiments as compared to our scRNA-seq (we haven't tested multiplexed snRNA-seq in our hands) but similar snATAC-seq ambient DNA estimations as detected with :ref:`Souporcell<Souporcell-docs>`
+We have noticed slightly higher ambient RNA from our combined snRNA-seq + scATAC-seq experiments as compared to our scRNA-seq (we haven't tested multiplexed snRNA-seq in our hands) but similar snATAC-seq ambient DNA estimations as detected with :ref:`Souporcell<Souporcell-docs>`
 Therefore, we recommend running :ref:`Souporcell<Souporcell-docs>`, if only to estimate the ambient RNA in your multiplexed pool.
-If you are doing the demultiplexing with the snRNA-seq results, please see the :ref:`snRNA-seq Section <snrna>`.
+If you are demultiplexing with the snRNA-seq results, please see the :ref:`snRNA-seq Section <snrna>`.
 If you are using the snATAC-seq data for demultiplexing, please see the :ref:`snATAC-seq Section <snatac>`.
 
 
