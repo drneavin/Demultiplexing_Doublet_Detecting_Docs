@@ -100,14 +100,15 @@ if (length(which(c(!is.null(args$demuxalot), !is.null(args$demuxlet), !is.null(a
 		### Read in Demuxalot Results ###
 		message("Reading in demuxalot results.")
 		if (file_test("-f", args$demuxalot)){
-			results_list[["Demuxalot"]] <- fread(args$demuxalot, sep = "\t")
+			results_list[["Demuxalot"]] <- fread(args$demuxalot, sep = "\t", header = TRUE)
 		} else {
 			demuxalot <- list.files(args$demuxalot, pattern = "assignments.tsv.gz")
 			demuxalot_refined <- list.files(args$demuxalot, pattern = "assignments_refined.tsv.gz")
 			if (length(demuxalot_refined) == 1){
-				results_list[["Demuxalot"]] <- fread(paste0(args$demuxalot, "/", demuxalot_refined), sep = "\t")
+				results_list[["Demuxalot"]] <- fread(paste0(args$demuxalot, "/", demuxalot_refined), sep = "\t", header = TRUE)
+				
 			} else if (length(demuxalot) == 1){
-				results_list[["Demuxalot"]] <- fread(paste0(args$demuxalot, "/", demuxalot), sep = "\t")
+				results_list[["Demuxalot"]] <- fread(paste0(args$demuxalot, "/", demuxalot), sep = "\t", header = TRUE)
 			} else {
 				message("Can't read in the demuxalot report either from the file you provided or to find the 'assignments.tsv.gz' or the 'assignments_refined.tsv.gz' file in the directory you provided. Please double check your path and provide the full path to the demuxlet file. Exiting.")
 				q()
@@ -120,6 +121,7 @@ if (length(which(c(!is.null(args$demuxalot), !is.null(args$demuxlet), !is.null(a
 		results_list[["Demuxalot"]]$Demuxalot_Individual_Assignment <- ifelse(grepl("\\+", results_list[["Demuxalot"]]$Demuxalot_Individual_Assignment), "doublet", results_list[["Demuxalot"]]$Demuxalot_Individual_Assignment)
 		results_list[["Demuxalot"]]$Demuxalot_DropletType  <- ifelse(results_list[["Demuxalot"]]$Demuxalot_Individual_Assignment == "doublet", "doublet", "singlet")
 
+		print(results_list[["Demuxalot"]])
 	}
 
 
@@ -736,7 +738,8 @@ if (length(which(c(!is.null(args$demuxalot), !is.null(args$demuxlet), !is.null(a
 	combined_results_summary <- combined_results_summary[order(-N)]
 
 	fwrite(combined_results_summary, paste0(tools::file_path_sans_ext(args$out),"_summary.tsv"), sep = "\t", append = FALSE)
-	
+
+
 
 	## Call singlets and doublets using combined intersectional methods ##
 	if (is.null(args$method)){
@@ -770,6 +773,7 @@ if (length(which(c(!is.null(args$demuxalot), !is.null(args$demuxlet), !is.null(a
 
 				individual_assignment <- data.table(ID = unlist(lapply(individual_assignment_list, function(y) ifelse(is.null(names(which.max.simple(y[names(y) != "doublet"]))), NA, names(which.max.simple(y[names(y) != "doublet"]))))),
 													N =  unlist(lapply(individual_assignment_list, function(y) ifelse(is.null(names(which.max.simple(y[names(y) != "doublet"]))), NA, max(y[names(y) != "doublet"]))))) ## Need to remove doublet count from table
+	
 			}
 			### Make combined calls dependent on the method selected by the user
 			if (args$method == "MajoritySinglet"){ ### Only call a singlet if majority of softwares call a singlet AND majority of demultiplexing (if present) call the same donor
@@ -781,10 +785,20 @@ if (length(which(c(!is.null(args$demuxalot), !is.null(args$demuxlet), !is.null(a
 					combined_results$MajoritySinglet_Individual_Assignment <- ifelse(combined_results$MajoritySinglet_DropletType == "singlet" & !is.na(individual_assignment$ID), individual_assignment$ID,"doublet")
 					combined_results$MajoritySinglet_DropletType <- ifelse(is.na(combined_results$MajoritySinglet_DropletType) & combined_results$MajoritySinglet_Individual_Assignment == "doublet", "doublet", combined_results$MajoritySinglet_DropletType)
 					combined_results$MajoritySinglet_Individual_Assignment <- ifelse(combined_results$MajoritySinglet_DropletType == "singlet" & combined_results$MajoritySinglet_Individual_Assignment == "doublet", "unassigned", combined_results$MajoritySinglet_Individual_Assignment)
+					
+					##### Make a file that has the summary of the number of assignments and the number of droplets
+					assignment_summary <- as.data.frame(table(combined_results$MajoritySinglet_Individual_Assignment))
+					colnames(assignment_summary) <- c("Classification", "Droplet N")
+					fwrite(assignment_summary, paste0(tools::file_path_sans_ext(args$out),"_assignment_summary.tsv"), sep = "\t", append = FALSE)
 				} else {
 					### method when no demultiplexing softwares
 					combined_results$MajoritySinglet_DropletType <- ifelse(rowSums(combined_results[,.SD, .SDcols = grep("DropletType", colnames(combined_results), value = TRUE)] == "singlet") > length(grep("DropletType", colnames(combined_results)))/2, "singlet", "doublet")
 				}
+
+				droplet_type_summary <- as.data.frame(table(combined_results$MajoritySinglet_DropletType))
+				colnames(droplet_type_summary) <- c("Classification", "Droplet N")
+				fwrite(droplet_type_summary, paste0(tools::file_path_sans_ext(args$out),"_droplet_type_summary.tsv"), sep = "\t", append = FALSE)
+
 			} else if (args$method == "AtLeastHalfSinglet"){ ### Only call a singlet if at least half of softwares call a singlet AND at least half of demultiplexing (if present) call the same donor
 				message("Using the 'AtLeastHalfSinglet' method to call droplet classification (and donor identify if demultiplexing softwares included).")
 			
@@ -794,10 +808,20 @@ if (length(which(c(!is.null(args$demuxalot), !is.null(args$demuxlet), !is.null(a
 					combined_results$AtLeastHalfSinglet_Individual_Assignment <- ifelse(combined_results$AtLeastHalfSinglet_DropletType == "singlet" & !is.na(individual_assignment$ID), individual_assignment$ID, "doublet")
 					combined_results$AtLeastHalfSinglet_DropletType <- ifelse((is.na(combined_results$AtLeastHalfSinglet_DropletType) & combined_results$AtLeastHalfSinglet_Individual_Assignment == "doublet"), "doublet", combined_results$AtLeastHalfSinglet_DropletType)
 					combined_results$AtLeastHalfSinglet_Individual_Assignment <- ifelse(combined_results$AtLeastHalfSinglet_DropletType == "singlet" & combined_results$AtLeastHalfSinglet_Individual_Assignment == "doublet", "unassigned", combined_results$AtLeastHalfSinglet_Individual_Assignment)
+
+					##### Make a file that has the summary of the number of assignments and the number of droplets
+					assignment_summary <- as.data.frame(table(combined_results$AtLeastHalfSinglet_Individual_Assignment))
+					colnames(assignment_summary) <- c("Classification", "Droplet N")
+					fwrite(assignment_summary, paste0(tools::file_path_sans_ext(args$out),"_assignment_summary.tsv"), sep = "\t", append = FALSE)
 				} else {
 					### method when no demultiplexing softwares
 					combined_results$AtLeastHalfSinglet_DropletType <- ifelse(rowSums(combined_results[,.SD, .SDcols = grep("DropletType", colnames(combined_results), value = TRUE)] == "singlet") >= length(grep("DropletType", colnames(combined_results)))/2, "singlet", "doublet")
 				}
+
+				droplet_type_summary <- as.data.frame(table(combined_results$AtLeastHalfSinglet_DropletType))
+				colnames(droplet_type_summary) <- c("Classification", "Droplet N")
+				fwrite(droplet_type_summary, paste0(tools::file_path_sans_ext(args$out),"_droplet_type_summary.tsv"), sep = "\t", append = FALSE)
+
 			} else if (args$method == "AnySinglet"){ ### Call a singlet if any softwares calls that droplet a singlet AND using the donor with the most consensus (call doublet if no consensus)
 				message("Using the 'AnySinglet' method to call droplet classification (and donor identify if demultiplexing softwares included).")
 			
@@ -807,10 +831,20 @@ if (length(which(c(!is.null(args$demuxalot), !is.null(args$demuxlet), !is.null(a
 					combined_results$AnySinglet_Individual_Assignment <- ifelse(combined_results$AnySinglet_DropletType == "singlet" & !is.na(individual_assignment$ID), individual_assignment$ID, "doublet")
 					combined_results$AnySinglet_DropletType <- ifelse(is.na(combined_results$AnySinglet_DropletType) & combined_results$AnySinglet_Individual_Assignment == "doublet", "doublet", combined_results$AnySinglet_DropletType)
 					combined_results$AnySinglet_Individual_Assignment <- ifelse(combined_results$AnySinglet_DropletType == "singlet" & combined_results$AnySinglet_Individual_Assignment == "doublet", "unassigned", combined_results$AnySinglet_Individual_Assignment)
+
+					##### Make a file that has the summary of the number of assignments and the number of droplets
+					assignment_summary <- as.data.frame(table(combined_results$AnySinglet_Individual_Assignment))
+					colnames(assignment_summary) <- c("Classification", "Droplet N")
+					fwrite(assignment_summary, paste0(tools::file_path_sans_ext(args$out),"_assignment_summary.tsv"), sep = "\t", append = FALSE)
 				} else {
 				### method when no demultiplexing softwares
 					combined_results$AnySinglet_DropletType <- ifelse(rowSums(combined_results[,.SD, .SDcols = grep("DropletType", colnames(combined_results), value = TRUE)] == "singlet") > 0, "singlet", "doublet")
 				}
+
+				droplet_type_summary <- as.data.frame(table(combined_results$AnySinglet_DropletType))
+				colnames(droplet_type_summary) <- c("Classification", "Droplet N")
+				fwrite(droplet_type_summary, paste0(tools::file_path_sans_ext(args$out),"_droplet_type_summary.tsv"), sep = "\t", append = FALSE)
+
 			} else if (args$method == "AnyDoublet"){ ### Call a singlet if all softwares calls that droplet a singlet AND all softwares call the same donor
 				message("Using the 'AnyDoublet' method to call droplet classification (and donor identify if demultiplexing softwares included).")
 			
@@ -820,14 +854,25 @@ if (length(which(c(!is.null(args$demuxalot), !is.null(args$demuxlet), !is.null(a
 					combined_results$AnyDoublet_Individual_Assignment <- ifelse(combined_results$AnyDoublet_DropletType == "doublet" | is.na(individual_assignment$ID), "doublet", individual_assignment$ID)
 					combined_results$AnyDoublet_DropletType <- ifelse(is.na(combined_results$AnyDoublet_DropletType) & combined_results$AnyDoublet_Individual_Assignment == "doublet", "doublet", combined_results$AnyDoublet_DropletType)
 					combined_results$AnyDoublet_Individual_Assignment <- ifelse(combined_results$AnyDoublet_DropletType == "singlet" & combined_results$AnyDoublet_Individual_Assignment == "doublet", "unassigned", combined_results$AnyDoublet_Individual_Assignment)
+
+					##### Make a file that has the summary of the number of assignments and the number of droplets
+					assignment_summary <- as.data.frame(table(combined_results$AnyDoublet_Individual_Assignment))
+					colnames(assignment_summary) <- c("Classification", "Droplet N")
+					fwrite(assignment_summary, paste0(tools::file_path_sans_ext(args$out),"_assignment_summary.tsv"), sep = "\t", append = FALSE)
 				} else {
 					### method when no demultiplexing softwares
 					combined_results$AnyDoublet_DropletType <- ifelse(rowSums(combined_results[,.SD, .SDcols = grep("DropletType", colnames(combined_results), value = TRUE)] == "doublet") > 0, "doublet", "singlet")
 				}
+
+				droplet_type_summary <- as.data.frame(table(combined_results$AnyDoublet_DropletType))
+				colnames(droplet_type_summary) <- c("Classification", "Droplet N")
+				fwrite(droplet_type_summary, paste0(tools::file_path_sans_ext(args$out),"_droplet_type_summary.tsv"), sep = "\t", append = FALSE)
+
 			}
 		}
 	message("\nWriting output with combined calls.\n")
 	fwrite(combined_results, paste0(tools::file_path_sans_ext(args$out),"_w_combined_assignments.tsv"), sep = "\t", append = FALSE)
+
 	}
 
 	if (length(c(args$demuxalot, args$demuxlet, args$dropulation, args$freemuxlet, args$scSplit, args$souporcell, args$vireo, args$DoubletDecon, args$DoubletDetection, args$DoubletFinder, args$scDblFinder, args$scds, args$scrublet, args$solo)) > 1) {

@@ -10,7 +10,7 @@ Just download the singluarity image with:
   .. code-block:: bash
 
     wget -O Demuxafy.sif https://www.dropbox.com/scl/fi/g0cuyjwomdavom6u6kb2v/Demuxafy.sif?rlkey=xfey1agg371jo4lubsljfavkh&
-    wget -O Demuxafy.sif.md5 https://www.dropbox.com/scl/fi/bk3p2k2440un6sb6psijn/Demuxafy.sif.md5?rlkey=x3vl8ejpfhjsrvmjanwzkxty9&
+    wget -O Demuxafy.sif.md5 https://www.dropbox.com/scl/fi/bk3p2k2440un6sb6psijn/Demuxafy.sif.md5?rlkey=x3vl8ejpfhjsrvmjanwzkxty9
 
 
 
@@ -53,9 +53,13 @@ If you run into any issues with downloading the image or any issue with running 
     +----------------------------+---------------------------+-------------------------------+
     | Software Group             | Software                  | Version                       |
     +============================+===========================+===============================+
-    |  Demultiplexing            | ``popscle``               |                               |
+    | Demultiplexing             | ``Demuxalot``             | v0.2.0                        |
+    |                            +---------------------------+-------------------------------+
+    |                            | ``popscle``               |                               |
     |                            |  - ``demuxlet``           | v0.1-beta                     |
     |                            |  - ``freemuxlet``         |                               |
+    |                            +---------------------------+-------------------------------+
+    |                            | ``Dropulation``           | v2.5.4                        |
     |                            +---------------------------+-------------------------------+
     |                            | ``scSplit``               | v1.0.8.2                      |
     |                            +---------------------------+-------------------------------+

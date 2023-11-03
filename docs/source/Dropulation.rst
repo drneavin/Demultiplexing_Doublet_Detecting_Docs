@@ -171,6 +171,19 @@ Please note that the ``\`` at the end of each line is purely for readability to 
             --MAX_ERROR_RATE 0.05
 
 
+If the bam annotation is successful, you will have these new files in your ``$DROPULATION_OUTDIR``:
+
+.. code-block:: bash
+  :emphasize-lines: 2,3,4
+
+  /path/to/output/dropulation
+  ├── assignments.tsv.gz
+  ├── likelihoods.tsv.gz
+  ├── out_vcf.vcf
+  ├── out_vcf.vcf.idx
+  └── possorted_genome_bam_dropulation_tag.bam
+
+
 Dropulation Call
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 Finally, we will make final assignments for each droplet based on the doublet and assignment calls.
@@ -191,6 +204,7 @@ If the bam annotation is successful, you will have these new files in your ``$DR
 
   /path/to/output/dropulation
   ├── assignments.tsv.gz
+  ├── likelihoods.tsv.gz
   ├── out_vcf.vcf
   ├── out_vcf.vcf.idx
   ├── possorted_genome_bam_dropulation_tag.bam
@@ -273,18 +287,19 @@ These are the files that most users will find the most informative:
       +----------------------------+------------------------+------------------------+-------------------------+-------------------+-------------------------+
       | Barcode                    | dropulation_Likelihood | dropulation_Assignment | dropulation_DropletType | dropulation_Nsnps |      dropulation_Numis  |
       +============================+========================+========================+=========================+===================+=========================+
-      |                            |                        |                        |                         |                   |                         |
+      | CATATGGCAGCTCGCA-1         | -44.523                | 596_597                | singlet                 | 193               | 381                     |
       +----------------------------+------------------------+------------------------+-------------------------+-------------------+-------------------------+
-      |                            |                        |                        |                         |                   |                         |
+      | ACATACGGTCGAATCT-1         | -93.431                | 632_633                | singlet                 | 296               | 675                     |
       +----------------------------+------------------------+------------------------+-------------------------+-------------------+-------------------------+
-      |                            |                        |                        |                         |                   |                         |
+      | GCATGCGAGATCACGG-1         | -45.708                | 41_41                  | singlet                 | 241               | 536                     |
       +----------------------------+------------------------+------------------------+-------------------------+-------------------+-------------------------+
-      |                            |                        |                        |                         |                   |                         |
+      | CCTTACGGTAGCTCCG-1         | -21.723                | 41_41                  | singlet                 | 135               | 217                     |
       +----------------------------+------------------------+------------------------+-------------------------+-------------------+-------------------------+
-      |                            |                        |                        |                         |                   |                         |
+      | TTTACTGCAATGAATG-1         | -26.521                | 352_353                | singlet                 | 120               | 206                     |
       +----------------------------+------------------------+------------------------+-------------------------+-------------------+-------------------------+
       | ...                        | ...                    | ...                    |  ...                    | ...               | ...                     |
       +----------------------------+------------------------+------------------------+-------------------------+-------------------+-------------------------+
+
 
 
 

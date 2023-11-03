@@ -34,7 +34,7 @@ This is the data that you will need to have prepare to run Demuxalot_:
 
   - Output directory (``$DEMUXALOT_OUTDIR``)
 
-    - A text file with the individual ids (``$INDS``)
+  - A text file with the individual ids (``$INDS``)
     
       - File containing the individual ids (separated by line) as they appear in the vcf file
 

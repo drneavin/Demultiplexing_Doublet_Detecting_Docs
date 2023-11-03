@@ -36,6 +36,12 @@ wget https://download.bell-sw.com/java/11.0.20+8/bellsoft-jdk11.0.20+8-linux-amd
 dpkg -i bellsoft-jdk11.0.20+8-linux-amd64.deb
 
 
+### Install biopython to handle gzipped fasta files in souporcell
+/opt/conda/envs/py36/bin/pip install biopython==1.78
+
+### Install biopython to handle gzipped fasta files for other methods
+/opt/conda/envs/py36/bin/pip install biopython
+
 ### Remove and reisntall Demuxafy
 rm -rf /opt/Demultiplexing_Doublet_Detecting_Docs
 

@@ -335,7 +335,7 @@ In addition, we provide an example for filtering the single cell matrix to a sub
 
 DoubletDetection Results and Interpretation
 -------------------------------------------
-After running the DoubletDetection_, you will have multiple files in the ``$DOUBLETDETECTION_OUTDIR``:
+After running DoubletDetection_, you will have multiple files in the ``$DOUBLETDETECTION_OUTDIR``:
 
 .. code-block:: bash
 

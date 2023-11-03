@@ -61,8 +61,9 @@ Providing the possible parameter options:
 
 .. code-block:: bash
 
-  usage: Combine_Results.R
-        [-h] -o OUT [-d DEMUXLET] [-f FREEMUXLET] [-g FREEMUXLET_ASSIGNMENTS]
+  usage: /opt/Demultiplexing_Doublet_Detecting_Docs/scripts/Combine_Results.R
+        [-h] -o OUT [-z DEMUXALOT] [-d DEMUXLET] [-q DROPULATION]                                                                                      ocs/docs/source/Demuxalot                         Doublet_
+        [-f FREEMUXLET] [-g FREEMUXLET_ASSIGNMENTS]
         [-a FREEMUXLET_CORRELATION_LIMIT] [-s SCSPLIT] [-w SCSPLIT_ASSIGNMENTS]
         [-j SCSPLIT_CORRELATION_LIMIT] [-u SOUPORCELL]
         [-x SOUPORCELL_ASSIGNMENTS] [-k SOUPORCELL_CORRELATION_LIMIT]
@@ -73,9 +74,15 @@ Providing the possible parameter options:
   optional arguments:
     -h, --help            show this help message and exit
     -o OUT, --out OUT     The file where results will be saved
+    -z DEMUXALOT, --demuxalot DEMUXALOT
+                          Path to demuxalot results. Only use this option if you
+                          want to include the demuxalot results.
     -d DEMUXLET, --demuxlet DEMUXLET
                           Path to demuxlet results. Only use this option if you
                           want to include the demuxlet results.
+    -q DROPULATION, --dropulation DROPULATION
+                          Path to dropulation results. Only use this option if
+                          you want to include the dropulation results.
     -f FREEMUXLET, --freemuxlet FREEMUXLET
                           Path to freemuxlet results. Only use this option if
                           you want to include the freemuxlet results.
@@ -142,8 +149,9 @@ Providing the possible parameter options:
                           for all demultiplexing method. Options are 'Demuxlet',
                           'Freemuxlet', 'scSplit', 'Souporcell' and 'Vireo'. If
                           blank when assignment keys are missing, default
-                          softwares to use if present are Vireo, then Demuxlet,
-                          then Freemuxlet, then Souporcell, then scSplit.
+                          softwares to use if present are Demuxalot, then Vireo,
+                          then Demuxlet, then Freemuxlet, then Souporcell, then
+                          Dropulation, then scSplit.
     -p PCT_AGREEMENT, --pct_agreement PCT_AGREEMENT
                           The proportion of a cluster that match the 'ref'
                           assignment to assign that cluster the individual
