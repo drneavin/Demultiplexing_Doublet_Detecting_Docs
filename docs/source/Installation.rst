@@ -1,5 +1,8 @@
 Installation
 ==========================
+
+Singularity Image Download
+--------------------------------
 Installation should be pretty painless (we hope).
 We have  provided all the softwares in a singularity image which provides continuity across different computing platforms (see `HPCNG Singluarity <https://singularity.hpcng.org/>`__ and `Sylabs io <https://sylabs.io/singularity/>`__ for more information on singularity images).
 The only thing to note before you download this image is that the image is **~6.5Gb** so, depending on the internet speed, it will take **~15-30 min to download**.
@@ -9,8 +12,10 @@ Just download the singlularity image with:
 
   .. code-block:: bash
 
-    wget -O Demuxafy.sif https://www.dropbox.com/scl/fi/r53gyc40ssy4g7solhtnz/Demuxafy.sif?rlkey=ilc3edrvu6mv1di2gdxeao01v
-    wget -O Demuxafy.sif.md5 https://www.dropbox.com/scl/fi/wseim74xibperw1o8yp2c/Demuxafy.sif.md5?rlkey=gv9s5o4la8ipdbpnbbi119zn2
+
+    wget -O Demuxafy.sif https://www.dropbox.com/scl/fi/g0cuyjwomdavom6u6kb2v/Demuxafy.sif?rlkey=xfey1agg371jo4lubsljfavkh&
+    wget -O Demuxafy.sif.md5 https://www.dropbox.com/scl/fi/bk3p2k2440un6sb6psijn/Demuxafy.sif.md5?rlkey=x3vl8ejpfhjsrvmjanwzkxty9
+
 
 
 
@@ -53,9 +58,13 @@ If you run into any issues with downloading the image or any issue with running 
     +----------------------------+---------------------------+-------------------------------+
     | Software Group             | Software                  | Version                       |
     +============================+===========================+===============================+
-    |  Demultiplexing            | ``popscle``               |                               |
+    | Demultiplexing             | ``Demuxalot``             | v0.2.0                        |
+    |                            +---------------------------+-------------------------------+
+    |                            | ``popscle``               |                               |
     |                            |  - ``demuxlet``           | v0.1-beta                     |
     |                            |  - ``freemuxlet``         |                               |
+    |                            +---------------------------+-------------------------------+
+    |                            | ``Dropulation``           | v2.5.4                        |
     |                            +---------------------------+-------------------------------+
     |                            | ``scSplit``               | v1.0.8.2                      |
     |                            +---------------------------+-------------------------------+
@@ -125,3 +134,49 @@ If you run into any issues with downloading the image or any issue with running 
 
 
               
+
+.. _Singularity-docs:
+
+
+Notes About Singularity Images
+--------------------------------
+
+Singularity images effectively store an operating system with files, softwares etc. that can be easily transported across different operating systems - ensuring reproducibility.
+Most HPCs have singularity installed making it easy to implement.
+There are some tips and tricks we have identified through using singularity images that we thought might help new users.
+
+Tips and Tricks
+++++++++++++++++++
+1. Error: File Not Found
+^^^^^^^^^^^^^^^^^^^^^^^^
+  **Reason**
+
+  Singularity only loads the directories directly downstream from where you execute the singularity command.
+  If any of the files that need to be accessed by the command are not downstream of the that location, you will receive an error similar to this one:
+
+  .. code-block:: bash
+
+    Failed to open file "/path/to/readfile.tsv" : No such file or directory
+
+  If you then check for that file:
+
+  .. code-block:: bash
+
+    ll /path/to/readfile.tsv
+
+  We can see that the  file does truly exist:
+
+  .. code-block:: bash
+
+    -rw-rw-r-- 1 user group 70636291 Dec 21  2020 /path/to/readfile.tsv
+
+  **Solution**
+
+  The easiest solution to this problem is to "bind" a path upstream of all the files that will need to be accessed by your command:
+
+  .. code-block:: bash
+
+    singularity exec --bind /path Demuxafy.sif ...
+
+
+If you don't have access to Singularity on your HPC, you can ask your HPC administrators to install it (see the `Singularity page <https://sylabs.io/guides/3.0/user-guide/quick_start.html>`__)

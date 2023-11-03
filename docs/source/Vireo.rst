@@ -73,6 +73,11 @@ First, let's assign the variables that will be used to execute each step.
 
 CellSNP Pileup
 ^^^^^^^^^^^^^^
+.. admonition:: |:stopwatch:| Expected Resource Usage
+  :class: note
+
+  ~5h using a total of 5Gb memory when using 1 thread1 for the full :ref:`Test Dataset <TestData>` which contains ~20,982 droplets of 13 multiplexed donors,
+
 First, you need to count the number of alleles at each SNP in each droplet using cellSNP-lite:
 
 .. code-block:: bash
@@ -107,6 +112,11 @@ Additional details about outputs are available below in the :ref:`Vireo Results 
 
 Demultiplex with Vireo
 ^^^^^^^^^^^^^^^^^^^^^^
+.. admonition:: |:stopwatch:| Expected Resource Usage
+  :class: note
+
+  ~2min using a <1Gb memory when using 2 threads for the full :ref:`Test Dataset <TestData>` which contains ~20,982 droplets of 13 multiplexed donors,
+
 Next, we can use the cellSNP results to demultiplex the data with Vireo_.
 As already mentioned, you can use Vireo_ with multiple different levels of reference SNP genotypes.
 We've provided an example command for each of these differing amounts of donor SNP genotype data.

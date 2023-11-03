@@ -34,7 +34,7 @@ This is the data that you will need to have prepare to run Demuxalot_:
 
   - Output directory (``$DEMUXALOT_OUTDIR``)
 
-    - A text file with the individual ids (``$INDS``)
+  - A text file with the individual ids (``$INDS``)
     
       - File containing the individual ids (separated by line) as they appear in the vcf file
 
@@ -63,6 +63,14 @@ Run Demuxalot
 Demuxalot_ can be run with refinement if desired - this means that there is another step that is run to refine the genotypes from the data which makes the results slightly more accurate.
 You can choose to run Demuxalot_ with or without refinement:
 
+Demultiplex with Demuxalot
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. admonition:: |:stopwatch:| Expected Resource Usage
+  :class: note
+
+  ~2.5h using a total of 81Gb memory when using 32 threads for the full :ref:`Test Dataset <TestData>` which contains ~20,982 droplets of 13 multiplexed donors,
+
+
 .. tabs::
 
   .. tab:: With Refinement
@@ -71,43 +79,13 @@ You can choose to run Demuxalot_ with or without refinement:
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif python demuxalot.py \
+      singularity exec Demuxafy.sif python Demuxalot.py \
               -b $BARCODES \
               -a $BAM \
               -n $INDS \
               -v $VCF \
               -o $DEMUXALOT_OUTDIR \
               -r True
-
-    .. admonition:: HELP! It says my file/directory doesn't exist!
-      :class: dropdown
-
-      If you receive an error indicating that a file or directory doesn't exist but you are sure that it does, this is likely an issue arising from Singularity.
-      This is easy to fix.
-      The issue and solution are explained in detail in the :ref:`Notes About Singularity Images <Singularity-docs>`
-
-    If Demuxalot_ is successful, you will have these new files in your ``$DEMUXALOT_OUTDIR``:
-
-    .. code-block:: bash
-
-      /path/to/output/demuxalot
-      ├── assignments.tsv.gz
-      ├── likelihoods.tsv.gz
-      └── posterior_probabilities.tsv.gz
-
-  .. tab:: Without Refinement
-
-    This will run the first phase of Demuxalot_ only without any refinement:
-
-    .. code-block:: bash
-
-      singularity exec Demuxafy.sif python demuxalot.py \
-              -b $BARCODES \
-              -a $BAM \
-              -n $INDS \
-              -v $VCF \
-              -o $DEMUXALOT_OUTDIR \
-              -r False
 
     .. admonition:: HELP! It says my file/directory doesn't exist!
       :class: dropdown
@@ -128,6 +106,37 @@ You can choose to run Demuxalot_ with or without refinement:
       ├── posterior_probabilities_refined.tsv.gz
       └── posterior_probabilities.tsv.gz
 
+
+  .. tab:: Without Refinement
+
+    This will run the first phase of Demuxalot_ only without any refinement:
+
+    .. code-block:: bash
+
+      singularity exec Demuxafy.sif python Demuxalot.py \
+              -b $BARCODES \
+              -a $BAM \
+              -n $INDS \
+              -v $VCF \
+              -o $DEMUXALOT_OUTDIR \
+              -r False
+
+    .. admonition:: HELP! It says my file/directory doesn't exist!
+      :class: dropdown
+
+      If you receive an error indicating that a file or directory doesn't exist but you are sure that it does, this is likely an issue arising from Singularity.
+      This is easy to fix.
+      The issue and solution are explained in detail in the :ref:`Notes About Singularity Images <Singularity-docs>`
+
+    If Demuxalot_ is successful, you will have these new files in your ``$DEMUXALOT_OUTDIR``:
+
+    .. code-block:: bash
+
+      /path/to/output/demuxalot
+      ├── assignments.tsv.gz
+      ├── likelihoods.tsv.gz
+      └── posterior_probabilities.tsv.gz
+
 Additional details about outputs are available below in the :ref:`Demuxalot Results and Interpretation <demuxalot-results>`.
 
 
@@ -142,7 +151,7 @@ You can run this to get a fast and easy summary of your results by providing the
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif bash Demuxalot_summary.sh $DEMUXALOT_OUTDIR/assignments_refined.tsv.gz
+      singularity exec Demuxafy.sif bash demuxalot_summary.sh $DEMUXALOT_OUTDIR/assignments_refined.tsv.gz
 
 
     which will return:
@@ -201,36 +210,38 @@ You can run this to get a fast and easy summary of your results by providing the
       +-----------------+--------------+
       | Classification  | Assignment N |
       +=================+==============+
-      | 113_113         | 1334         |
+      | 113_113         | 1344         |
       +-----------------+--------------+
-      | 349_350         | 1458         |
+      | 349_350         | 1463         |
       +-----------------+--------------+
-      | 352_353         | 1607         |
+      | 352_353         | 1619         |
       +-----------------+--------------+
-      | 39_39           | 1297         |
+      | 39_39           | 1306         |
       +-----------------+--------------+
-      | 40_40           | 1078         |
+      | 40_40           | 1082         |
       +-----------------+--------------+
-      | 41_41           | 1127         |
+      | 41_41           | 1129         |
       +-----------------+--------------+
-      | 42_42           | 1419         |
+      | 42_42           | 1437         |
       +-----------------+--------------+
       | 43_43           | 1553         |
       +-----------------+--------------+
-      | 465_466         | 1094         |
+      | 465_466         | 1091         |
       +-----------------+--------------+
-      | 596_597         | 1255         |
+      | 596_597         | 1267         |
       +-----------------+--------------+
-      | 597_598         | 1517         |
+      | 597_598         | 1523         |
       +-----------------+--------------+
-      | 632_633         | 868          |
+      | 632_633         | 872          |
       +-----------------+--------------+
-      | 633_634         | 960          |
+      | 633_634         | 961          |
       +-----------------+--------------+
-      | 660_661         | 1362         |
+      | 660_661         | 1371         |
       +-----------------+--------------+
-      | doublet         | 3053         |
+      | doublet         | 2964         |
       +-----------------+--------------+
+
+
 
 
     or you can write it straight to a file:
@@ -253,25 +264,28 @@ Demuxalot Results and Interpretation
 After running the Demuxalot_ steps and summarizing the results, you will have a number of files from some of the intermediary steps. 
 These are the files that most users will find the most informative:
 
-  - ``assignments_refined.tsv.gz`` or ``assignments.tsv.gz``
+  - ``assignments.tsv.gz`` (and ``assignments_refined.tsv.gz`` if you indicated ``-r True``)
 
     - The droplet assignment for each barcode:
 
       +---------------------------+------------------+
       | BARCODE                   | 0                |
       +===========================+==================+
-      |                           |                  |
+      | AAACCTGAGATAGCAT-1        | 41_41            |
       +---------------------------+------------------+
-      |                           |                  |
+      | AAACCTGAGCAGCGTA-1        | 465_466          |
       +---------------------------+------------------+
-      |                           |                  |
+      | AAACCTGAGCGATGAC-1        | 113_113          |
       +---------------------------+------------------+
-      |                           |                  |
+      | AAACCTGAGCGTAGTG-1        | 349_350          |
       +---------------------------+------------------+
-      |                           |                  |
+      | AAACCTGAGGAGTTTA-1        | 632_633          |
+      +---------------------------+------------------+
+      | AAACCTGAGGCTCATT-1        | 39_39            |
       +---------------------------+------------------+
       | ...                       | ...              |
       +---------------------------+------------------+
+
 
   - ``likelihoods_refined.tsv.gz`` or ``likelihoods.tsv.gz``:
 

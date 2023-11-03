@@ -54,12 +54,17 @@ First, let's assign the variables that will be used to execute each step.
       BARCODES=/path/to/TestData4PipelineFull/test_dataset/outs/filtered_gene_bc_matrices/Homo_sapiens_GRCh38p10/barcodes.tsv
       BAM=/path/to/test_dataset/possorted_genome_bam.bam
       SCSPLIT_OUTDIR=/path/to/output/scscplit
-      N=14
+      N=13
       VCF=/path/to/TestData4PipelineFull/test_dataset.vcf ### optional
 
 
 Prepare Bam file
 ^^^^^^^^^^^^^^^^
+.. admonition:: |:stopwatch:| Expected Resource Usage
+  :class: note
+
+  ~7h using a total of 6.5Gb memory when using 8 threads for the full :ref:`Test Dataset <TestData>` which contains ~20,982 droplets of 13 multiplexed donors,
+
 First, you will need to prepare the bam file so that it only contains high quality, primarily mapped reads without any PCR duplicated reads.
 
 .. code-block:: bash
@@ -90,6 +95,11 @@ After running these bam preparation steps, you will have the following files in 
 
 Call Sample SNVs
 ^^^^^^^^^^^^^^^^
+.. admonition:: |:stopwatch:| Expected Resource Usage
+  :class: note
+
+  ~7h using a total of 6.5Gb memory when using 8 threads for the full :ref:`Test Dataset <TestData>` which contains ~20,982 droplets of 13 multiplexed donors,
+
 Next, you will need to identify SNV genotypes in the pooled bam.
 
 .. code-block:: bash
@@ -114,6 +124,11 @@ After running these SNV calling steps, you will have the following new files in 
 
 Demultiplex with ScSplit
 ^^^^^^^^^^^^^^^^^^^^^^^^
+.. admonition:: |:stopwatch:| Expected Resource Usage
+  :class: note
+
+  ~1h using a total of 32Gb memory when using 4 threads for the full :ref:`Test Dataset <TestData>` which contains ~20,982 droplets of 13 multiplexed donors,
+
 The prepared SNV genotypes and bam file can then be used to demultiplex and call genotypes in each cluster.
 
 .. code-block:: bash

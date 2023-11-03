@@ -70,7 +70,12 @@ First, let's assign the variables that will be used to execute each step.
 
 Popscle Pileup
 ^^^^^^^^^^^^^^
-First we will need to identify the number of reads from each allele at each SNP location:
+.. admonition:: |:stopwatch:| Expected Resource Usage
+  :class: note
+
+  ~3-4h using a total of 91Gb memory when using 5 threads for the full :ref:`Test Dataset <TestData>` which contains ~20,982 droplets of 13 multiplexed donors,
+
+First we will need to identify the number of reads from each allele at each SNP location.
 
 .. tabs::
 
@@ -123,7 +128,13 @@ Additional details about outputs are available below in the :ref:`Demuxlet Resul
 
 Popscle Demuxlet
 ^^^^^^^^^^^^^^^^
+.. admonition:: |:stopwatch:| Expected Resource Usage
+  :class: note
+
+  ~3min using a total of 7Gb memory when using 5 threads for the full :ref:`Test Dataset <TestData>` which contains ~20,982 droplets of 13 multiplexed donors,
+
 Once you have run ``popscle pileup``, you can demultiplex your samples:
+
 
 .. tabs::
 

@@ -9,9 +9,9 @@ parser <- ArgumentParser()
 
 # specify our desired options 
 # by default ArgumentParser will add an help option 
-parser$add_argument("-o", "--assign", required = TRUE, help="The dropulation assignment results.")
-parser$add_argument("-s", "--doublet", required = TRUE, type = "character", help = "The dropulation doublet calls.")
-parser$add_argument("-c", "--out", required = TRUE, type = "character", help = "Whether sctransform was used for normalization.")
+parser$add_argument("-o", "--assign", required = TRUE, help="The dropulation assignment results: assignments.tsv.gz.")
+parser$add_argument("-s", "--doublet", required = TRUE, type = "character", help = "The dropulation doublet calls: likelihoods.tsv.gz.")
+parser$add_argument("-c", "--out", required = TRUE, type = "character", help = "The file to  write the updated results to")
 
 # get command line options, if help option encountered print help and exit,
 # otherwise if options not found on command line then set defaults, 

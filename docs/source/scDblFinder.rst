@@ -45,6 +45,11 @@ This is the data that you will need to have prepare to run ScDblFinder_:
 
 Run ScDblFinder
 ----------------
+.. admonition:: :octicon:`stopwatch` Expected Resource Usage
+  :class: note
+
+  ~1min using a total of 3Gb memory when using 2 thread for the full :ref:`Test Dataset <TestData>` which contains ~20,982 droplets of 13 multiplexed donors,
+
 You can either run ScDblFinder_ with the wrapper script we have provided or you can run it manually if you would prefer to alter more parameters.
 
 .. tabs::
