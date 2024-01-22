@@ -23,7 +23,7 @@ However, :ref:`Souporcell <Souporcell-docs>` and :ref:`Vireo <Vireo-docs>` are a
 +--------------------------------------+------------------------------------------+------------------------------------------+------------------------------------------+
 |:ref:`Souporcell <Souporcell-docs>`   | .. centered:: |:heavy_multiplication_x:| | .. centered:: |:heavy_check_mark:|       | .. centered:: |:heavy_check_mark:|       |
 +--------------------------------------+------------------------------------------+------------------------------------------+------------------------------------------+
-|:ref:`Vireo <Vireo-docs>`             | .. centered:: |:heavy_multiplication_x:| | .. centered:: |:heavy_check_mark:|       | .. centered:: |:heavy_check_mark::|      |
+|:ref:`Vireo <Vireo-docs>`             | .. centered:: |:heavy_multiplication_x:| | .. centered:: |:heavy_check_mark:|       | .. centered:: |:heavy_check_mark:|       |
 +--------------------------------------+------------------------------------------+------------------------------------------+------------------------------------------+
 
 We highly recommend using :ref:`Souporcell <Souporcell-docs>` if only to estimate the percentage of ambient RNA in your pool.

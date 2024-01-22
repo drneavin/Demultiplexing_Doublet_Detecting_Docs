@@ -188,7 +188,7 @@ In addition, we provide an example for filtering the single cell matrix to a sub
       import read10x
 
       ### Set up parameters and variables ###
-      counts_matrix = "/path/to/counts/matrix.mtx" ## Change this based on the path on your system
+      counts_matrix = "/path/to/counts/" ## Change this based on the path on your system
       outdir = "/path/to/doublet/detection/outdir" ## Change this based on the path on your system
 
 

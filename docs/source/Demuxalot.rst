@@ -79,7 +79,7 @@ Demultiplex with Demuxalot
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif python Demuxalot.py \
+      singularity exec Demuxafy.sif Demuxalot.py \
               -b $BARCODES \
               -a $BAM \
               -n $INDS \
@@ -113,7 +113,7 @@ Demultiplex with Demuxalot
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif python Demuxalot.py \
+      singularity exec Demuxafy.sif Demuxalot.py \
               -b $BARCODES \
               -a $BAM \
               -n $INDS \
