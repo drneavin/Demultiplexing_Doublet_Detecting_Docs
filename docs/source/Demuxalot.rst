@@ -195,7 +195,7 @@ You can run this to get a fast and easy summary of your results by providing the
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif bash Demuxalot_summary.sh $DEMUXLET_OUTDIR/assignments_refined.tsv.gz > $DEMUXLET_OUTDIR/demuxalot_summary.tsv
+      singularity exec Demuxafy.sif bash Demuxalot_summary.sh $DEMUXALOT_OUTDIR/assignments_refined.tsv.gz > $DEMUXALOT_OUTDIR/demuxalot_summary.tsv
 
 
   .. tab:: Without Refinement
@@ -248,7 +248,7 @@ You can run this to get a fast and easy summary of your results by providing the
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif bash Demuxalot_summary.sh $DEMUXLET_OUTDIR/assignments.tsv.gz > $DEMUXLET_OUTDIR/demuxalot_summary.tsv
+      singularity exec Demuxafy.sif bash Demuxalot_summary.sh $DEMUXALOT_OUTDIR/assignments.tsv.gz > $DEMUXALOT_OUTDIR/demuxalot_summary.tsv
 
 
 
