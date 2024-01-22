@@ -89,6 +89,7 @@ We built the required softwares into the singularity image so you can run these 
 Filter for Common SNPs
 ^^^^^^^^^^^^^^^^^^^^^^
 First, filter the SNP genotypes for common SNPs - 5% minor allele frequency should work for most datasets but you can change this to another minor allele frequency if you would like.
+We assume that you have already filtered imputed SNPs for quality based on the imputation method used.
 
 .. code-block:: bash
 
@@ -99,10 +100,28 @@ Where ``$OUTDIR`` is the output directory where you want to save the results and
 Filter for SNPs overlapping Exons
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Next, filter for the SNPs that overlap exons.
+The below command uses `vcftools`` with a `bed file <https://en.wikipedia.org/wiki/BED_(file_format)>` that contains the locations of each exon (or gene if you prefer) across the genome. 
+
 
 .. NOTE::
 
   You can get an exon bed using the `UCSC table browser <https://genome.ucsc.edu/cgi-bin/hgTables>`__ (see instructions `here <https://www.biostars.org/p/93011/>`__) and we have also provided bed files for :download:`hg19 <../../references/hg19exonsUCSC.bed>` and :download:`hg38 <../../references/hg38exonsUCSC.bed>`
+
+  Here is an example of what the head of a bed file might look like and you can find a description of the file type `here <https://en.wikipedia.org/wiki/BED_(file_format)>`.
+  The only required columns are the first three that contain the location of the exon:
+
+  .. code-block: bash
+
+    1       11868   12227   ENST00000456328.2_exon_0_0_chr1_11869_f 0       +
+    1       12612   12721   ENST00000456328.2_exon_1_0_chr1_12613_f 0       +
+    1       13220   14409   ENST00000456328.2_exon_2_0_chr1_13221_f 0       +
+    1       12009   12057   ENST00000450305.2_exon_0_0_chr1_12010_f 0       +
+    1       12178   12227   ENST00000450305.2_exon_1_0_chr1_12179_f 0       +
+    1       12612   12697   ENST00000450305.2_exon_2_0_chr1_12613_f 0       +
+    1       12974   13052   ENST00000450305.2_exon_3_0_chr1_12975_f 0       +
+    1       13220   13374   ENST00000450305.2_exon_4_0_chr1_13221_f 0       +
+    1       13452   13670   ENST00000450305.2_exon_5_0_chr1_13453_f 0       +
+    1       14403   14501   ENST00000488147.1_exon_0_0_chr1_14404_r 0       -
 
 .. code-block:: bash
 
@@ -115,6 +134,8 @@ Next, filter for the SNPs that overlap exons.
     --recode-INFO-all \
     --out $OUTDIR/common_maf0.05_exon_filtered
 
+
+We typically expect ~250k SNPs to remain following this filtering step.
 
 
 .. _TestData:

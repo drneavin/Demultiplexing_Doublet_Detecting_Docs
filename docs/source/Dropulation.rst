@@ -82,6 +82,11 @@ Bam Annotation
 You will most likely need to annotate your bam using ``TagReadWithGeneFunction`` (unless you have already annotated your bam with this function).
 Please note that the ``\`` at the end of each line is purely for readability to put a separate parameter argument on each line.
 
+.. admonition:: note
+
+  If you are submitting this job to an cluster to run, you may have to bind the ``$TMPDIR`` directory used by your cluster in the singularity command.
+  This will be slightly different depending on your cluster configuration.
+
   .. code-block:: bash
 
     singularity exec Demuxafy.sif TagReadWithGeneFunction \
@@ -113,6 +118,11 @@ First, we will identify the most likely singlet donor for each droplet.
 
   Please change the cell barcode and molecular barcode tags as necessary. 
   For 10x experiments processed with cellranger, this should be 'CB' for the ``CELL_BARCODE_TAG`` and 'UB' for the ``MOLECULAR_BARCODE_TAG``
+
+.. admonition:: note
+
+  If you are submitting this job to an cluster to run, you may have to bind the ``$TMPDIR`` directory used by your cluster in the singularity command.
+  This will be slightly different depending on your cluster configuration.
 
 Please note that the ``\`` at the end of each line is purely for readability to put a separate parameter argument on each line.
 
@@ -155,6 +165,11 @@ Next, we will identify the likelihoods of each droplet being a doublet.
 
   Please change the cell barcode and molecular barcode tags as necessary. 
   For 10x experiments processed with cellranger, this should be 'CB' for the ``CELL_BARCODE_TAG`` and 'UB' for the ``MOLECULAR_BARCODE_TAG``
+
+.. admonition:: note
+
+  If you are submitting this job to an cluster to run, you may have to bind the ``$TMPDIR`` directory used by your cluster in the singularity command.
+  This will be slightly different depending on your cluster configuration.
 
 Please note that the ``\`` at the end of each line is purely for readability to put a separate parameter argument on each line.
 
