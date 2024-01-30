@@ -145,7 +145,7 @@ Test Dataset
 In addition, we have provided a test dataset that you can use.
 Find the data that can be downloaded below along with some information about the data.
 The data have been aligned to GRCh38 so for running.
-If you are running souporcell, you will needa a fasta file, which you can download from `UCSC FTP <https://asia.ensembl.org/info/data/ftp/index.html>`__
+If you are running souporcell, you will needa a fasta file, which you can download from `Ensembl FTP <https://asia.ensembl.org/info/data/ftp/index.html>`__
 
 .. admonition:: Information
   :class: important
