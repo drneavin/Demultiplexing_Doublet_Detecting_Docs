@@ -205,7 +205,7 @@ We've provided an example command for each of these differing amounts of donor S
 
         .. code-block::
 
-          singularity exec Demuxafy.sif bcftools view $VCF -R $VIREO_OUTDIR/cellSNP.base.vcf.gz -s sample1,sample2 -Ov -o $VIREO_OUTDIR/donor_subset.vcf -N $N
+          singularity exec Demuxafy.sif bcftools view $VCF -R $VIREO_OUTDIR/cellSNP.base.vcf.gz -s sample1,sample2 -Ov -o $VIREO_OUTDIR/donor_subset.vcf
 
         Alternatively, if you have the individuals from the pool in a file with each individuals separated by a new line (``individual_file.tsv``), then you can use ``-S individual_file.tsv``.
 
