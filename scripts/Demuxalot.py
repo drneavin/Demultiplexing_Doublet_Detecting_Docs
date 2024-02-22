@@ -50,7 +50,6 @@ likelihoods, posterior_probabilities = Demultiplexer.predict_posteriors(
     snps,
     genotypes=genotypes,
     barcode_handler=barcode_handler,
-    only_singlets=False
 )
 
 print("writing unrefined results")
@@ -71,7 +70,6 @@ if args.refine:
         snps,
         genotypes=refined_genotypes,
         barcode_handler=barcode_handler,
-        only_singlets=False,
     )
 
     print("writing second set of output")
