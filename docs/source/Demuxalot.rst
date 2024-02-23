@@ -75,7 +75,7 @@ Demultiplex with Demuxalot
 
   .. tab:: With Refinement
 
-    This will run the first phase of Demuxalot_ as well as the subsequent refinement:
+    This will run the first phase of Demuxalot_ as well as the subsequent refinement, provided an appropriate thread number (``$THREADS``) for your system:
 
     .. code-block:: bash
 
@@ -85,6 +85,7 @@ Demultiplex with Demuxalot
               -n $INDS \
               -v $VCF \
               -o $DEMUXALOT_OUTDIR \
+              -p $THREADS \
               -r True
 
     .. admonition:: HELP! It says my file/directory doesn't exist!
@@ -93,6 +94,8 @@ Demultiplex with Demuxalot
       If you receive an error indicating that a file or directory doesn't exist but you are sure that it does, this is likely an issue arising from Singularity.
       This is easy to fix.
       The issue and solution are explained in detail in the :ref:`Notes About Singularity Images <Singularity-docs>`
+
+    Setting ``$THREADS`` to ``-1`` results in Demuxalot_ using all available CPUs/threads.
 
     If Demuxalot_ is successful, you will have these new files in your ``$DEMUXALOT_OUTDIR``:
 
@@ -109,7 +112,7 @@ Demultiplex with Demuxalot
 
   .. tab:: Without Refinement
 
-    This will run the first phase of Demuxalot_ only without any refinement:
+    This will run the first phase of Demuxalot_ only without any refinement, provided an appropriate thread number (``$THREADS``) for your system:
 
     .. code-block:: bash
 
@@ -119,6 +122,7 @@ Demultiplex with Demuxalot
               -n $INDS \
               -v $VCF \
               -o $DEMUXALOT_OUTDIR \
+              -p $THREADS \
               -r False
 
     .. admonition:: HELP! It says my file/directory doesn't exist!
@@ -127,6 +131,8 @@ Demultiplex with Demuxalot
       If you receive an error indicating that a file or directory doesn't exist but you are sure that it does, this is likely an issue arising from Singularity.
       This is easy to fix.
       The issue and solution are explained in detail in the :ref:`Notes About Singularity Images <Singularity-docs>`
+
+    Setting ``$THREADS`` to ``-1`` results in Demuxalot_ using all available CPUs/threads.
 
     If Demuxalot_ is successful, you will have these new files in your ``$DEMUXALOT_OUTDIR``:
 
