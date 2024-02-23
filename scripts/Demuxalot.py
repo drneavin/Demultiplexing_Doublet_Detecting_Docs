@@ -16,6 +16,7 @@ parser.add_argument("-n", "--indiv_file", required = True, default = None, help 
 parser.add_argument("-v", "--vcf", required = True, default = None, help = "The vcf file that has the SNP genotypes for each donor in the pool.")
 parser.add_argument("-o", "--outdir", required = True, default = None, help = "The output directory.")
 parser.add_argument("-r", "--refine", required = True, default = True, help = "Whether to run genotype refinement.")
+parser.add_argument("-p", "--nproc", required = False, type = int, default = 1, help = "(max.) number of parallel jobs; -1: number of CPU cores/threads; default: 1.")
 args = parser.parse_args()
 
 print("read arguments")
@@ -42,6 +43,7 @@ snps = count_snps(
     bamfile_location = args.bamfile,
     chromosome2positions=genotypes.get_chromosome2positions(),
     barcode_handler=barcode_handler, 
+    joblib_n_jobs=args.nproc,
 )
 
 print("estimating posterior probs and likelihoods")
