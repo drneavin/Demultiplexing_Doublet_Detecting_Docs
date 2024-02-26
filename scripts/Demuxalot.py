@@ -3,6 +3,7 @@
 import numpy as np
 import demuxalot
 from demuxalot import Demultiplexer, BarcodeHandler, ProbabilisticGenotypes, count_snps
+from demuxalot.cellranger_specific import parse_read
 import pandas as pd
 import argparse
 
@@ -16,6 +17,8 @@ parser.add_argument("-n", "--indiv_file", required = True, default = None, help 
 parser.add_argument("-v", "--vcf", required = True, default = None, help = "The vcf file that has the SNP genotypes for each donor in the pool.")
 parser.add_argument("-o", "--outdir", required = True, default = None, help = "The output directory.")
 parser.add_argument("-r", "--refine", required = True, default = True, help = "Whether to run genotype refinement.")
+parser.add_argument("-c", "--celltag", required = False, default = "CB", help = "optional: SAM tag used for cell barcodes; default: `CB`. ")
+parser.add_argument("-u", "--umitag", required = False, default = "UB", help = "optional: SAM tag used for UMIs; default: `UB`.")
 args = parser.parse_args()
 
 print("read arguments")
@@ -36,12 +39,14 @@ genotypes.add_vcf(args.vcf)
 
 # Load barcodes
 print("loading barcodes")
-barcode_handler = BarcodeHandler.from_file(args.barcodes)
+barcode_handler = BarcodeHandler.from_file(args.barcodes, tag=args.celltag)
 
+parse_read_custom = lambda read: parse_read(read, umi_tag = args.umitag)
 snps = count_snps(
     bamfile_location = args.bamfile,
     chromosome2positions=genotypes.get_chromosome2positions(),
     barcode_handler=barcode_handler, 
+    parse_read=parse_read_custom,
 )
 
 print("estimating posterior probs and likelihoods")

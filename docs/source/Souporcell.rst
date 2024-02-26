@@ -51,6 +51,16 @@ This is the data that you will need to have prepare to run Souporcell_:
   - Output directory (``$SOUPORCELL_OUTDIR``)
 
 
+.. admonition:: Optional
+
+    - The SAM tag used in the Bam file to annotate the aligned single cell reads with their corresponding cell barcode (``$CELL_TAG``)
+
+      - If not specified, _Souporcell defaults to using ``CB``.
+
+    - The SAM tag used in the Bam file to annotate the aligned single cell reads with their corresponding unique molecular identifier (UMI) (``$UMI_TAG``)
+
+      - If not specified, _Souporcell defaults to using ``UB``.
+
 
 Run Souporcell
 ---------------
@@ -91,7 +101,7 @@ You can run Souporcell_ with or without reference SNP genotypes - follow the ins
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif souporcell_pipeline.py -i $BAM -b $BARCODES -f $FASTA -t $THREADS -o $SOUPORCELL_OUTDIR -k $N --common_variants $VCF
+      singularity exec Demuxafy.sif souporcell_pipeline.py -i $BAM -b $BARCODES -f $FASTA -t $THREADS -o $SOUPORCELL_OUTDIR ${CELL_TAG:+--cell_tag $CELL_TAG} ${UMI_TAG:+--umi_tag $UMI_TAG} -k $N --common_variants $VCF
 
     .. admonition:: HELP! It says my file/directory doesn't exist!
       :class: dropdown
@@ -106,7 +116,7 @@ You can run Souporcell_ with or without reference SNP genotypes - follow the ins
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif souporcell_pipeline.py -i $BAM -b $BARCODES -f $FASTA -t $THREADS -o $SOUPORCELL_OUTDIR -k $N --known_genotypes $VCF --known_genotypes_sample_names donor1 donor donor3 donor4
+      singularity exec Demuxafy.sif souporcell_pipeline.py -i $BAM -b $BARCODES -f $FASTA -t $THREADS -o $SOUPORCELL_OUTDIR ${CELL_TAG:+--cell_tag $CELL_TAG} ${UMI_TAG:+--umi_tag $UMI_TAG} -k $N --known_genotypes $VCF --known_genotypes_sample_names donor1 donor donor3 donor4
 
     .. admonition:: HELP! It says my file/directory doesn't exist!
       :class: dropdown
