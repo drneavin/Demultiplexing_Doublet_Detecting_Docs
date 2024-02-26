@@ -42,6 +42,17 @@ This is the data that you will need to have prepare to run Freemuxlet_:
   - Output directory (``$FREEMUXLET_OUTDIR``)
 
 
+.. admonition:: Optional
+
+    - The SAM tag used in the Bam file to annotate the aligned single cell reads with their corresponding cell barcode (``$CELL_TAG``)
+
+      - If not specified, _Freemuxlet defaults to using ``CB``.
+
+    - The SAM tag used in the Bam file to annotate the aligned single cell reads with their corresponding unique molecular identifier (UMI) (``$UMI_TAG``)
+
+      - If not specified, _Freemuxlet defaults to using ``UB``.
+
+
 
 
 Run Freemuxlet
@@ -80,6 +91,8 @@ First we will need to identify the number of reads from each allele at each of t
   --sam $BAM \
   --vcf $VCF \
   --group-list $BARCODES \
+  ${CELL_TAG:+--tag-group $CELL_TAG} \
+  ${UMI_TAG:+--tag-UMI $UMI_TAG} \
   --out $FREEMUXLET_OUTDIR/pileup
 
 .. admonition:: HELP! It says my file/directory doesn't exist!
@@ -117,7 +130,7 @@ Once you have run ``popscle pileup``, you can demultiplex your samples with Free
 
 .. code-block:: bash
 
-  singularity exec Demuxafy.sif popscle freemuxlet --plp $FREEMUXLET_OUTDIR/pileup --out $FREEMUXLET_OUTDIR/freemuxlet --group-list $BARCODES --nsample $N
+  singularity exec Demuxafy.sif popscle freemuxlet --plp $FREEMUXLET_OUTDIR/pileup --out $FREEMUXLET_OUTDIR/freemuxlet --group-list $BARCODES ${CELL_TAG:+--tag-group $CELL_TAG} ${UMI_TAG:+--tag-UMI $UMI_TAG} --nsample $N
 
 .. admonition:: HELP! It says my file/directory doesn't exist!
   :class: dropdown

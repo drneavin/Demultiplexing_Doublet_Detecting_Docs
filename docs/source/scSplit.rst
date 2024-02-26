@@ -38,6 +38,13 @@ This is the data that you will need to have prepared to run ScSplit_:
   - Output directory (``$SCSPLIT_OUTDIR``)
 
 
+.. admonition:: Optional
+
+    - The SAM tag used in the Bam file to annotate the aligned single cell reads with their corresponding cell barcode (``$CELL_TAG``)
+
+      - If not specified, _ScSplit defaults to using ``CB``.
+
+
 Run ScSplit
 -----------
 First, let's assign the variables that will be used to execute each step.
@@ -142,7 +149,7 @@ The prepared SNV genotypes and bam file can then be used to demultiplex and call
 
 .. code-block:: bash
 
-  singularity exec Demuxafy.sif scSplit count -c $VCF -v $SCSPLIT_OUTDIR/freebayes_var_qual30.recode.vcf -i $SCSPLIT_OUTDIR/filtered_bam_dedup_sorted.bam -b $BARCODES -r $SCSPLIT_OUTDIR/ref_filtered.csv -a $SCSPLIT_OUTDIR/alt_filtered.csv -o $SCSPLIT_OUTDIR
+  singularity exec Demuxafy.sif scSplit count -c $VCF -v $SCSPLIT_OUTDIR/freebayes_var_qual30.recode.vcf -i $SCSPLIT_OUTDIR/filtered_bam_dedup_sorted.bam -b $BARCODES ${CELL_TAG:+-t $CELL_TAG} -r $SCSPLIT_OUTDIR/ref_filtered.csv -a $SCSPLIT_OUTDIR/alt_filtered.csv -o $SCSPLIT_OUTDIR
   singularity exec Demuxafy.sif scSplit run -r $SCSPLIT_OUTDIR/ref_filtered.csv -a $SCSPLIT_OUTDIR/alt_filtered.csv -n $N -o $SCSPLIT_OUTDIR
   singularity exec Demuxafy.sif scSplit genotype -r $SCSPLIT_OUTDIR/ref_filtered.csv -a $SCSPLIT_OUTDIR/alt_filtered.csv -p $SCSPLIT_OUTDIR/scSplit_P_s_c.csv -o $SCSPLIT_OUTDIR
 

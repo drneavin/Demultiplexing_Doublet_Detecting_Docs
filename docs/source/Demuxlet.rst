@@ -46,6 +46,14 @@ This is the data that you will need to have prepare to run Demuxlet_:
 
       - For example, this is the :download:`individual file <_download_files/Individuals.txt>` for our example dataset
 
+    - The SAM tag used in the Bam file to annotate the aligned single cell reads with their corresponding cell barcode (``$CELL_TAG``)
+
+      - If not specified, _Demuxlet defaults to using ``CB``.
+
+    - The SAM tag used in the Bam file to annotate the aligned single cell reads with their corresponding unique molecular identifier (UMI) (``$UMI_TAG``)
+
+      - If not specified, _Demuxlet defaults to using ``UB``.
+
 
 Run Demuxlet
 ------------
@@ -89,6 +97,8 @@ First we will need to identify the number of reads from each allele at each SNP 
       --sam $BAM \
       --vcf $VCF \
       --group-list $BARCODES \
+      ${CELL_TAG:+--tag-group $CELL_TAG} \
+      ${UMI_TAG:+--tag-UMI $UMI_TAG} \
       --out $DEMUXLET_OUTDIR/pileup \
       --sm-list $INDS
 
@@ -108,7 +118,7 @@ First we will need to identify the number of reads from each allele at each SNP 
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif popscle dsc-pileup --sam $BAM --vcf $VCF --group-list $BARCODES --out $DEMUXLET_OUTDIR/pileup
+      singularity exec Demuxafy.sif popscle dsc-pileup --sam $BAM --vcf $VCF --group-list $BARCODES ${CELL_TAG:+--tag-group $CELL_TAG} ${UMI_TAG:+--tag-UMI $UMI_TAG} --out $DEMUXLET_OUTDIR/pileup
 
     .. admonition:: HELP! It says my file/directory doesn't exist!
       :class: dropdown
@@ -149,7 +159,7 @@ Once you have run ``popscle pileup``, you can demultiplex your samples:
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif popscle demuxlet --plp $DEMUXLET_OUTDIR/pileup --vcf $VCF --field $FIELD --group-list $BARCODES --geno-error-coeff 1.0 --geno-error-offset 0.05 --out $DEMUXLET_OUTDIR/demuxlet --sm-list $INDS
+      singularity exec Demuxafy.sif popscle demuxlet --plp $DEMUXLET_OUTDIR/pileup --vcf $VCF --field $FIELD --group-list $BARCODES ${CELL_TAG:+--tag-group $CELL_TAG} ${UMI_TAG:+--tag-UMI $UMI_TAG} --geno-error-coeff 1.0 --geno-error-offset 0.05 --out $DEMUXLET_OUTDIR/demuxlet --sm-list $INDS
 
     .. admonition:: HELP! It says my file/directory doesn't exist!
       :class: dropdown
@@ -166,7 +176,7 @@ Once you have run ``popscle pileup``, you can demultiplex your samples:
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif popscle demuxlet --plp $DEMUXLET_OUTDIR/pileup --vcf $VCF --field $FIELD --group-list $BARCODES --geno-error-coeff 1.0 --geno-error-offset 0.05 --out $DEMUXLET_OUTDIR/demuxlet
+      singularity exec Demuxafy.sif popscle demuxlet --plp $DEMUXLET_OUTDIR/pileup --vcf $VCF --field $FIELD --group-list $BARCODES ${CELL_TAG:+--tag-group $CELL_TAG} ${UMI_TAG:+--tag-UMI $UMI_TAG} --geno-error-coeff 1.0 --geno-error-offset 0.05 --out $DEMUXLET_OUTDIR/demuxlet
 
     .. admonition:: HELP! It says my file/directory doesn't exist!
       :class: dropdown
