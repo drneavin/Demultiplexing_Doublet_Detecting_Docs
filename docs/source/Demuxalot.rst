@@ -40,6 +40,15 @@ This is the data that you will need to have prepare to run Demuxalot_:
 
       - For example, this is the :download:`individual file <_download_files/Individuals.txt>` for our example dataset
 
+.. admonition:: Optional
+
+    - The SAM tag used in the Bam file to annotate the aligned single cell reads with their corresponding cell barcode (``$CELL_TAG``)
+
+      - If not specified, _Demuxalot defaults to using ``CB`` as that flag is used by Cell Ranger.
+
+    - The SAM tag used in the Bam file to annotate the aligned single cell reads with their corresponding unique molecular identifier (UMI) (``$UMI_TAG``)
+
+      - If not specified, _Demuxalot defaults to using ``UB`` as that flag is used by Cell Ranger.
 
 
 Run Demuxalot
@@ -85,6 +94,8 @@ Demultiplex with Demuxalot
               -n $INDS \
               -v $VCF \
               -o $DEMUXALOT_OUTDIR \
+              ${CELL_TAG:+-c $CELL_TAG} \
+              ${UMI_TAG:+-u $UMI_TAG} \
               -r True
 
     .. admonition:: HELP! It says my file/directory doesn't exist!

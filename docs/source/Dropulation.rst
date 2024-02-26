@@ -51,6 +51,17 @@ This is the data that you will need to have prepare to run Dropulation_:
     - For example, this is the :download:`individual file <_download_files/Individuals.txt>` for our example dataset
 
 
+.. admonition:: Optional
+
+    - The SAM tag used in the Bam file to annotate the aligned single cell reads with their corresponding cell barcode (``$CELL_TAG``)
+
+      - If not specified, _Demuxlet defaults to using ``XC``.
+
+    - The SAM tag used in the Bam file to annotate the aligned single cell reads with their corresponding unique molecular identifier (UMI) (``$UMI_TAG``)
+
+      - If not specified, _Demuxlet defaults to using ``XM``.
+
+
 Run Dropulation
 -----------------
 First, let's assign the variables that will be used to execute each step.
@@ -70,6 +81,8 @@ First, let's assign the variables that will be used to execute each step.
       DROPULATION_OUTDIR=/path/to/output/dropulation
       INDS=/path/to/TestData4PipelineFull/donor_list.txt
       GTF=/path/to/genes.gtf
+      CELL_TAG=CB  # default: XC
+      UMI_TAG=UB  # default: XM
 
 
 Bam Annotation
@@ -113,12 +126,6 @@ Dropulation Assignment
 
 First, we will identify the most likely singlet donor for each droplet.
 
-.. admonition:: Note
-  :class: note
-
-  Please change the cell barcode and molecular barcode tags as necessary. 
-  For 10x experiments processed with cellranger, this should be 'CB' for the ``CELL_BARCODE_TAG`` and 'UB' for the ``MOLECULAR_BARCODE_TAG``
-
 .. admonition:: note
 
   If you are submitting this job to an cluster to run, you may have to bind the ``$TMPDIR`` directory used by your cluster in the singularity command.
@@ -133,8 +140,8 @@ Please note that the ``\`` at the end of each line is purely for readability to 
             --OUTPUT $DROPULATION_OUTDIR/assignments.tsv.gz \
             --VCF $VCF \
             --SAMPLE_FILE $INDS \
-            --CELL_BARCODE_TAG 'CB' \
-            --MOLECULAR_BARCODE_TAG 'UB' \
+            ${CELL_TAG:+--CELL_BARCODE_TAG $CELL_TAG} \
+            ${UMI_TAG:+--MOLECULAR_BARCODE_TAG $UMI_TAG} \
             --VCF_OUTPUT $DROPULATION_OUTDIR/assignment.vcf \
             --MAX_ERROR_RATE 0.05
 
@@ -160,12 +167,6 @@ Dropulation Doublet
 
 Next, we will identify the likelihoods of each droplet being a doublet.
 
-.. admonition:: Note
-  :class: note
-
-  Please change the cell barcode and molecular barcode tags as necessary. 
-  For 10x experiments processed with cellranger, this should be 'CB' for the ``CELL_BARCODE_TAG`` and 'UB' for the ``MOLECULAR_BARCODE_TAG``
-
 .. admonition:: note
 
   If you are submitting this job to an cluster to run, you may have to bind the ``$TMPDIR`` directory used by your cluster in the singularity command.
@@ -179,8 +180,8 @@ Please note that the ``\`` at the end of each line is purely for readability to 
             --INPUT_BAM $DROPULATION_OUTDIR/possorted_genome_bam_dropulation_tag.bam \
             --OUTPUT $DROPULATION_OUTDIR/likelihoods.tsv.gz \
             --VCF $VCF \
-            --CELL_BARCODE_TAG 'CB' \
-            --MOLECULAR_BARCODE_TAG 'UB' \
+            ${CELL_TAG:+--CELL_BARCODE_TAG $CELL_TAG} \
+            ${UMI_TAG:+--MOLECULAR_BARCODE_TAG $UMI_TAG} \
             --SINGLE_DONOR_LIKELIHOOD_FILE $DROPULATION_OUTDIR/assignments.tsv.gz \
             --SAMPLE_FILE $INDS \
             --MAX_ERROR_RATE 0.05
