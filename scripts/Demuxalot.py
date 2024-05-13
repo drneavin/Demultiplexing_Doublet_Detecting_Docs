@@ -5,6 +5,8 @@ import demuxalot
 from demuxalot import Demultiplexer, BarcodeHandler, ProbabilisticGenotypes, count_snps
 import pandas as pd
 import argparse
+import subprocess
+
 
 print("loaded packages")
 
@@ -20,6 +22,13 @@ args = parser.parse_args()
 
 print("read arguments")
 
+
+print("checking genome nomenclature for vcf and bam files.")
+
+return_code = subprocess.run("/directflow/SCCGGroupShare/projects/DrewNeavin/Demultiplex_Benchmark/Demultiplexing_Doublet_Detecting_Docs/scripts/compare_vcf_bam_genome.sh " + args.bamfile + " " + args.vcf, shell = True).returncode
+
+if return_code != 0:
+    exit(0)
 
 
 ### Load in file with individual IDs as list

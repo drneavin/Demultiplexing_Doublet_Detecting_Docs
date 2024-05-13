@@ -65,7 +65,16 @@ Prepare Bam file
 
   ~7h using a total of 6.5Gb memory when using 8 threads for the full :ref:`Test Dataset <TestData>` which contains ~20,982 droplets of 13 multiplexed donors,
 
-First, you will need to prepare the bam file so that it only contains high quality, primarily mapped reads without any PCR duplicated reads.
+First, let's check to make sure that the bam file and vcf file are on the same reference for matching chromosome encoding (ie UCSC = hg38 = chr1, chr2, chr3... vs ENSEMBL/NCBI = GRCh38 = 1, 2, 3...)
+
+.. code-block:: bash
+
+  singularity exec Demuxafy.sif compare_vcf_bam_genome.sh $BAM $VCF
+
+If you receive an error, you will have to standardise the genome encoding so the files match before continuing.
+
+
+you will need to prepare the bam file so that it only contains high quality, primarily mapped reads without any PCR duplicated reads.
 
 .. code-block:: bash
 
