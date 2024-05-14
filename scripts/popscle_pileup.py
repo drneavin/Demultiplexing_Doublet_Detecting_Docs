@@ -6,7 +6,7 @@ import subprocess
 
 parser = argparse.ArgumentParser(
     description="wrapper for execution of demuxlet and freemuxlet popscle pileup.")
-parser.add_argument("--bam", required = True, help = "Input SAM/BAM/CRAM file. Must be sorted by coordinates and indexed.")
+parser.add_argument("--sam", required = True, help = "Input SAM/BAM/CRAM file. Must be sorted by coordinates and indexed.")
 parser.add_argument("--vcf", required = True,  help = "Input VCF/BCF file, containing the AC and AN field.")
 parser.add_argument("--out", required = True, help = "Output file prefix.")
 parser.add_argument("--tag-group", required = False, default = 'CB', help = "File containing a filtered list of droplet barcodes. This may be used if you want to use a filtered list of barcodes for doublet detection (ie need to remove droplets that are empty or high in ambient RNA).")
@@ -56,7 +56,7 @@ else:
 
 print("Running popscle pileup.")
 
-subprocess.run("popscle pileup --bam " + args.bam + 
+subprocess.run("popscle pileup --sam " + args.bam + 
                " --vcf " + args.vcf + 
                " --out " + args.out + 
                " --tag-group " + args.tag_group + 

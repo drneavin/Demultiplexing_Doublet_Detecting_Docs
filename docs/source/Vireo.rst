@@ -84,12 +84,12 @@ Please note that the ``\`` at the end of each line is purely for readability to 
 
 .. code-block:: bash
 
-  singularity exec Demuxafy.sif cellsnp-lite \
+  singularity exec Demuxafy.sif cellsnp_pileup.py \
     -s $BAM \
     -b $BARCODES \
     -O $VIREO_OUTDIR \
     -R $VCF \
-    -p 20 \
+    -p 20 \ ## number of parallel processors
     --minMAF 0.1 \
     --minCOUNT 20 \
     --gzip 

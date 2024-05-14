@@ -128,7 +128,7 @@ Please note that the ``\`` at the end of each line is purely for readability to 
 
 .. code-block:: bash
 
-  singularity exec Demuxafy.sif AssignCellsToSamples --CELL_BC_FILE $BARCODES \
+  singularity exec Demuxafy.sif Dropulation_AssignCellsToSamples.py --CELL_BC_FILE $BARCODES \
             --INPUT_BAM $DROPULATION_OUTDIR/possorted_genome_bam_dropulation_tag.bam \
             --OUTPUT $DROPULATION_OUTDIR/assignments.tsv.gz \
             --VCF $VCF \

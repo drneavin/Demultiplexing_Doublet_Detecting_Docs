@@ -76,7 +76,11 @@ First we will need to identify the number of reads from each allele at each of t
 
 .. code-block:: bash
 
-  singularity exec Demuxafy.sif popscle dsc-pileup --sam $BAM --vcf $VCF --group-list $BARCODES --out $FREEMUXLET_OUTDIR/pileup
+  singularity exec Demuxafy.sif popscle_pileup.py \
+  --sam $BAM \
+  --vcf $VCF \
+  --group-list $BARCODES \
+  --out $FREEMUXLET_OUTDIR/pileup
 
 .. admonition:: HELP! It says my file/directory doesn't exist!
   :class: dropdown

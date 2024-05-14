@@ -322,6 +322,16 @@ In addition, we provide an example for filtering the single cell matrix to a sub
 
       summary.to_csv(os.path.join(outdir,'scrublet_summary.tsv'), sep = "\t", index = False)
 
+  .. admonition:: HELP! I'm getting an error about 'rdist'?
+    :class: dropdown
+
+    If you receive an error similar to the following:
+
+    ```
+    RuntimeError: cannot cache function 'rdist': no locator available for file '/opt/conda/envs/py37/lib/python3.7/site-packages/umap/layouts.py'
+    ```
+
+    you may have to set the ``NUMBA_CACHE_DIR`` variable
 
 
 .. _scrublet-results:

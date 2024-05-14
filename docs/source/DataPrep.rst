@@ -77,7 +77,10 @@ For 1000G, use the instructions at the above link to access the data per your pr
 Preparing your own SNP Genotype Data
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-It is best to filter the SNP genotypes for common SNPs (generally > 1% or > 5% minor allele frequency) that overlap exons.
+It is best to filter the SNP genotypes for common SNPs (generally > 1% or > 5% minor allele frequency) that overlap either exons or genes.
+We typically suggest filtering for exons since it typically resultsin in ~250k SNPs to remain following filtering which is sufficient for demultiplexing without using too many SNPs which can slow down the demultiplexing softwares.
+However, some capture types might be better suited to look for SNPs overlapping genes such as single nuclei RNA-seq.
+For relative numbers of SNPs in the exons and introns, see the `issue raised by @jamesnemesh <https://github.com/drneavin/Demultiplexing_Doublet_Detecting_Docs/issues/49#issue-2182195018>`__.
 Here we provide an example of how to do this filtering. 
 We built the required softwares into the singularity image so you can run these filtering steps with the image.
 
