@@ -46,6 +46,14 @@ This is the data that you will need to have prepare to run Demuxlet_:
 
       - For example, this is the :download:`individual file <_download_files/Individuals.txt>` for our example dataset
 
+    - The SAM tag used in the Bam file to annotate the aligned single cell reads with their corresponding cell barcode (``$CELL_TAG``)
+
+      - If not specified, _Demuxlet defaults to using ``CB``.
+
+    - The SAM tag used in the Bam file to annotate the aligned single cell reads with their corresponding unique molecular identifier (UMI) (``$UMI_TAG``)
+
+      - If not specified, _Demuxlet defaults to using ``UB``.
+
 
 Run Demuxlet
 ------------
@@ -91,6 +99,8 @@ Please note that the ``\`` at the end of each line is purely for readability to 
               --sam $BAM \
               --vcf $VCF \
               --group-list $BARCODES \
+              --tag-group $CELL_TAG \
+              --tag-UMI $UMI_TAG
               --out $DEMUXLET_OUTDIR/pileup \
               --sm-list $INDS
 
@@ -114,7 +124,10 @@ Please note that the ``\`` at the end of each line is purely for readability to 
               --sam $BAM \
               --vcf $VCF \
               --group-list $BARCODES \
+              --tag-UMI $UMI_TAG \
+              --tag-group $CELL_TAG \
               --out $DEMUXLET_OUTDIR/pileup
+
 
     .. admonition:: HELP! It says my file/directory doesn't exist!
       :class: dropdown
@@ -161,10 +174,13 @@ Once you have run ``popscle pileup``, you can demultiplex your samples:
               --vcf $VCF \
               --field $FIELD \
               --group-list $BARCODES \
+              --tag-group $CELL_TAG \
+              --tag-UMI $UMI_TAG \
               --geno-error-coeff 1.0 \
               --geno-error-offset 0.05 \
               --out $DEMUXLET_OUTDIR/demuxlet \
               --sm-list $INDS
+
 
     .. admonition:: HELP! It says my file/directory doesn't exist!
       :class: dropdown
@@ -186,9 +202,12 @@ Once you have run ``popscle pileup``, you can demultiplex your samples:
               --vcf $VCF \
               --field $FIELD \
               --group-list $BARCODES \
+              --tag-group $CELL_TAG \
+              --tag-UMI $UMI_TAG \
               --geno-error-coeff 1.0 \
               --geno-error-offset 0.05 \
               --out $DEMUXLET_OUTDIR/demuxlet
+              
 
     .. admonition:: HELP! It says my file/directory doesn't exist!
       :class: dropdown

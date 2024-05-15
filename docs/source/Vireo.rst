@@ -48,6 +48,22 @@ This is the data that you will need to have preparede to run Vireo_:
   - Output directory (``$VIREO_OUTDIR``)
   
 
+.. admonition:: Optional
+
+    - The SAM tag used in the Bam file to annotate the aligned single cell reads with their corresponding cell barcode (``$CELL_TAG``)
+
+      - If not specified, _Vireo defaults to using ``CB``.
+
+    - The SAM tag used in the Bam file to annotate the aligned single cell reads with their corresponding unique molecular identifier (UMI) (``$UMI_TAG``)
+
+      - If not specified, _Vireo defaults to using ``UR``.
+..
+  Note: The default switched from ``UR`` to ``UB`` with cellsnp-lite v.1.2.3.
+  The Demuxafy Singularity image v. 2.0.1 bundles cellsnp-lite v.1.2.1, so the
+  old default applies. The above documentation should be updated to reflect the
+  upstream change, once cellsnp-lite is updated to v.1.2.3 or higher in the
+  Demuxafy Singularity image.
+
 
 
 
@@ -92,7 +108,10 @@ Please note that the ``\`` at the end of each line is purely for readability to 
             -p 20 \ ## number of parallel processors
             --minMAF 0.1 \
             --minCOUNT 20 \
+            --cellTAG $CELL_TAG \
+            --UMItag $UMI_TAG \
             --gzip 
+
 
 You can alter the ``-p``, ``--minMAF`` and ``--minCOUNT`` parameters to fit your data and your needs.
 We have found these settings to work well with our data.

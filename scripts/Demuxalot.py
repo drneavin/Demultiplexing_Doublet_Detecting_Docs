@@ -55,13 +55,12 @@ print("loading barcodes")
 barcode_handler = BarcodeHandler.from_file(args.barcodes, tag=args.celltag)
 
 parse_read_custom = lambda read: parse_read(read, umi_tag = args.umitag)
-
 snps = count_snps(
     bamfile_location = args.bamfile,
     chromosome2positions=genotypes.get_chromosome2positions(),
     barcode_handler=barcode_handler, 
     joblib_n_jobs=args.nproc,
-    parse_read=parse_read_custom
+    parse_read=parse_read_custom,
 )
 
 print("estimating posterior probs and likelihoods")

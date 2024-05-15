@@ -42,6 +42,17 @@ This is the data that you will need to have prepare to run Freemuxlet_:
   - Output directory (``$FREEMUXLET_OUTDIR``)
 
 
+.. admonition:: Optional
+
+    - The SAM tag used in the Bam file to annotate the aligned single cell reads with their corresponding cell barcode (``$CELL_TAG``)
+
+      - If not specified, _Freemuxlet defaults to using ``CB``.
+
+    - The SAM tag used in the Bam file to annotate the aligned single cell reads with their corresponding unique molecular identifier (UMI) (``$UMI_TAG``)
+
+      - If not specified, _Freemuxlet defaults to using ``UB``.
+
+
 
 
 Run Freemuxlet
@@ -82,6 +93,8 @@ Please note that the ``\`` at the end of each line is purely for readability to 
   --sam $BAM \
   --vcf $VCF \
   --group-list $BARCODES \
+  --tag-group $CELL_TAG \
+  --tag-UMI $UMI_TAG \
   --out $FREEMUXLET_OUTDIR/pileup
 
 .. admonition:: HELP! It says my file/directory doesn't exist!
@@ -124,8 +137,11 @@ Please note that the ``\`` at the end of each line is purely for readability to 
   singularity exec Demuxafy.sif popscle freemuxlet \
           --plp $FREEMUXLET_OUTDIR/pileup \
           --out $FREEMUXLET_OUTDIR/freemuxlet \
+          --tag-group $CELL_TAG \
+          --tag-UMI $UMI_TAG \
           --group-list $BARCODES \
           --nsample $N
+
 
 .. admonition:: HELP! It says my file/directory doesn't exist!
   :class: dropdown
