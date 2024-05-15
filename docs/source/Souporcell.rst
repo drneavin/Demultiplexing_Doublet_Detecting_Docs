@@ -91,6 +91,7 @@ Run Souporcell Pipeline
 
 You can run Souporcell_ with or without reference SNP genotypes - follow the instructions for each bellow:
 
+Please note that the ``\`` at the end of each line is purely for readability to put a separate parameter argument on each line.
 
 .. tabs::
 
@@ -289,13 +290,18 @@ If you have reference SNP genotypes for some or all of the donors in your pool, 
 
   In order to do this, your $VCF must be reference SNP genotypes for the individuals in the pool and cannot be a general vcf with common SNP genotype locations from 1000 Genomes or HRC.
 
+Please note that the ``\`` at the end of each line is purely for readability to put a separate parameter argument on each line.
+
 .. tabs::
 
   .. tab:: With Script
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif Assign_Indiv_by_Geno.R -r $VCF -c $SOUPORCELL_OUTDIR/cluster_genotypes.vcf -o $SOUPORCELL_OUTDIR
+      singularity exec Demuxafy.sif Assign_Indiv_by_Geno.R \
+              -r $VCF \
+              -c $SOUPORCELL_OUTDIR/cluster_genotypes.vcf \
+              -o $SOUPORCELL_OUTDIR
 
     To see the parameter help menu, type:
 

@@ -7,7 +7,10 @@ from demuxalot.cellranger_specific import parse_read
 import pandas as pd
 import argparse
 import subprocess
+import os
 
+__location__ = os.path.realpath(
+    os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 print("loaded packages")
 
@@ -29,7 +32,7 @@ print("read arguments")
 
 print("checking genome nomenclature for vcf and bam files.")
 
-return_code = subprocess.run("/directflow/SCCGGroupShare/projects/DrewNeavin/Demultiplex_Benchmark/Demultiplexing_Doublet_Detecting_Docs/scripts/compare_vcf_bam_genome.sh " + args.bamfile + " " + args.vcf, shell = True).returncode
+return_code = subprocess.run(os.path.join(__location__, "compare_vcf_bam_genome.sh ") + args.bamfile + " " + args.vcf, shell = True).returncode
 
 if return_code != 0:
     exit(0)
