@@ -3,6 +3,11 @@
 
 import argparse
 import subprocess
+import os
+
+__location__ = os.path.realpath(
+    os.path.join(os.getcwd(), os.path.dirname(__file__)))
+
 
 parser = argparse.ArgumentParser(
     description="wrapper for execution of demuxlet and souporcell.")
@@ -37,11 +42,33 @@ args = parser.parse_args()
 
 print("checking genome nomenclature for vcf and bam files.")
 
-return_code = subprocess.run("/directflow/SCCGGroupShare/projects/DrewNeavin/Demultiplex_Benchmark/Demultiplexing_Doublet_Detecting_Docs/scripts/compare_vcf_bam_genome.sh " + args.bam + " " + args.vcf, shell = True).returncode
-return_code2 = subprocess.run("/directflow/SCCGGroupShare/projects/DrewNeavin/Demultiplex_Benchmark/Demultiplexing_Doublet_Detecting_Docs/scripts/compare_fasta_bam_genome.sh " + args.bam + " " + args.fasta, shell = True).returncode
+if not args.common_variants is None:
+    return_code = subprocess.run(os.path.join(__location__, "compare_vcf_bam_genome.sh ") + args.bam + " " + args.common_variants, shell = True).returncode
+elif not args.known_genotypes is None:
+    return_code = subprocess.run(os.path.join(__location__, "compare_vcf_bam_genome.sh ") + args.bam + " " + args.known_genotypes, shell = True).returncode
+
+return_code2 = subprocess.run(os.path.join(__location__, "compare_fasta_bam_genome.sh ") + args.bam + " " + args.fasta, shell = True).returncode
 
 if return_code != 0:
     exit(0)
+
+if return_code2 != 0:
+    exit(0)
+
+if args.common_variants is None:
+    common_variants = ''
+else:
+    common_variants = " --common_variants " + args.common_variants
+
+if args.known_genotypes is None:
+    known_genotypes = ''
+else:
+    known_genotypes = " --known_genotypes " + args.known_genotypes
+
+if args.known_genotypes_sample_names is None:
+    known_genotypes_sample_names = ''
+else:
+    known_genotypes_sample_names = " --known_genotypes_sample_names " + ' '.join(args.known_genotypes_sample_names)
 
 
 subprocess.run("souporcell_pipeline.py --bam " + args.bam + 
@@ -55,9 +82,9 @@ subprocess.run("souporcell_pipeline.py --bam " + args.bam +
                 " --min_ref " + args.min_ref + 
                 " --max_loci " + args.max_loci + 
                 " --restarts " + str(args.restarts) + 
-                " --common_variants " + args.common_variants + 
-                " --known_genotypes " + args.known_genotypes + 
-                " --known_genotypes_sample_names " + args.known_genotypes_sample_names +
+                common_variants + 
+                known_genotypes + 
+                known_genotypes_sample_names +
                  " --skip_remap " + str(args.skip_remap) + 
                  " --no_umi " + str(args.no_umi) + 
                  " --umi_tag " + args.umi_tag + 

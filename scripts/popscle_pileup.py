@@ -3,6 +3,10 @@
 
 import argparse
 import subprocess
+import os
+
+__location__ = os.path.realpath(
+    os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 parser = argparse.ArgumentParser(
     description="wrapper for execution of demuxlet and freemuxlet popscle pileup.")
@@ -16,7 +20,7 @@ parser.add_argument("--sm", required = False, default = None, help = "List of sa
 parser.add_argument("--sm-list", required = False, default = None, help = "File containing the list of sample IDs to compare.")
 parser.add_argument("--sam-verbose", required = False, default = 1000000, type = int, help = "Verbose message frequency for SAM/BAM/CRAM.")
 parser.add_argument("--vcf-verbose", required = False, default = 10000, type = int, help = "Verbose message frequency for VCF/BCF.")
-parser.add_argument("--skip-umi", required = False, default = 'OFF', help = "Do not generate [prefix].umi.gz file, which stores the regions covered by each barcode/UMI pair.")
+parser.add_argument("--skip-umi", required = False, default = False, type = bool, help = "Do not generate [prefix].umi.gz file, which stores the regions covered by each barcode/UMI pair. True or False. Default: False")
 parser.add_argument("--cap-BQ", required = False, default = 40, help = "Maximum base quality (higher BQ will be capped).")
 parser.add_argument("--min-BQ", required = False, default = 13, help = "Minimum base quality to consider (lower BQ will be skipped).")
 parser.add_argument("--min-MQ", required = False, default = 20, help = "Minimum mapping quality to consider (lower MQ will be ignored).")
@@ -28,10 +32,11 @@ parser.add_argument("--min-uniq", required = False, default = 0, help = "Minimum
 parser.add_argument("--min-snp", required = False, default = 0, help = "Minimum number of SNPs with coverage for a droplet/cell to be considered.")
 args = parser.parse_args()
 
+print(args)
 
 print("checking genome nomenclature for vcf and bam files.")
 
-return_code = subprocess.run("compare_vcf_bam_genome.sh " + args.bam + " " + args.vcf, shell = True).returncode
+return_code = subprocess.run(os.path.join(__location__, "compare_vcf_bam_genome.sh ") + args.sam + " " + args.vcf, shell = True).returncode
 
 if return_code != 0:
     exit(0)
@@ -46,17 +51,22 @@ else:
 if args.sm_list is None:
     sm_list = ''
 else:
-    sm_list = ' --sm_list ' + args.sm_list
+    sm_list = ' --sm-list ' + args.sm_list
 
 if args.group_list is None:
     group_list = ''
 else:
     group_list = ' --group-list ' + args.group_list
 
+if args.skip_umi is None:
+    skip_umi = ''
+else:
+    skip_umi = ' --skip-umi '
+
 
 print("Running popscle pileup.")
 
-subprocess.run("popscle pileup --sam " + args.bam + 
+subprocess.run("popscle dsc-pileup --sam " + args.sam + 
                " --vcf " + args.vcf + 
                " --out " + args.out + 
                " --tag-group " + args.tag_group + 
@@ -66,7 +76,7 @@ subprocess.run("popscle pileup --sam " + args.bam +
                sm_list +
                " --sam-verbose " + str(args.sam_verbose) + 
                " --vcf-verbose " + str(args.vcf_verbose) + 
-               " --skip-umi " + args.skip_umi + 
+               skip_umi + 
                " --cap-BQ " + str(args.cap_BQ) + 
                " --min-BQ " + str(args.min_BQ) + 
                " --min-MQ " + str(args.min_MQ) + 

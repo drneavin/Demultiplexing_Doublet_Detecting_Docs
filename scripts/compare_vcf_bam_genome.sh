@@ -19,16 +19,26 @@ else
 fi
 
 
-
-if $(grep -v "#" $VCF | head -n 1 | grep -q "^chr")
+if (echo $VCF | grep -q ".gz")
 then
-    echo "VCF file is using chr notation"
-    vcf_genome="UCSC"
+    if $(zgrep -v "#" $VCF | head -n 1 | grep -q "^chr")
+    then
+        echo "VCF file is using chr notation"
+        vcf_genome="UCSC"
+    else
+        echo "VCF file is using non-chr notation"
+        vcf_genome="ENSEMBL/NCBI"
+    fi
 else
-    echo "VCF file is using non-chr notation"
-    vcf_genome="ENSEMBL/NCBI"
+    if $(grep -v "#" $VCF | head -n 1 | grep -q "^chr")
+    then
+        echo "VCF file is using chr notation"
+        vcf_genome="UCSC"
+    else
+        echo "VCF file is using non-chr notation"
+        vcf_genome="ENSEMBL/NCBI"
+    fi
 fi
-
 
 if [ $bam_genome == $vcf_genome ]
 then

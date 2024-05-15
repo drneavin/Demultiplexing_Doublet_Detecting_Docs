@@ -85,14 +85,14 @@ Please note that the ``\`` at the end of each line is purely for readability to 
 .. code-block:: bash
 
   singularity exec Demuxafy.sif cellsnp_pileup.py \
-    -s $BAM \
-    -b $BARCODES \
-    -O $VIREO_OUTDIR \
-    -R $VCF \
-    -p 20 \ ## number of parallel processors
-    --minMAF 0.1 \
-    --minCOUNT 20 \
-    --gzip 
+            -s $BAM \
+            -b $BARCODES \
+            -O $VIREO_OUTDIR \
+            -R $VCF \
+            -p 20 \ ## number of parallel processors
+            --minMAF 0.1 \
+            --minCOUNT 20 \
+            --gzip 
 
 You can alter the ``-p``, ``--minMAF`` and ``--minCOUNT`` parameters to fit your data and your needs.
 We have found these settings to work well with our data.
@@ -157,7 +157,11 @@ We've provided an example command for each of these differing amounts of donor S
 
         .. code-block::
 
-          singularity exec Demuxafy.sif bcftools view $VCF -R $VIREO_OUTDIR/cellSNP.base.vcf.gz -s sample1,sample2 -Ov -o $VIREO_OUTDIR/donor_subset.vcf
+          singularity exec Demuxafy.sif bcftools view $VCF \
+                  -R $VIREO_OUTDIR/cellSNP.base.vcf.gz \
+                  -s sample1,sample2 \
+                  -Ov \
+                  -o $VIREO_OUTDIR/donor_subset.vcf
 
         Alternatively, if you have the individuals from the pool in a file with each individuals separated by a new line (``individual_file.tsv``), then you can use ``-S individual_file.tsv``.
 
@@ -169,11 +173,11 @@ We've provided an example command for each of these differing amounts of donor S
     .. code-block::
 
       singularity exec Demuxafy.sif vireo \
-      -c $VIREO_OUTDIR \
-      -d $VIREO_OUTDIR/donor_subset.vcf \
-      -o $VIREO_OUTDIR \
-      -t $FIELD \
-      --callAmbientRNAs
+              -c $VIREO_OUTDIR \
+              -d $VIREO_OUTDIR/donor_subset.vcf \
+              -o $VIREO_OUTDIR \
+              -t $FIELD \
+              --callAmbientRNAs
 
     .. admonition:: HELP! It says my file/directory doesn't exist!
       :class: dropdown
@@ -205,7 +209,11 @@ We've provided an example command for each of these differing amounts of donor S
 
         .. code-block::
 
-          singularity exec Demuxafy.sif bcftools view $VCF -R $VIREO_OUTDIR/cellSNP.base.vcf.gz -s sample1,sample2 -Ov -o $VIREO_OUTDIR/donor_subset.vcf
+          singularity exec Demuxafy.sif bcftools view $VCF \
+                  -R $VIREO_OUTDIR/cellSNP.base.vcf.gz \
+                  -s sample1,sample2 \
+                  -Ov \
+                  -o $VIREO_OUTDIR/donor_subset.vcf
 
         Alternatively, if you have the individuals from the pool in a file with each individuals separated by a new line (``individual_file.tsv``), then you can use ``-S individual_file.tsv``.
 
@@ -217,19 +225,22 @@ We've provided an example command for each of these differing amounts of donor S
 
         .. code-block::
 
-          singularity exec Demuxafy.sif bcftools view $VCF -R $VIREO_OUTDIR/cellSNP.base.vcf.gz -Oz -o $VIREO_OUTDIR/donor_subset.vcf
+          singularity exec Demuxafy.sif bcftools view $VCF \
+                  -R $VIREO_OUTDIR/cellSNP.base.vcf.gz \
+                  -Oz \
+                  -o $VIREO_OUTDIR/donor_subset.vcf
 
     Please note that the ``\`` at the end of each line is purely for readability to put a separate parameter argument on each line.
 
     .. code-block::
 
       singularity exec Demuxafy.sif vireo \
-        -c $VIREO_OUTDIR \
-        -d $VIREO_OUTDIR/donor_subset.vcf.gz \
-        -o $VIREO_OUTDIR \
-        -t $FIELD \
-        -N $N \
-        --callAmbientRNAs
+                -c $VIREO_OUTDIR \
+                -d $VIREO_OUTDIR/donor_subset.vcf.gz \
+                -o $VIREO_OUTDIR \
+                -t $FIELD \
+                -N $N \
+                --callAmbientRNAs
 
     .. admonition:: HELP! It says my file/directory doesn't exist!
       :class: dropdown
@@ -245,10 +256,10 @@ We've provided an example command for each of these differing amounts of donor S
     .. code-block::
 
       singularity exec Demuxafy.sif vireo \
-        -c $VIREO_OUTDIR \
-        -o $VIREO_OUTDIR \
-        -N $N \
-        --callAmbientRNAs
+              -c $VIREO_OUTDIR \
+              -o $VIREO_OUTDIR \
+              -N $N \
+              --callAmbientRNAs
 
     .. admonition:: HELP! It says my file/directory doesn't exist!
       :class: dropdown

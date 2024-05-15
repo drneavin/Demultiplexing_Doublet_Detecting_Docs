@@ -77,6 +77,8 @@ Popscle Pileup
 
 First we will need to identify the number of reads from each allele at each SNP location.
 
+Please note that the ``\`` at the end of each line is purely for readability to put a separate parameter argument on each line.
+
 .. tabs::
 
   .. tab:: With ``$INDS`` file
@@ -86,11 +88,11 @@ First we will need to identify the number of reads from each allele at each SNP 
     .. code-block:: bash
 
       singularity exec Demuxafy.sif popscle_pileup.py \
-      --sam $BAM \
-      --vcf $VCF \
-      --group-list $BARCODES \
-      --out $DEMUXLET_OUTDIR/pileup \
-      --sm-list $INDS
+              --sam $BAM \
+              --vcf $VCF \
+              --group-list $BARCODES \
+              --out $DEMUXLET_OUTDIR/pileup \
+              --sm-list $INDS
 
     .. admonition:: HELP! It says my file/directory doesn't exist!
       :class: dropdown
@@ -108,7 +110,11 @@ First we will need to identify the number of reads from each allele at each SNP 
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif popscle dsc-pileup --sam $BAM --vcf $VCF --group-list $BARCODES --out $DEMUXLET_OUTDIR/pileup
+      singularity exec Demuxafy.sif popscle dsc-pileup \
+              --sam $BAM \
+              --vcf $VCF \
+              --group-list $BARCODES \
+              --out $DEMUXLET_OUTDIR/pileup
 
     .. admonition:: HELP! It says my file/directory doesn't exist!
       :class: dropdown
@@ -140,6 +146,7 @@ Popscle Demuxlet
 
 Once you have run ``popscle pileup``, you can demultiplex your samples:
 
+    Please note that the ``\`` at the end of each line is purely for readability to put a separate parameter argument on each line.
 
 .. tabs::
 
@@ -149,7 +156,15 @@ Once you have run ``popscle pileup``, you can demultiplex your samples:
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif popscle demuxlet --plp $DEMUXLET_OUTDIR/pileup --vcf $VCF --field $FIELD --group-list $BARCODES --geno-error-coeff 1.0 --geno-error-offset 0.05 --out $DEMUXLET_OUTDIR/demuxlet --sm-list $INDS
+      singularity exec Demuxafy.sif popscle demuxlet \
+              --plp $DEMUXLET_OUTDIR/pileup \
+              --vcf $VCF \
+              --field $FIELD \
+              --group-list $BARCODES \
+              --geno-error-coeff 1.0 \
+              --geno-error-offset 0.05 \
+              --out $DEMUXLET_OUTDIR/demuxlet \
+              --sm-list $INDS
 
     .. admonition:: HELP! It says my file/directory doesn't exist!
       :class: dropdown
@@ -166,7 +181,14 @@ Once you have run ``popscle pileup``, you can demultiplex your samples:
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif popscle demuxlet --plp $DEMUXLET_OUTDIR/pileup --vcf $VCF --field $FIELD --group-list $BARCODES --geno-error-coeff 1.0 --geno-error-offset 0.05 --out $DEMUXLET_OUTDIR/demuxlet
+      singularity exec Demuxafy.sif popscle demuxlet \
+              --plp $DEMUXLET_OUTDIR/pileup \
+              --vcf $VCF \
+              --field $FIELD \
+              --group-list $BARCODES \
+              --geno-error-coeff 1.0 \
+              --geno-error-offset 0.05 \
+              --out $DEMUXLET_OUTDIR/demuxlet
 
     .. admonition:: HELP! It says my file/directory doesn't exist!
       :class: dropdown

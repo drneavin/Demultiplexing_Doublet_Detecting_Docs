@@ -74,6 +74,8 @@ Popscle Pileup
 
 First we will need to identify the number of reads from each allele at each of the common SNP location:
 
+Please note that the ``\`` at the end of each line is purely for readability to put a separate parameter argument on each line.
+
 .. code-block:: bash
 
   singularity exec Demuxafy.sif popscle_pileup.py \
@@ -115,9 +117,15 @@ First we will need to identify the number of reads from each allele at each SNP 
 
 Once you have run ``popscle pileup``, you can demultiplex your samples with Freemuxlet_:
 
+Please note that the ``\`` at the end of each line is purely for readability to put a separate parameter argument on each line.
+
 .. code-block:: bash
 
-  singularity exec Demuxafy.sif popscle freemuxlet --plp $FREEMUXLET_OUTDIR/pileup --out $FREEMUXLET_OUTDIR/freemuxlet --group-list $BARCODES --nsample $N
+  singularity exec Demuxafy.sif popscle freemuxlet \
+          --plp $FREEMUXLET_OUTDIR/pileup \
+          --out $FREEMUXLET_OUTDIR/freemuxlet \
+          --group-list $BARCODES \
+          --nsample $N
 
 .. admonition:: HELP! It says my file/directory doesn't exist!
   :class: dropdown
@@ -209,13 +217,18 @@ If you have reference SNP genotypes for some or all of the donors in your pool, 
 
   In order to do this, your ``$VCF`` must be reference SNP genotypes for the individuals in the pool and cannot be a general vcf with common SNP genotype locations from 1000 Genomes or HRC.
 
+  Please note that the ``\`` at the end of each line is purely for readability to put a separate parameter argument on each line.
+
 .. tabs::
 
   .. tab:: With Script
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif Assign_Indiv_by_Geno.R -r $VCF -c $FREEMUXLET_OUTDIR/freemuxlet.clust1.vcf.gz -o $FREEMUXLET_OUTDIR
+      singularity exec Demuxafy.sif Assign_Indiv_by_Geno.R \
+              -r $VCF \
+              -c $FREEMUXLET_OUTDIR/freemuxlet.clust1.vcf.gz \
+              -o $FREEMUXLET_OUTDIR
 
     To see the parameter help menu, type:
 
