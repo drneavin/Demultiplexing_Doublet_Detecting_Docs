@@ -100,7 +100,7 @@ Please note that the ``\`` at the end of each line is purely for readability to 
               --vcf $VCF \
               --group-list $BARCODES \
               --tag-group $CELL_TAG \
-              --tag-UMI $UMI_TAG
+              --tag-UMI $UMI_TAG \
               --out $DEMUXLET_OUTDIR/pileup \
               --sm-list $INDS
 
