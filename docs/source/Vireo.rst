@@ -105,7 +105,7 @@ Please note that the ``\`` at the end of each line is purely for readability to 
             -b $BARCODES \
             -O $VIREO_OUTDIR \
             -R $VCF \
-            -p 20 \ ## number of parallel processors
+            -p 20 \
             --minMAF 0.1 \
             --minCOUNT 20 \
             --cellTAG $CELL_TAG \
