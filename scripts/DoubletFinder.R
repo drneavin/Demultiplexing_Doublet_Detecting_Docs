@@ -34,6 +34,7 @@ options(future.globals.maxSize=(850*1024^2))
 
 ### Read in the data
 seurat <- readRDS(args$seurat_object)
+seurat <- UpdateSeuratObject(object = seurat)
 
 
 ## pK Identification (no ground-truth) ---------------------------------------------------------------------------------------

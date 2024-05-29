@@ -160,7 +160,6 @@ if args.IGNORED_CHROMOSOMES is None:
 else:
     IGNORED_CHROMOSOMES = (' --IGNORED_CHROMOSOMES ' + str(args.IGNORED_CHROMOSOMES))
     
-print(CELL_BC_FILE)
 
 subprocess.run("AssignCellsToSamples " + CELL_BC_FILE + 
                 " -I " + str(args.INPUT_BAM) + 
@@ -182,7 +181,6 @@ subprocess.run("AssignCellsToSamples " + CELL_BC_FILE +
                 FIXED_ERROR_RATE +
                 " --FRACTION_SAMPLES_PASSING " + str(args.FRACTION_SAMPLES_PASSING) +
                 " --FUNCTION_TAG " + str(args.FUNCTION_TAG) +
-                " --GA4GH_CLIENT_SECRETS " + str(args.GA4GH_CLIENT_SECRETS) +
                 " --GENE_FUNCTION_TAG " + str(args.GENE_FUNCTION_TAG) +
                 " --GENE_NAME_TAG " + str(args.GENE_NAME_TAG) +
                 " --GENE_STRAND_TAG " + str(args.GENE_STRAND_TAG) +
@@ -207,5 +205,5 @@ subprocess.run("AssignCellsToSamples " + CELL_BC_FILE +
                 VCF_OUTPUT +
                 VERBOSE_BEST_DONOR_OUTPUT +
                 VERBOSE_OUTPUT +
-                " --VERBOSITY " + str(args.VERBOSITY), 
-                shell = True)
+                " --VERBOSITY " + str(args.VERBOSITY)
+                ,shell = True)
