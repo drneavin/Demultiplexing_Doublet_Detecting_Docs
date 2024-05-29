@@ -240,7 +240,7 @@ You can download the dataset with one of the following commands:
 
     .. code-block:: bash
 
-      tar -xvf TestData4PipelineFull.tar.gz
+      tar -xvf TestData4PipelineSmall.tar.gz
 
     This should unzip the ``TestData4PipelineSmall`` directory where you will have the following file structure:
 
