@@ -77,133 +77,133 @@ if args.CELL_BC_FILE is None:
         print("Error: Either CELL_BC_FILE or NUM_BARCODES must be specified.")
         exit(0)
 else:
-    CELL_BC_FILE = (' --CELL_BC_FILE ' + str(args.CELL_BC_FILE))
+    CELL_BC_FILE = (' CELL_BC_FILE=' + str(args.CELL_BC_FILE))
 
 if args.NUM_BARCODES is None:
     NUM_BARCODES = ''
 else:
-    NUM_BARCODES = (' --NUM_BARCODES ' + str(args.NUM_BARCODES))
+    NUM_BARCODES = (' NUM_BARCODES=' + str(args.NUM_BARCODES))
 
 ## Check for optional arguments
 if args.ALLELE_FREQUENCY_ESTIMATE_FILE is None:
     ALLELE_FREQUENCY_ESTIMATE_FILE = ''
 else:
-    ALLELE_FREQUENCY_ESTIMATE_FILE = (' --ALLELE_FREQUENCY_ESTIMATE_FILE ' + str(args.ALLELE_FREQUENCY_ESTIMATE_FILE))
+    ALLELE_FREQUENCY_ESTIMATE_FILE = (' ALLELE_FREQUENCY_ESTIMATE_FILE=' + str(args.ALLELE_FREQUENCY_ESTIMATE_FILE))
 
 if args.ANSWER_KEY_FILE is None:
     ANSWER_KEY_FILE = ''
 else:
-    ANSWER_KEY_FILE = (' --ANSWER_KEY_FILE ' + str(args.ANSWER_KEY_FILE))
+    ANSWER_KEY_FILE = (' ANSWER_KEY_FILE ' + str(args.ANSWER_KEY_FILE))
 
 if args.arguments_file is None:
     arguments_file = ''
 else:   
-    arguments_file = (' --arguments_file ' + str(args.arguments_file))
+    arguments_file = (' arguments_file=' + str(args.arguments_file))
 
 if args.BAM_OUTPUT is None:
     BAM_OUTPUT = ''
 else:
-    BAM_OUTPUT = (' --BAM_OUTPUT ' + str(args.BAM_OUTPUT))
+    BAM_OUTPUT = (' BAM_OUTPUT=' + str(args.BAM_OUTPUT))
 
 if args.CELL_CONTAMINATION_ESTIMATE_FILE is None:
     CELL_CONTAMINATION_ESTIMATE_FILE = ''
 else:
-    CELL_CONTAMINATION_ESTIMATE_FILE = (' --CELL_CONTAMINATION_ESTIMATE_FILE ' + str(args.CELL_CONTAMINATION_ESTIMATE_FILE))
+    CELL_CONTAMINATION_ESTIMATE_FILE = (' CELL_CONTAMINATION_ESTIMATE_FILE=' + str(args.CELL_CONTAMINATION_ESTIMATE_FILE))
 
 if args.FIXED_ERROR_RATE is None:
     FIXED_ERROR_RATE = ''  
 else:
-    FIXED_ERROR_RATE = (' --COMPRESSION_LEVEL ' + str(args.FIXED_ERROR_RATE))
+    FIXED_ERROR_RATE = (' COMPRESSION_LEVEL=' + str(args.FIXED_ERROR_RATE))
 
 if args.MAX_ERROR_RATE is None:
     MAX_ERROR_RATE = ''
 else:
-    MAX_ERROR_RATE = (' --MAX_ERROR_RATE ' + str(args.MAX_ERROR_RATE))
+    MAX_ERROR_RATE = (' MAX_ERROR_RATE=' + str(args.MAX_ERROR_RATE))
 
 if args.REFERENCE_SEQUENCE is None:
     REFERENCE_SEQUENCE = ''
 else:
-    REFERENCE_SEQUENCE = (' --REFERENCE_SEQUENCE ' + str(args.REFERENCE_SEQUENCE))
+    REFERENCE_SEQUENCE = (' REFERENCE_SEQUENCE=' + str(args.REFERENCE_SEQUENCE))
 
 if args.SAMPLE_FILE is None:
     SAMPLE_FILE = ''
 else:
-    SAMPLE_FILE = (' --SAMPLE_FILE ' + str(args.SAMPLE_FILE))
+    SAMPLE_FILE = (' SAMPLE_FILE=' + str(args.SAMPLE_FILE))
 
 if args.TMP_DIR is None:
     TMP_DIR = ''
 else:
-    TMP_DIR = (' --TMP_DIR ' + str(args.TMP_DIR))
+    TMP_DIR = (' TMP_DIR=' + str(args.TMP_DIR))
     
 if args.VCF_OUTPUT is None:
     VCF_OUTPUT = ''
 else:
-    VCF_OUTPUT = (' --VCF_OUTPUT ' + str(args.VCF_OUTPUT))
+    VCF_OUTPUT = (' VCF_OUTPUT=' + str(args.VCF_OUTPUT))
 
 if args.VERBOSE_BEST_DONOR_OUTPUT is None:
     VERBOSE_BEST_DONOR_OUTPUT = ''
 else:
-    VERBOSE_BEST_DONOR_OUTPUT = (' --VERBOSE_BEST_DONOR_OUTPUT ' + str(args.VERBOSE_BEST_DONOR_OUTPUT))
+    VERBOSE_BEST_DONOR_OUTPUT = (' VERBOSE_BEST_DONOR_OUTPUT=' + str(args.VERBOSE_BEST_DONOR_OUTPUT))
 
 if args.VERBOSE_OUTPUT is None:
     VERBOSE_OUTPUT = ''
 else:
-    VERBOSE_OUTPUT = (' --VERBOSE_OUTPUT ' + str(args.VERBOSE_OUTPUT))
+    VERBOSE_OUTPUT = (' VERBOSE_OUTPUT=' + str(args.VERBOSE_OUTPUT))
 
 if args.LOCUS_FUNCTION_LIST is None:
     LOCUS_FUNCTION_LIST = ''
 else:
-    LOCUS_FUNCTION_LIST = (' --LOCUS_FUNCTION_LIST ' + str(args.LOCUS_FUNCTION_LIST))
+    LOCUS_FUNCTION_LIST = (' LOCUS_FUNCTION_LIST=' + str(args.LOCUS_FUNCTION_LIST))
 
 if args.IGNORED_CHROMOSOMES is None:
     IGNORED_CHROMOSOMES = ''
 else:
-    IGNORED_CHROMOSOMES = (' --IGNORED_CHROMOSOMES ' + str(args.IGNORED_CHROMOSOMES))
+    IGNORED_CHROMOSOMES = (' IGNORED_CHROMOSOMES=' + str(args.IGNORED_CHROMOSOMES))
     
 
 subprocess.run("AssignCellsToSamples " + CELL_BC_FILE + 
-                " -I " + str(args.INPUT_BAM) + 
-                " -O " + str(args.OUTPUT) + 
+                " INPUT_BAM=" + str(args.INPUT_BAM) + 
+                " OUTPUT=" + str(args.OUTPUT) + 
                 NUM_BARCODES +
-                " --VCF " + str(args.VCF) + 
-                " --ADD_MISSING_VALUES " + str(args.ADD_MISSING_VALUES) +
+                " VCF=" + str(args.VCF) + 
+                " ADD_MISSING_VALUES=" + str(args.ADD_MISSING_VALUES) +
                 ALLELE_FREQUENCY_ESTIMATE_FILE +
                 ANSWER_KEY_FILE +
                 arguments_file +
                 BAM_OUTPUT +
-                " --CELL_BARCODE_TAG " + str(args.CELL_BARCODE_TAG) +
+                " CELL_BARCODE_TAG=" + str(args.CELL_BARCODE_TAG) +
                 CELL_CONTAMINATION_ESTIMATE_FILE +
-                " --COMPRESSION_LEVEL " + str(args.COMPRESSION_LEVEL) +
-                " --CREATE_INDEX " + str(args.CREATE_INDEX) +
-                " --CREATE_MD5_FILE " + str(args.CREATE_MD5_FILE) +
-                " --DNA_MODE " + str(args.DNA_MODE) +
-                " --EDIT_DISTANCE " + str(args.EDIT_DISTANCE) +
+                " COMPRESSION_LEVEL=" + str(args.COMPRESSION_LEVEL) +
+                " CREATE_INDEX=" + str(args.CREATE_INDEX) +
+                " CREATE_MD5_FILE=" + str(args.CREATE_MD5_FILE) +
+                " DNA_MODE=" + str(args.DNA_MODE) +
+                " EDIT_DISTANCE=" + str(args.EDIT_DISTANCE) +
                 FIXED_ERROR_RATE +
-                " --FRACTION_SAMPLES_PASSING " + str(args.FRACTION_SAMPLES_PASSING) +
-                " --FUNCTION_TAG " + str(args.FUNCTION_TAG) +
-                " --GENE_FUNCTION_TAG " + str(args.GENE_FUNCTION_TAG) +
-                " --GENE_NAME_TAG " + str(args.GENE_NAME_TAG) +
-                " --GENE_STRAND_TAG " + str(args.GENE_STRAND_TAG) +
-                " --GQ_THRESHOLD " + str(args.GQ_THRESHOLD) +
+                " FRACTION_SAMPLES_PASSING=" + str(args.FRACTION_SAMPLES_PASSING) +
+                " FUNCTION_TAG=" + str(args.FUNCTION_TAG) +
+                " GENE_FUNCTION_TAG=" + str(args.GENE_FUNCTION_TAG) +
+                " GENE_NAME_TAG=" + str(args.GENE_NAME_TAG) +
+                " GENE_STRAND_TAG=" + str(args.GENE_STRAND_TAG) +
+                " GQ_THRESHOLD=" + str(args.GQ_THRESHOLD) +
                 IGNORED_CHROMOSOMES +
                 LOCUS_FUNCTION_LIST +
                 MAX_ERROR_RATE +
-                " --MAX_RECORDS_IN_RAM " + str(args.MAX_RECORDS_IN_RAM) +
-                " --MOLECULAR_BARCODE_TAG " + str(args.MOLECULAR_BARCODE_TAG) +
-                " --QUIET " + str(args.QUIET) +
-                " --READ_MQ " + str(args.READ_MQ) +
+                " MAX_RECORDS_IN_RAM=" + str(args.MAX_RECORDS_IN_RAM) +
+                " MOLECULAR_BARCODE_TAG=" + str(args.MOLECULAR_BARCODE_TAG) +
+                " QUIET=" + str(args.QUIET) +
+                " READ_MQ=" + str(args.READ_MQ) +
                 REFERENCE_SEQUENCE +
-                " --RETAIN_MONOMORPIC_SNPS " + str(args.RETAIN_MONOMORPIC_SNPS) +
+                " RETAIN_MONOMORPIC_SNPS=" + str(args.RETAIN_MONOMORPIC_SNPS) +
                 SAMPLE_FILE +
-                " --SNP_LOG_RATE " + str(args.SNP_LOG_RATE) +
-                " --STRAND_STRATEGY " + str(args.STRAND_STRATEGY) +
+                " SNP_LOG_RATE=" + str(args.SNP_LOG_RATE) +
+                " STRAND_STRATEGY=" + str(args.STRAND_STRATEGY) +
                 TMP_DIR +
-                " --TRANSCRIBED_SNP_FAIL_FAST_THRESHOLD " + str(args.TRANSCRIBED_SNP_FAIL_FAST_THRESHOLD) +
-                " --USE_JDK_DEFLATER " + str(args.USE_JDK_DEFLATER) +
-                " --USE_JDK_INFLATER " + str(args.USE_JDK_INFLATER) +
-                " --VALIDATION_STRINGENCY " + str(args.VALIDATION_STRINGENCY) +
+                " TRANSCRIBED_SNP_FAIL_FAST_THRESHOLD=" + str(args.TRANSCRIBED_SNP_FAIL_FAST_THRESHOLD) +
+                " USE_JDK_DEFLATER=" + str(args.USE_JDK_DEFLATER) +
+                " USE_JDK_INFLATER=" + str(args.USE_JDK_INFLATER) +
+                " VALIDATION_STRINGENCY=" + str(args.VALIDATION_STRINGENCY) +
                 VCF_OUTPUT +
                 VERBOSE_BEST_DONOR_OUTPUT +
                 VERBOSE_OUTPUT +
-                " --VERBOSITY " + str(args.VERBOSITY)
+                " VERBOSITY=" + str(args.VERBOSITY)
                 ,shell = True)
