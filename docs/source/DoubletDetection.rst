@@ -4,7 +4,7 @@ DoubletDetection
 ===========================
 
 .. _DoubletDetection: https://github.com/JonathanShor/DoubletDetection
-.. _preprint: https://www.biorxiv.org/content/10.1101/2022.03.07.483367v1
+.. _publication: https://genomebiology.biomedcentral.com/articles/10.1186/s13059-024-03224-8
 
 
 DoubletDetection_ is a transcription-based doublet detection software.
@@ -405,4 +405,4 @@ See :ref:`Combine Results <Combine-docs>`.
 
 Citation
 --------
-If you used the Demuxafy platform for analysis, please reference our preprint_ as well as `DoubletDetection <https://zenodo.org/record/4359992>`__.
+If you used the Demuxafy platform for analysis, please reference our publication_ as well as `DoubletDetection <https://zenodo.org/record/4359992>`__.

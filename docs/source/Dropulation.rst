@@ -5,7 +5,7 @@ Dropulation
 ===========================
 
 .. _Dropulation: https://github.com/broadinstitute/Drop-seq/blob/master/doc/Census-seq_Computational_Protcools.pdf
-.. _preprint: https://www.biorxiv.org/content/10.1101/2022.03.07.483367v1
+.. _publication: https://genomebiology.biomedcentral.com/articles/10.1186/s13059-024-03224-8
 .. _GENCODE: https://www.gencodegenes.org/human/
 
 
@@ -326,7 +326,7 @@ See :ref:`Combine Results <Combine-docs>`.
 
 Citation
 -----------
-If you used the Demuxafy platform for analysis, please reference our preprint_ as well as Dropulation_.
+If you used the Demuxafy platform for analysis, please reference our publication_ as well as Dropulation_.
 
 
 

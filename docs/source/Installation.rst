@@ -12,9 +12,8 @@ Just download the singlularity image with:
 
   .. code-block:: bash
 
-
-    wget -O Demuxafy.sif 'https://www.dropbox.com/scl/fi/owqniywk63nknynj6nrez/Demuxafy.sif?rlkey=nt1m99pvcaqjjho2wodjhx80u&st=eco4uozg'
-    wget -O Demuxafy.sif.md5 'https://www.dropbox.com/scl/fi/o867xtogvcl57l8u2zxgj/Demuxafy.sif.md5?rlkey=1mu54ejnl9uigmj2470z38gqd&st=mzma4mkw'
+    wget -O Demuxafy.sif 'https://www.dropbox.com/scl/fi/kykwi78vk4yifbbag5ajz/Demuxafy.sif?rlkey=5hcugu6ztpy0eik3xno63xiar'
+    wget -O Demuxafy.sif.md5 'https://www.dropbox.com/scl/fi/37oj9y1frzhqazl4h8s21/Demuxafy.sif.md5?rlkey=o2bn5wp9q68numlaav8gg95kh'
 
 
 
@@ -39,6 +38,7 @@ If everything was downloaded correctly, that command should report:
   Please note that the singularity image and this documentation is updated with each release. 
   This means that the most recent documentation may not be 100% compatible with the singularity image that you have.
   For example, additional parameters and functionality were implemented in v1.0.2 that was not available in v0.0.4.
+  There is documentation to match each release so be sure you're using documentation that matches your singularity image.
   
   You can check the version of your singularity image to match with documentation with:
 
@@ -53,7 +53,7 @@ If you run into any issues with downloading the image or any issue with running 
   :class: dropdown
 
   Image version: 2.0.1
-  Image build date: 20 January, 2023
+  Image build date: 31 May, 2024
  
     +----------------------------+---------------------------+-------------------------------+
     | Software Group             | Software                  | Version                       |
@@ -103,7 +103,7 @@ If you run into any issues with downloading the image or any issue with running 
     |                            | ``cellSNP-lite``          | v1.2.3                        |
     +----------------------------+---------------------------+-------------------------------+
     | R Supporting Packages      | ``argparse``              | v2.2.3                        |
-    | (R v4.2.2)                 +---------------------------+-------------------------------+
+    | (R v4.4.0)                 +---------------------------+-------------------------------+
     |                            | ``ComplexHeatmap``        | v2.20.0                       |
     |                            +---------------------------+-------------------------------+
     |                            | ``ComplexUpset``          | v1.3.3                        |
@@ -115,12 +115,12 @@ If you run into any issues with downloading the image or any issue with running 
     |                            | ``SingleCellExperiment``  | v1.26.0                       |
     +----------------------------+---------------------------+-------------------------------+
     | Python Supporting Packages | ``argparse``              | v1.1.0                        |
-    | (Python v3.7.2)            +---------------------------+-------------------------------+
+    | (Python v3.9.7)            +---------------------------+-------------------------------+
     |                            | ``numpy``                 | v1.25.2                       |
     |                            +---------------------------+-------------------------------+
     |                            | ``matplotlib``            | v3.9.0                        |
     |                            +---------------------------+-------------------------------+
-    |                            | ``pandas``                | v2.0.3                        |
+    |                            | ``pandas``                | v1.5.3                        |
     |                            +---------------------------+-------------------------------+
     |                            | ``PyVCF``                 | v0.6.8                        |
     |                            +---------------------------+-------------------------------+

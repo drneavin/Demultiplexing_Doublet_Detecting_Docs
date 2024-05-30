@@ -1,6 +1,9 @@
 Tutorial
 ==========
 
+.. _publication: https://genomebiology.biomedcentral.com/articles/10.1186/s13059-024-03224-8
+
+
 In this tutorial, we'll analyze the :ref:`Test Dataset <TestData>` which contains 13 multiplexed donors and ~20,982 droplets.
 
 This tutorial will take you through the typical steps for demultiplexing data with Demuxafy. 
@@ -646,4 +649,4 @@ Feel free to reach out if you have any questions, issues or recommendations with
 
 Citation
 --------
-If you used the Demuxafy platform for analysis, please reference our preprint_ as well as `DoubletDetection <https://zenodo.org/record/4359992>`__.
+If you used the Demuxafy platform for analysis, please reference our publication_ as well as `DoubletDetection <https://zenodo.org/record/4359992>`__.

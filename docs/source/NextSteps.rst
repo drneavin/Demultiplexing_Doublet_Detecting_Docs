@@ -3,7 +3,7 @@
 Next Steps
 ==============
 
-.. _preprint: https://www.biorxiv.org/content/10.1101/2022.03.07.483367v1
+.. _publication: https://genomebiology.biomedcentral.com/articles/10.1186/s13059-024-03224-8
 
 After you've run the Demultiplexing and/or Doublet Detecting softwares you would like, you can easily add the results to your single cell data with your analysis program of choice.
 This works best using the `combined results <Combine-docs>`__ files since they are well formatted for this function.
@@ -151,4 +151,4 @@ More detailed instructions are provided by `10x Genomics <https://www.10xgenomic
 
 Citation
 --------
-If you used the Demuxafy platform for analysis, please reference our preprint_.
+If you used the Demuxafy platform for analysis, please reference our publication_.
