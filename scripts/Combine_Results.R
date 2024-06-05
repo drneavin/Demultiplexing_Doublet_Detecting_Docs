@@ -1022,10 +1022,15 @@ if (length(which(c(!is.null(args$demuxalot), !is.null(args$demuxlet), !is.null(a
 		if (length(c(args$demuxalot, args$demuxlet, args$dropulation, args$freemuxlet, args$scSplit, args$souporcell, args$vireo) == 1)){
 
 			assignment_column <- paste0(names(results_list), "_Individual_Assignment")
+			cluster_column <- paste0(names(results_list), "_Cluster")
 			droplettype_column <- paste0(names(results_list), "_DropletType")
 
-
-			combined_results$Final_Individual_Assignment <- combined_results[,..assignment_column]
+			if (assignment_column %in% colnames(combined_results)){
+				combined_results$Final_Individual_Assignment <- combined_results[,..assignment_column]
+			} else {
+				combined_results$Final_Individual_Assignment <- combined_results[,..cluster_column]
+			}
+	
 			combined_results$Final_DropletType <- combined_results[,..droplettype_column]
 
 			colourCount = length(unique(combined_results$Final_Individual_Assignment))

@@ -5,16 +5,15 @@ Singularity Image Download
 --------------------------------
 Installation should be pretty painless (we hope).
 We have  provided all the softwares in a singularity image which provides continuity across different computing platforms (see `HPCNG Singluarity <https://singularity.hpcng.org/>`__ and `Sylabs io <https://sylabs.io/singularity/>`__ for more information on singularity images).
-The only thing to note before you download this image is that the image is **~6.5Gb** so, depending on the internet speed, it will take **~15-30 min to download**.
+The only thing to note before you download this image is that the image is **~7.5Gb** so, depending on the internet speed, it will take **~15-30 min to download**.
 The good news is that you should only need to do this once unless updates are made to the scripts or image.
 
 Just download the singlularity image with:
 
   .. code-block:: bash
 
-
-    wget -O Demuxafy.sif 'https://www.dropbox.com/scl/fi/g0cuyjwomdavom6u6kb2v/Demuxafy.sif?rlkey=xfey1agg371jo4lubsljfavkh&'
-    wget -O Demuxafy.sif.md5 'https://www.dropbox.com/scl/fi/bk3p2k2440un6sb6psijn/Demuxafy.sif.md5?rlkey=x3vl8ejpfhjsrvmjanwzkxty9'
+    wget -O Demuxafy.sif 'https://www.dropbox.com/scl/fi/kykwi78vk4yifbbag5ajz/Demuxafy.sif?rlkey=5hcugu6ztpy0eik3xno63xiar'
+    wget -O Demuxafy.sif.md5 'https://www.dropbox.com/scl/fi/37oj9y1frzhqazl4h8s21/Demuxafy.sif.md5?rlkey=o2bn5wp9q68numlaav8gg95kh'
 
 
 
@@ -39,6 +38,7 @@ If everything was downloaded correctly, that command should report:
   Please note that the singularity image and this documentation is updated with each release. 
   This means that the most recent documentation may not be 100% compatible with the singularity image that you have.
   For example, additional parameters and functionality were implemented in v1.0.2 that was not available in v0.0.4.
+  There is documentation to match each release so be sure you're using documentation that matches your singularity image.
   
   You can check the version of your singularity image to match with documentation with:
 
@@ -52,33 +52,33 @@ If you run into any issues with downloading the image or any issue with running 
 .. admonition:: Demuxafy software versions - for the curious
   :class: dropdown
 
-  Image version: 2.0.1
-  Image build date: 20 January, 2023
+  Image version: 3.0.0
+  Image build date: 5 June, 2024
  
     +----------------------------+---------------------------+-------------------------------+
     | Software Group             | Software                  | Version                       |
     +============================+===========================+===============================+
-    | Demultiplexing             | ``Demuxalot``             | v0.2.0                        |
+    | Demultiplexing             | ``Demuxalot``             | v0.4.0                        |
     |                            +---------------------------+-------------------------------+
     |                            | ``popscle``               |                               |
     |                            |  - ``demuxlet``           | v0.1-beta                     |
     |                            |  - ``freemuxlet``         |                               |
     |                            +---------------------------+-------------------------------+
-    |                            | ``Dropulation``           | v2.5.4                        |
+    |                            | ``Dropulation``           | v3.0.1-7-gf7acbbc             |
     |                            +---------------------------+-------------------------------+
-    |                            | ``scSplit``               | v1.0.8.2                      |
+    |                            | ``scSplit``               | v1.0.9                        |
     |                            +---------------------------+-------------------------------+
-    |                            | ``Souporcell``            | v2.0                          |
+    |                            | ``Souporcell``            | v2.5                          |
     |                            +---------------------------+-------------------------------+
-    |                            | ``Vireo``                 | v0.5.7                        |
+    |                            | ``Vireo``                 | v0.5.8                        |
     +----------------------------+---------------------------+-------------------------------+
     | Doublet Detecting          | ``DoubletDecon``          | v1.1.6                        |
     |                            +---------------------------+-------------------------------+
     |                            | ``DoubletDetection``      | v4.2                          |
     |                            +---------------------------+-------------------------------+
-    |                            | ``DoubletFinder``         | v2.0.3                        |
+    |                            | ``DoubletFinder``         | v2.0.4                        |
     |                            +---------------------------+-------------------------------+
-    |                            | ``scDblFinder``           | v1.12.0                       |
+    |                            | ``scDblFinder``           | v1.18.0                       |
     |                            +---------------------------+-------------------------------+
     |                            | ``scds``                  | v1.13.1                       |
     |                            +---------------------------+-------------------------------+
@@ -86,7 +86,7 @@ If you run into any issues with downloading the image or any issue with running 
     |                            +---------------------------+-------------------------------+
     |                            | ``solo``                  | v1.2                          |
     +----------------------------+---------------------------+-------------------------------+
-    | Supporting Softwares       | ``minimap2``              | v2.7-r654                     |
+    | Supporting Softwares       | ``minimap2``              | 2.26-r1175                    |
     |                            +---------------------------+-------------------------------+
     |                            | ``bedtools2``             | v2.30.0                       |
     |                            +---------------------------+-------------------------------+
@@ -94,41 +94,41 @@ If you run into any issues with downloading the image or any issue with running 
     |                            +---------------------------+-------------------------------+
     |                            | ``htslib``                | v1.16                         |
     |                            +---------------------------+-------------------------------+
-    |                            | ``samtools``              | v1.16                         |
+    |                            | ``samtools``              | v1.20                         |
     |                            +---------------------------+-------------------------------+
-    |                            | ``bcftools``              | v1.16                         |
+    |                            | ``bcftools``              | v1.20                         |
     |                            +---------------------------+-------------------------------+
-    |                            | ``freebayes``             | v1.3.5                        |
+    |                            | ``freebayes``             | v1.3.7                        |
     |                            +---------------------------+-------------------------------+
-    |                            | ``cellSNP-lite``          | v1.2.1                        |
+    |                            | ``cellSNP-lite``          | v1.2.3                        |
     +----------------------------+---------------------------+-------------------------------+
-    | R Supporting Packages      | ``argparse``              | v2.2.1                        |
-    | (R v4.2.2)                 +---------------------------+-------------------------------+
-    |                            | ``ComplexHeatmap``        | v2.14.0                       |
+    | R Supporting Packages      | ``argparse``              | v2.2.3                        |
+    | (R v4.4.0)                 +---------------------------+-------------------------------+
+    |                            | ``ComplexHeatmap``        | v2.20.0                       |
     |                            +---------------------------+-------------------------------+
     |                            | ``ComplexUpset``          | v1.3.3                        |
     |                            +---------------------------+-------------------------------+
-    |                            | ``vcfR``                  | v1.13.0.9999                  |
+    |                            | ``vcfR``                  | v1.15.0                       |
     |                            +---------------------------+-------------------------------+
-    |                            | ``Seurat``                | v4.3.0                        |
+    |                            | ``Seurat``                | v5.1.0                        |
     |                            +---------------------------+-------------------------------+
-    |                            | ``SingleCellExperiment``  | v1.20.0                       |
+    |                            | ``SingleCellExperiment``  | v1.26.0                       |
     +----------------------------+---------------------------+-------------------------------+
-    | Python Supporting Packages | ``argparse``              | v1.4.0                        |
-    | (Python v3.7.2)            +---------------------------+-------------------------------+
-    |                            | ``numpy``                 | v1.21.5                       |
+    | Python Supporting Packages | ``argparse``              | v1.1.0                        |
+    | (Python v3.9.7)            +---------------------------+-------------------------------+
+    |                            | ``numpy``                 | v1.25.2                       |
     |                            +---------------------------+-------------------------------+
-    |                            | ``matplotlib``            | v3.5.3                        |
+    |                            | ``matplotlib``            | v3.9.0                        |
     |                            +---------------------------+-------------------------------+
-    |                            | ``pandas``                | v1.3.5                        |
+    |                            | ``pandas``                | v1.5.3                        |
     |                            +---------------------------+-------------------------------+
     |                            | ``PyVCF``                 | v0.6.8                        |
     |                            +---------------------------+-------------------------------+
-    |                            | ``scipy``                 | v1.7.3                        |
+    |                            | ``scipy``                 | v1.10.1                       |
     |                            +---------------------------+-------------------------------+
     |                            | ``scvi-tools``            | v0.14.6                       |
     |                            +---------------------------+-------------------------------+
-    |                            | ``umap-learn``            | v0.5.3                        |
+    |                            | ``umap-learn``            | v0.5.6                        |
     +----------------------------+---------------------------+-------------------------------+
 
 

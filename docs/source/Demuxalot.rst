@@ -5,7 +5,7 @@ Demuxalot
 ===========================
 
 .. _Demuxalot: https://pypi.org/project/demuxalot/
-.. _preprint: https://www.biorxiv.org/content/10.1101/2022.03.07.483367v1
+.. _publication: https://genomebiology.biomedcentral.com/articles/10.1186/s13059-024-03224-8
 
 
 
@@ -40,6 +40,15 @@ This is the data that you will need to have prepare to run Demuxalot_:
 
       - For example, this is the :download:`individual file <_download_files/Individuals.txt>` for our example dataset
 
+.. admonition:: Optional
+
+    - The SAM tag used in the Bam file to annotate the aligned single cell reads with their corresponding cell barcode (``$CELL_TAG``)
+
+      - If not specified, _Demuxalot defaults to using ``CB`` as that flag is used by Cell Ranger.
+
+    - The SAM tag used in the Bam file to annotate the aligned single cell reads with their corresponding unique molecular identifier (UMI) (``$UMI_TAG``)
+
+      - If not specified, _Demuxalot defaults to using ``UB`` as that flag is used by Cell Ranger.
 
 
 Run Demuxalot
@@ -75,7 +84,7 @@ Demultiplex with Demuxalot
 
   .. tab:: With Refinement
 
-    This will run the first phase of Demuxalot_ as well as the subsequent refinement:
+    This will run the first phase of Demuxalot_ as well as the subsequent refinement, provided an appropriate thread number (``$THREADS``) for your system:
 
     .. code-block:: bash
 
@@ -85,6 +94,9 @@ Demultiplex with Demuxalot
               -n $INDS \
               -v $VCF \
               -o $DEMUXALOT_OUTDIR \
+              -p $THREADS \
+              ${CELL_TAG:+-c $CELL_TAG} \
+              ${UMI_TAG:+-u $UMI_TAG} \
               -r True
 
     .. admonition:: HELP! It says my file/directory doesn't exist!
@@ -93,6 +105,8 @@ Demultiplex with Demuxalot
       If you receive an error indicating that a file or directory doesn't exist but you are sure that it does, this is likely an issue arising from Singularity.
       This is easy to fix.
       The issue and solution are explained in detail in the :ref:`Notes About Singularity Images <Singularity-docs>`
+
+    Setting ``$THREADS`` to ``-1`` results in Demuxalot_ using all available CPUs/threads.
 
     If Demuxalot_ is successful, you will have these new files in your ``$DEMUXALOT_OUTDIR``:
 
@@ -109,7 +123,7 @@ Demultiplex with Demuxalot
 
   .. tab:: Without Refinement
 
-    This will run the first phase of Demuxalot_ only without any refinement:
+    This will run the first phase of Demuxalot_ only without any refinement, provided an appropriate thread number (``$THREADS``) for your system:
 
     .. code-block:: bash
 
@@ -119,6 +133,7 @@ Demultiplex with Demuxalot
               -n $INDS \
               -v $VCF \
               -o $DEMUXALOT_OUTDIR \
+              -p $THREADS \
               -r False
 
     .. admonition:: HELP! It says my file/directory doesn't exist!
@@ -127,6 +142,8 @@ Demultiplex with Demuxalot
       If you receive an error indicating that a file or directory doesn't exist but you are sure that it does, this is likely an issue arising from Singularity.
       This is easy to fix.
       The issue and solution are explained in detail in the :ref:`Notes About Singularity Images <Singularity-docs>`
+
+    Setting ``$THREADS`` to ``-1`` results in Demuxalot_ using all available CPUs/threads.
 
     If Demuxalot_ is successful, you will have these new files in your ``$DEMUXALOT_OUTDIR``:
 
@@ -303,6 +320,6 @@ See :ref:`Combine Results <Combine-docs>`.
 
 Citation
 --------
-If you used the Demuxafy platform for analysis, please reference our preprint_ as well as Demuxalot_.
+If you used the Demuxafy platform for analysis, please reference our publication_ as well as Demuxalot_.
 
 

@@ -5,7 +5,7 @@ Scrublet
 ===========================
 
 .. _Scrublet: https://github.com/swolock/scrublet
-.. _preprint: https://www.biorxiv.org/content/10.1101/2022.03.07.483367v1
+.. _publication: https://genomebiology.biomedcentral.com/articles/10.1186/s13059-024-03224-8
 
 Scrublet_ is a transcription-based doublet detecting software.
 We have provided a wrapper script that enables Scrublet_ to be easily run from the command line but we also provide example code so that users can run manually as well depending on their data.
@@ -322,6 +322,16 @@ In addition, we provide an example for filtering the single cell matrix to a sub
 
       summary.to_csv(os.path.join(outdir,'scrublet_summary.tsv'), sep = "\t", index = False)
 
+  .. admonition:: HELP! I'm getting an error about 'rdist'?
+    :class: dropdown
+
+    If you receive an error similar to the following:
+
+    ```
+    RuntimeError: cannot cache function 'rdist': no locator available for file '/opt/conda/envs/py37/lib/python3.7/site-packages/umap/layouts.py'
+    ```
+
+    you may have to set the ``NUMBA_CACHE_DIR`` variable
 
 
 .. _scrublet-results:
@@ -400,4 +410,4 @@ See :ref:`Combine Results <Combine-docs>`.
 
 Citation
 --------
-If you used the Demuxafy platform for analysis, please reference our preprint_ as well as `Scrublet <https://www.cell.com/cell-systems/pdfExtended/S2405-4712(18)30474-5>`__.
+If you used the Demuxafy platform for analysis, please reference our publication_ as well as `Scrublet <https://www.cell.com/cell-systems/pdfExtended/S2405-4712(18)30474-5>`__.

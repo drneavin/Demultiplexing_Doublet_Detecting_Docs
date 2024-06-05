@@ -81,8 +81,22 @@ if (is.list(counts)){
 	sce <- SingleCellExperiment(list(counts=counts))
 }
 
+## Account for the fact that there might not be 500 hvg (default for scds and it hasn't built in the correct checks to make sure it doesn't throw an error if there are less)
+ind1 = Matrix::rowSums(counts(sce)>0)>0.01*ncol(sce)
+lc = Matrix::t(log1p(counts(sce)[ind1,]))
+lc = lc/Matrix::rowMeans(lc)
+vrs = apply(lc,2,stats::var)
+
+if (length(vrs) < 500){
+    message("There are less than 500 genes with non-zero expression in the dataset. Adjusting the number of HVGs to be the number of genes with non-zero expression.")
+    ntop = length(vrs)
+} else {
+    ntop = 500
+}
+
+
 ## Annotate doublet using binary classification based doublet scoring:
-sce = bcds(sce, retRes = TRUE, estNdbl=TRUE)
+sce = bcds(sce, retRes = TRUE, estNdbl=TRUE, ntop=ntop)
 
 ## Annotate doublet using co-expression based doublet scoring:
 try({

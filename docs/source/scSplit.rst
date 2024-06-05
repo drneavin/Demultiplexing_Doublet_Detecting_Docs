@@ -4,7 +4,7 @@ ScSplit
 ===========================
 
 .. _ScSplit: https://github.com/jon-xu/scSplit
-.. _preprint: https://www.biorxiv.org/content/10.1101/2022.03.07.483367v1
+.. _publication: https://genomebiology.biomedcentral.com/articles/10.1186/s13059-024-03224-8
 
 ScSplit_ is a reference-free demultiplexing software. If you have reference SNP genotypes, it would be better to use a demultiplexing software that can handle reference SNP genotypes (:ref:`Demuxlet <Demuxlet-docs>`, :ref:`Souporcell <Souporcell-docs>` or :ref:`Vireo<Vireo-docs>`)
 
@@ -38,6 +38,13 @@ This is the data that you will need to have prepared to run ScSplit_:
   - Output directory (``$SCSPLIT_OUTDIR``)
 
 
+.. admonition:: Optional
+
+    - The SAM tag used in the Bam file to annotate the aligned single cell reads with their corresponding cell barcode (``$CELL_TAG``)
+
+      - If not specified, _ScSplit defaults to using ``CB``.
+
+
 Run ScSplit
 -----------
 First, let's assign the variables that will be used to execute each step.
@@ -65,7 +72,16 @@ Prepare Bam file
 
   ~7h using a total of 6.5Gb memory when using 8 threads for the full :ref:`Test Dataset <TestData>` which contains ~20,982 droplets of 13 multiplexed donors,
 
-First, you will need to prepare the bam file so that it only contains high quality, primarily mapped reads without any PCR duplicated reads.
+First, let's check to make sure that the bam file and vcf file are on the same reference for matching chromosome encoding (ie UCSC = hg38 = chr1, chr2, chr3... vs ENSEMBL/NCBI = GRCh38 = 1, 2, 3...)
+
+.. code-block:: bash
+
+  singularity exec Demuxafy.sif compare_vcf_bam_genome.sh $BAM $VCF
+
+If you receive an error, you will have to standardise the genome encoding so the files match before continuing.
+
+
+you will need to prepare the bam file so that it only contains high quality, primarily mapped reads without any PCR duplicated reads.
 
 .. code-block:: bash
 
@@ -133,7 +149,7 @@ The prepared SNV genotypes and bam file can then be used to demultiplex and call
 
 .. code-block:: bash
 
-  singularity exec Demuxafy.sif scSplit count -c $VCF -v $SCSPLIT_OUTDIR/freebayes_var_qual30.recode.vcf -i $SCSPLIT_OUTDIR/filtered_bam_dedup_sorted.bam -b $BARCODES -r $SCSPLIT_OUTDIR/ref_filtered.csv -a $SCSPLIT_OUTDIR/alt_filtered.csv -o $SCSPLIT_OUTDIR
+  singularity exec Demuxafy.sif scSplit count -c $VCF -v $SCSPLIT_OUTDIR/freebayes_var_qual30.recode.vcf -i $SCSPLIT_OUTDIR/filtered_bam_dedup_sorted.bam -b $BARCODES ${CELL_TAG:+-t $CELL_TAG} -r $SCSPLIT_OUTDIR/ref_filtered.csv -a $SCSPLIT_OUTDIR/alt_filtered.csv -o $SCSPLIT_OUTDIR
   singularity exec Demuxafy.sif scSplit run -r $SCSPLIT_OUTDIR/ref_filtered.csv -a $SCSPLIT_OUTDIR/alt_filtered.csv -n $N -o $SCSPLIT_OUTDIR
   singularity exec Demuxafy.sif scSplit genotype -r $SCSPLIT_OUTDIR/ref_filtered.csv -a $SCSPLIT_OUTDIR/alt_filtered.csv -p $SCSPLIT_OUTDIR/scSplit_P_s_c.csv -o $SCSPLIT_OUTDIR
 
@@ -613,4 +629,4 @@ See :ref:`Combine Results <Combine-docs>`.
 
 Citation
 --------
-If you used the Demuxafy platform for analysis, please reference our preprint_ as well as `ScSplit <https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1852-7>`__.
+If you used the Demuxafy platform for analysis, please reference our publication_ as well as `ScSplit <https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1852-7>`__.

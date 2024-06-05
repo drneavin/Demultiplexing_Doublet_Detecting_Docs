@@ -5,7 +5,7 @@ Dropulation
 ===========================
 
 .. _Dropulation: https://github.com/broadinstitute/Drop-seq/blob/master/doc/Census-seq_Computational_Protcools.pdf
-.. _preprint: https://www.biorxiv.org/content/10.1101/2022.03.07.483367v1
+.. _publication: https://genomebiology.biomedcentral.com/articles/10.1186/s13059-024-03224-8
 .. _GENCODE: https://www.gencodegenes.org/human/
 
 
@@ -51,6 +51,17 @@ This is the data that you will need to have prepare to run Dropulation_:
     - For example, this is the :download:`individual file <_download_files/Individuals.txt>` for our example dataset
 
 
+.. admonition:: Optional
+
+    - The SAM tag used in the Bam file to annotate the aligned single cell reads with their corresponding cell barcode (``$CELL_TAG``)
+
+      - If not specified, _Demuxlet defaults to using ``XC``.
+
+    - The SAM tag used in the Bam file to annotate the aligned single cell reads with their corresponding unique molecular identifier (UMI) (``$UMI_TAG``)
+
+      - If not specified, _Demuxlet defaults to using ``XM``.
+
+
 Run Dropulation
 -----------------
 First, let's assign the variables that will be used to execute each step.
@@ -70,6 +81,8 @@ First, let's assign the variables that will be used to execute each step.
       DROPULATION_OUTDIR=/path/to/output/dropulation
       INDS=/path/to/TestData4PipelineFull/donor_list.txt
       GTF=/path/to/genes.gtf
+      CELL_TAG=CB  # default: XC
+      UMI_TAG=UB  # default: XM
 
 
 Bam Annotation
@@ -90,9 +103,9 @@ Please note that the ``\`` at the end of each line is purely for readability to 
   .. code-block:: bash
 
     singularity exec Demuxafy.sif TagReadWithGeneFunction \
-              --ANNOTATIONS_FILE $GTF \
-              --INPUT $BAM \
-              --OUTPUT $DROPULATION_OUTDIR/possorted_genome_bam_dropulation_tag.bam
+              ANNOTATIONS_FILE=$GTF \
+              INPUT=$BAM \
+              OUTPUT=$DROPULATION_OUTDIR/possorted_genome_bam_dropulation_tag.bam
 
 
 If the bam annotation is successful, you will have these new files in your ``$DROPULATION_OUTDIR``:
@@ -113,12 +126,6 @@ Dropulation Assignment
 
 First, we will identify the most likely singlet donor for each droplet.
 
-.. admonition:: Note
-  :class: note
-
-  Please change the cell barcode and molecular barcode tags as necessary. 
-  For 10x experiments processed with cellranger, this should be 'CB' for the ``CELL_BARCODE_TAG`` and 'UB' for the ``MOLECULAR_BARCODE_TAG``
-
 .. admonition:: note
 
   If you are submitting this job to an cluster to run, you may have to bind the ``$TMPDIR`` directory used by your cluster in the singularity command.
@@ -128,15 +135,20 @@ Please note that the ``\`` at the end of each line is purely for readability to 
 
 .. code-block:: bash
 
-  singularity exec Demuxafy.sif AssignCellsToSamples --CELL_BC_FILE $BARCODES \
+  singularity exec Demuxafy.sif Dropulation_AssignCellsToSamples.py --CELL_BC_FILE $BARCODES \
             --INPUT_BAM $DROPULATION_OUTDIR/possorted_genome_bam_dropulation_tag.bam \
             --OUTPUT $DROPULATION_OUTDIR/assignments.tsv.gz \
             --VCF $VCF \
             --SAMPLE_FILE $INDS \
-            --CELL_BARCODE_TAG 'CB' \
-            --MOLECULAR_BARCODE_TAG 'UB' \
+            --CELL_BARCODE_TAG $CELL_TAG \
+            --MOLECULAR_BARCODE_TAG $UMI_TAG \
             --VCF_OUTPUT $DROPULATION_OUTDIR/assignment.vcf \
             --MAX_ERROR_RATE 0.05
+
+.. admonition:: note
+
+  You might choose not to include the ``--SAMPLE_FILE`` if you have genotype information for many donors across multiple pools.
+  This would help identify potential sample swaps between pools (we see this happen often in practice when multiple pools are processed for a single project).
 
 
 If the bam annotation is successful, you will have these new files in your ``$DROPULATION_OUTDIR``:
@@ -160,12 +172,6 @@ Dropulation Doublet
 
 Next, we will identify the likelihoods of each droplet being a doublet.
 
-.. admonition:: Note
-  :class: note
-
-  Please change the cell barcode and molecular barcode tags as necessary. 
-  For 10x experiments processed with cellranger, this should be 'CB' for the ``CELL_BARCODE_TAG`` and 'UB' for the ``MOLECULAR_BARCODE_TAG``
-
 .. admonition:: note
 
   If you are submitting this job to an cluster to run, you may have to bind the ``$TMPDIR`` directory used by your cluster in the singularity command.
@@ -179,8 +185,8 @@ Please note that the ``\`` at the end of each line is purely for readability to 
             --INPUT_BAM $DROPULATION_OUTDIR/possorted_genome_bam_dropulation_tag.bam \
             --OUTPUT $DROPULATION_OUTDIR/likelihoods.tsv.gz \
             --VCF $VCF \
-            --CELL_BARCODE_TAG 'CB' \
-            --MOLECULAR_BARCODE_TAG 'UB' \
+            ${CELL_TAG:+--CELL_BARCODE_TAG $CELL_TAG} \
+            ${UMI_TAG:+--MOLECULAR_BARCODE_TAG $UMI_TAG} \
             --SINGLE_DONOR_LIKELIHOOD_FILE $DROPULATION_OUTDIR/assignments.tsv.gz \
             --SAMPLE_FILE $INDS \
             --MAX_ERROR_RATE 0.05
@@ -325,7 +331,7 @@ See :ref:`Combine Results <Combine-docs>`.
 
 Citation
 -----------
-If you used the Demuxafy platform for analysis, please reference our preprint_ as well as Dropulation_.
+If you used the Demuxafy platform for analysis, please reference our publication_ as well as Dropulation_.
 
 
 

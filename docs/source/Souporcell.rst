@@ -4,7 +4,7 @@ Souporcell
 ===========================
 
 .. _Souporcell: https://github.com/wheaton5/souporcell
-.. _preprint: https://www.biorxiv.org/content/10.1101/2022.03.07.483367v1
+.. _publication: https://genomebiology.biomedcentral.com/articles/10.1186/s13059-024-03224-8
 
 Souporcell_ is a genotype-free demultiplexing software that does not require you to have SNP genotypes the donors in your multiplexed capture.
 However, it can natively integrate SNP genotypes into the demultiplexing if you have them available for **all** the donors in your pool.
@@ -51,6 +51,16 @@ This is the data that you will need to have prepare to run Souporcell_:
   - Output directory (``$SOUPORCELL_OUTDIR``)
 
 
+.. admonition:: Optional
+
+    - The SAM tag used in the Bam file to annotate the aligned single cell reads with their corresponding cell barcode (``$CELL_TAG``)
+
+      - If not specified, _Souporcell defaults to using ``CB``.
+
+    - The SAM tag used in the Bam file to annotate the aligned single cell reads with their corresponding unique molecular identifier (UMI) (``$UMI_TAG``)
+
+      - If not specified, _Souporcell defaults to using ``UB``.
+
 
 Run Souporcell
 ---------------
@@ -81,6 +91,7 @@ Run Souporcell Pipeline
 
 You can run Souporcell_ with or without reference SNP genotypes - follow the instructions for each bellow:
 
+Please note that the ``\`` at the end of each line is purely for readability to put a separate parameter argument on each line.
 
 .. tabs::
 
@@ -91,7 +102,16 @@ You can run Souporcell_ with or without reference SNP genotypes - follow the ins
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif souporcell_pipeline.py -i $BAM -b $BARCODES -f $FASTA -t $THREADS -o $SOUPORCELL_OUTDIR -k $N --common_variants $VCF
+      singularity exec Demuxafy.sif Souporcell.py \
+        -i $BAM \
+        -b $BARCODES \
+        -f $FASTA \
+        -t $THREADS \
+        -o $SOUPORCELL_OUTDIR \
+        ${CELL_TAG:+--cell_tag $CELL_TAG} \
+        ${UMI_TAG:+--umi_tag $UMI_TAG} \
+        -k $N \
+        --common_variants $VCF
 
     .. admonition:: HELP! It says my file/directory doesn't exist!
       :class: dropdown
@@ -106,7 +126,17 @@ You can run Souporcell_ with or without reference SNP genotypes - follow the ins
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif souporcell_pipeline.py -i $BAM -b $BARCODES -f $FASTA -t $THREADS -o $SOUPORCELL_OUTDIR -k $N --known_genotypes $VCF --known_genotypes_sample_names donor1 donor donor3 donor4
+      singularity exec Demuxafy.sif Souprocell.py \
+        -i $BAM \
+        -b $BARCODES \
+        -f $FASTA \
+        -t $THREADS \
+        -o $SOUPORCELL_OUTDIR \
+        ${CELL_TAG:+--cell_tag $CELL_TAG} \
+        ${UMI_TAG:+--umi_tag $UMI_TAG} \
+        -k $N \
+        --known_genotypes $VCF \
+        --known_genotypes_sample_names donor1 donor donor3 donor4
 
     .. admonition:: HELP! It says my file/directory doesn't exist!
       :class: dropdown
@@ -260,13 +290,18 @@ If you have reference SNP genotypes for some or all of the donors in your pool, 
 
   In order to do this, your $VCF must be reference SNP genotypes for the individuals in the pool and cannot be a general vcf with common SNP genotype locations from 1000 Genomes or HRC.
 
+Please note that the ``\`` at the end of each line is purely for readability to put a separate parameter argument on each line.
+
 .. tabs::
 
   .. tab:: With Script
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif Assign_Indiv_by_Geno.R -r $VCF -c $SOUPORCELL_OUTDIR/cluster_genotypes.vcf -o $SOUPORCELL_OUTDIR
+      singularity exec Demuxafy.sif Assign_Indiv_by_Geno.R \
+              -r $VCF \
+              -c $SOUPORCELL_OUTDIR/cluster_genotypes.vcf \
+              -o $SOUPORCELL_OUTDIR
 
     To see the parameter help menu, type:
 
@@ -691,4 +726,4 @@ See :ref:`Combine Results <Combine-docs>`.
 
 Citation
 --------
-If you used the Demuxafy platform for analysis, please reference our preprint_ as well as `Souporcell <https://www.nature.com/articles/s41592-020-0820-1>`__.
+If you used the Demuxafy platform for analysis, please reference our publication_ as well as `Souporcell <https://www.nature.com/articles/s41592-020-0820-1>`__.

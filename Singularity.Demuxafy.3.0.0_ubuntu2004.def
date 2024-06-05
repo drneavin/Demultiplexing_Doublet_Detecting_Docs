@@ -9,10 +9,9 @@ From: ubuntu:20.04
 %environment
     # set up all essential environment variables
     export LC_ALL=C
-    export PATH=/miniconda3/bin:/opt/minimap2-2.26_x64-linux:/opt/:/opt/hisat2-2.2.1:/opt/bedtools2/bin:/opt/souporcell:/opt/.cargo/bin:/opt/freebayes/scripts:/opt/popscle/bin/:/miniconda3/lib/python3.9/site-packages/scSplit:/opt/Demultiplexing_Doublet_Detecting_Docs/scripts:opt/Demultiplexing_Doublet_Detecting_Docs/mods:/usr/bin:/usr/local/cuda-11.8/bin:/opt/Drop-seq/dropseq-3.0.1-7-gf7acbbc/:/opt/gradle/gradle-8.8/bin:/$PATH
+    export PATH=/miniconda3/bin:/opt/minimap2-2.26_x64-linux:/opt/:/opt/hisat2-2.2.1:/opt/bedtools2/bin:/opt/souporcell:/opt/.cargo/bin:/opt/freebayes/scripts:/opt/popscle/bin/:/miniconda3/lib/python3.9/site-packages/scSplit:/opt/Demultiplexing_Doublet_Detecting_Docs/scripts:opt/Demultiplexing_Doublet_Detecting_Docs/mods:/usr/bin:/usr/local/cuda-11.8/bin:/opt/dropseq-3.0.1/:/$PATH
     export PYTHONPATH=/miniconda3/lib/python3.9/:$PYTHONPATH
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu/:/miniconda3/lib/python3.9/site-packages/nvidia/cudnn/lib:/miniconda3/lib/
-    export JAVA_HOME=/usr/lib/jvm/jdk-21-oracle-x64
 
 %post
     #!/bin/dash
@@ -28,42 +27,26 @@ From: ubuntu:20.04
     apt-get -y install wget
     apt-get -y install libtool
     apt-get -y install flex
-    apt-get -y install zip unzip
 
     apt-get -y install software-properties-common
     apt update
 
     apt-get -y install curl
 
+#    cd /usr/local/src
+#    wget https://curl.se/download/curl-7.59.0.zip
+#    unzip curl-7.59.0.zip
+
+#    cd curl-7.59.0
+#    ./buildconf
+#    ./configure --with-ssl --prefix=/usr
+#    make
+#    make install
+
     export PATH=/usr/bin:$PATH
 
     cd /opt
     curl -V
-
-
-    ## Install java (for dropulation)
-    wget https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.deb
-    dpkg -i jdk-21_linux-x64_bin.deb
-    rm jdk-21_linux-x64_bin.deb
-
-    JAVA_HOME=/usr/lib/jvm/jdk-21-oracle-x64
-
-
-    ## dropulation
-    cd /opt
-
-    git clone https://github.com/broadinstitute/Drop-seq.git
-    cd Drop-seq
-    ./gradlew distZip
-    ls dropseq
-    ls dropseq/build/
-    ls dropseq/build/distributions
-    unzip -d /opt/Drop-seq ./dropseq/build/distributions/dropseq-3.0.1-7-gf7acbbc.zip
-    rm dropseq/build/distributions/dropseq-3.0.1-7-gf7acbbc.zip
-
-#    wget https://github.com/broadinstitute/Drop-seq/releases/download/v3.0.1/dropseq-3.0.1.zip
-#    unzip dropseq-3.0.1.zip
-#    rm dropseq-3.0.1.zip
 
 
     apt install -y dirmngr --install-recommends
@@ -125,9 +108,7 @@ From: ubuntu:20.04
 
 
     ## igraph must be built before activating conda because of how it searches for some dependencies and decides things are available that aren't
-    R --slave -e 'install.packages("pak", repos = sprintf("https://r-lib.github.io/p/pak/stable/%s/%s/%s", .Platform$pkgType, R.Version()$os, R.Version()$arch))'
-    R --slave -e 'pak::pak("igraph/rigraph")'
-    R --slave -e 'devtools::install_github("cran/lsa")'
+    R --slave -e 'install.packages("igraph", repos = "http://cran.us.r-project.org")'
 
 
     cd /opt
@@ -159,6 +140,7 @@ From: ubuntu:20.04
     apt-get -y install zlib1g-dev
     apt-get -y install libbz2-dev
     apt-get -y install liblzma-dev
+    apt-get -y install zip unzip
     apt-get -y install pkg-config
 
 
@@ -175,12 +157,21 @@ From: ubuntu:20.04
     pip install scipy
     pip install arviz==0.12.1
 
+#    pip install tensorflow[and-cuda]
+#    pip install tensorflow tensorrt==8.6.1 tensorflow-gpu==2.8.0 ## required for souporcell and solo
+#    yes | conda install cudatoolkit=11.3 nvidia/label/cuda-11.3.1::cuda ## solo
+
+#    conda install pytorch torchvision torchaudio pytorch-cuda=11.7 -c pytorch -c nvidia
+#    conda install jax jaxlib -c conda-forge
+#    pip install scvi-tools==0.14.6 ## required for solo
+#    pip install pytorch-lightning==1.4.0rc0 torch==1.11.0+cu113 torchmetrics==0.6.0 torchvision==0.12.0+cu113 --extra-index-url https://download.pytorch.org/whl/cu113
 
     ### Install solo ###
 
     pip install tensorflow[and-cuda] tensorrt==8.6.1 tensorflow-gpu==2.8.0
     yes | conda install cudatoolkit=11.8 nvidia/label/cuda-11.8.0::cuda
     pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+#    pip install solo-sc==1.2 torchmetrics==0.6.0 pytorch-lightning==1.3.1 scvi-tools==0.14.6 numpy==1.21.5
     pip install torchmetrics==0.6.0 pytorch-lightning==1.3.1 scvi-tools==0.14.6 numpy==1.21.5
 
     cd /opt
@@ -201,12 +192,12 @@ From: ubuntu:20.04
 
 
     pip install setuptools==57.5.0 ##scSplit, souporcell
-    pip install scikit-learn==1.0.2 ### later sklearns don't play well with scSplit need for numpy matrix...
-    pip install pandas==1.5.3
+    pip install scikit-learn
+    pip install pandas
     pip install matplotlib==3.2.2
     pip install scikit-image
     pip install numba
-    pip install annoy==1.15 ### can't be 1.17 based on feedback from some users about issues with scrublet on their system
+    pip install annoy
     pip install umap-learn
     pip install h5py
     pip install xgboost
@@ -223,10 +214,10 @@ From: ubuntu:20.04
     R --slave -e 'install.packages("pkgdown", repos = "http://cran.us.r-project.org", dependecies=TRUE)'
     R --slave -e 'install.packages("V8", repos = "http://cran.us.r-project.org")'
     R --slave -e 'install.packages("devtools", repos = "http://cran.us.r-project.org")'
-    R --slave -e 'remotes::install_github("tidyverse/tidyverse")'
+    R --slave -e 'install.packages("tidyverse", repos = "http://cran.us.r-project.org")'
     R --slave -e 'install.packages("data.table", repos = "http://cran.us.r-project.org")'
     R --slave -e 'install.packages("xgboost", repos = "http://cran.us.r-project.org")'
-    R --slave -e 'remotes::install_github("trevorld/r-argparse")'
+    R --slave -e 'install.packages("argparse", repos = "http://cran.us.r-project.org")'
     R --slave -e 'install.packages("https://cran.r-project.org/src/contrib/Archive/Matrix/Matrix_1.3-4.tar.gz", repos=NULL, type="source")'
 
     # ## Other helper pacages ##
@@ -235,11 +226,9 @@ From: ubuntu:20.04
     R --slave -e 'install.packages("hdf5r", repos = "http://cran.us.r-project.org")'
     R --slave -e 'devtools::install_github(repo="knausb/vcfR")' 
     R --slave -e 'install.packages("Cairo",repo="http://cran.us.r-project.org")' ### Required for Complex Heatmap
-    R --slave -e 'devtools::install_github("krassowski/complex-upset")'
+    R --slave -e 'BiocManager::install("ComplexHeatmap")'
     R --slave -e 'install.packages("lsa", repos = "http://cran.us.r-project.org")'
-    R --slave -e 'devtools::install_github("cran/lsa")'
-#    R --slave -e 'install.packages("ComplexUpset", repos = "http://cran.us.r-project.org")'
-    R --slave -e 'devtools::install_github("jokergoo/ComplexHeatmap")'
+    R --slave -e 'install.packages("ComplexUpset", repos = "http://cran.us.r-project.org")'
 
     ## Single Cell packages ##
     R --slave -e 'install.packages("BH", repos = "http://cran.us.r-project.org")'
@@ -254,9 +243,6 @@ From: ubuntu:20.04
     R --slave -e 'devtools::install_github("drneavin/DoubletDecon")' ### Forked and changed on August 2, 2022 because of errors with original directory and poor response from author of repo so unlikely to fix
     R --slave -e 'remotes::install_github("chris-mcginnis-ucsf/DoubletFinder")'
 
-    ## For dropseq
-    R --slave -e 'devtools::install_github("broadinstitute/Drop-seq", subdir="/src/R/packages/DropSeq.utilities")'
-    R --slave -e 'devtools::install_github("broadinstitute/Drop-seq", subdir="/src/R/packages/DropSeq.dropulation")'
 
 
 
@@ -348,7 +334,7 @@ From: ubuntu:20.04
 
 
     ### Install vcflib - I think for scSplit to parallelize if necessary? ###
-    conda install -c bioconda vcflib==1.0.3
+    conda install -c bioconda vcflib
 
 
 
@@ -405,6 +391,16 @@ From: ubuntu:20.04
     pip install demuxalot
 
 
+    ## dropulation
+    cd /opt
+    wget https://github.com/broadinstitute/Drop-seq/releases/download/v3.0.1/dropseq-3.0.1.zip
+    unzip dropseq-3.0.1.zip
+
+    ## Install java (for dropulation)
+    wget https://download.bell-sw.com/java/11.0.20+8/bellsoft-jdk11.0.20+8-linux-amd64.deb
+    dpkg -i bellsoft-jdk11.0.20+8-linux-amd64.deb
+
+
 
     ### Get the github repo with scripts for workflow ###
     cd /opt
@@ -412,6 +408,11 @@ From: ubuntu:20.04
                 cd Demultiplexing_Doublet_Detecting_Docs
                 rm -rf references ## Only hosting on  github for people to download if they want, no need to take up extra space in the image
                 rm -rf docs ## doc files, dont need in image
+
+    ### Needed for R libraries ###
+#    cp /opt/conda/lib/libstdc++.so.6.0.29 /usr/lib/x86_64-linux-gnu/
+#    mv /usr/lib/x86_64-linux-gnu/libstdc++.so.6 /usr/lib/x86_64-linux-gnu/libstdc++.so.6.bkp
+#    ln -s /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.29 /usr/lib/x86_64-linux-gnu/libstdc++.so.6
 
 
 

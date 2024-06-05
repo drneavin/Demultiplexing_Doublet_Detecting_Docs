@@ -4,7 +4,7 @@ Freemuxlet
 ===========================
 
 .. _Freemuxlet: https://github.com/statgen/popscle
-.. _preprint: https://www.biorxiv.org/content/10.1101/2022.03.07.483367v1
+.. _publication: https://genomebiology.biomedcentral.com/articles/10.1186/s13059-024-03224-8
 
 Freemuxlet_ is a genotype-free demultiplexing software that does not require you to have SNP genotypes the donors in your multiplexed capture.
 In fact, it can't natively integrate SNP genotypes into the demultiplexing.
@@ -42,6 +42,17 @@ This is the data that you will need to have prepare to run Freemuxlet_:
   - Output directory (``$FREEMUXLET_OUTDIR``)
 
 
+.. admonition:: Optional
+
+    - The SAM tag used in the Bam file to annotate the aligned single cell reads with their corresponding cell barcode (``$CELL_TAG``)
+
+      - If not specified, _Freemuxlet defaults to using ``CB``.
+
+    - The SAM tag used in the Bam file to annotate the aligned single cell reads with their corresponding unique molecular identifier (UMI) (``$UMI_TAG``)
+
+      - If not specified, _Freemuxlet defaults to using ``UB``.
+
+
 
 
 Run Freemuxlet
@@ -74,9 +85,17 @@ Popscle Pileup
 
 First we will need to identify the number of reads from each allele at each of the common SNP location:
 
+Please note that the ``\`` at the end of each line is purely for readability to put a separate parameter argument on each line.
+
 .. code-block:: bash
 
-  singularity exec Demuxafy.sif popscle dsc-pileup --sam $BAM --vcf $VCF --group-list $BARCODES --out $FREEMUXLET_OUTDIR/pileup
+  singularity exec Demuxafy.sif popscle_pileup.py \
+  --sam $BAM \
+  --vcf $VCF \
+  --group-list $BARCODES \
+  --tag-group $CELL_TAG \
+  --tag-UMI $UMI_TAG \
+  --out $FREEMUXLET_OUTDIR/pileup
 
 .. admonition:: HELP! It says my file/directory doesn't exist!
   :class: dropdown
@@ -111,9 +130,18 @@ First we will need to identify the number of reads from each allele at each SNP 
 
 Once you have run ``popscle pileup``, you can demultiplex your samples with Freemuxlet_:
 
+Please note that the ``\`` at the end of each line is purely for readability to put a separate parameter argument on each line.
+
 .. code-block:: bash
 
-  singularity exec Demuxafy.sif popscle freemuxlet --plp $FREEMUXLET_OUTDIR/pileup --out $FREEMUXLET_OUTDIR/freemuxlet --group-list $BARCODES --nsample $N
+  singularity exec Demuxafy.sif popscle freemuxlet \
+          --plp $FREEMUXLET_OUTDIR/pileup \
+          --out $FREEMUXLET_OUTDIR/freemuxlet \
+          --tag-group $CELL_TAG \
+          --tag-UMI $UMI_TAG \
+          --group-list $BARCODES \
+          --nsample $N
+
 
 .. admonition:: HELP! It says my file/directory doesn't exist!
   :class: dropdown
@@ -205,13 +233,18 @@ If you have reference SNP genotypes for some or all of the donors in your pool, 
 
   In order to do this, your ``$VCF`` must be reference SNP genotypes for the individuals in the pool and cannot be a general vcf with common SNP genotype locations from 1000 Genomes or HRC.
 
+  Please note that the ``\`` at the end of each line is purely for readability to put a separate parameter argument on each line.
+
 .. tabs::
 
   .. tab:: With Script
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif Assign_Indiv_by_Geno.R -r $VCF -c $FREEMUXLET_OUTDIR/freemuxlet.clust1.vcf.gz -o $FREEMUXLET_OUTDIR
+      singularity exec Demuxafy.sif Assign_Indiv_by_Geno.R \
+              -r $VCF \
+              -c $FREEMUXLET_OUTDIR/freemuxlet.clust1.vcf.gz \
+              -o $FREEMUXLET_OUTDIR
 
     To see the parameter help menu, type:
 
@@ -609,4 +642,4 @@ See :ref:`Combine Results <Combine-docs>`.
 
 Citation
 --------
-If you used the Demuxafy platform for analysis, please reference our preprint_ as well as `Freemuxlet <https://github.com/statgen/popscle>`__.
+If you used the Demuxafy platform for analysis, please reference our publication_ as well as `Freemuxlet <https://github.com/statgen/popscle>`__.

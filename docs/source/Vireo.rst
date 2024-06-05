@@ -10,7 +10,7 @@ Vireo
 ===========================
  
 .. _Vireo: https://vireosnp.readthedocs.io/en/latest/manual.html
-.. _preprint: https://www.biorxiv.org/content/10.1101/2022.03.07.483367v1
+.. _publication: https://genomebiology.biomedcentral.com/articles/10.1186/s13059-024-03224-8
 
 Vireo is a flexible demultiplexing software that can demutliplex without any reference SNP genotypes, with reference SNP genotypes for a subset of the donors in the pool or no reference SNP genotypes.
 If you have reference SNP genotypes for **all** of the donors in your pool, you could also use :ref:`Demuxlet <Demuxlet-docs>` or :ref:`Souporcell <Souporcell-docs>`.
@@ -48,6 +48,22 @@ This is the data that you will need to have preparede to run Vireo_:
   - Output directory (``$VIREO_OUTDIR``)
   
 
+.. admonition:: Optional
+
+    - The SAM tag used in the Bam file to annotate the aligned single cell reads with their corresponding cell barcode (``$CELL_TAG``)
+
+      - If not specified, _Vireo defaults to using ``CB``.
+
+    - The SAM tag used in the Bam file to annotate the aligned single cell reads with their corresponding unique molecular identifier (UMI) (``$UMI_TAG``)
+
+      - If not specified, _Vireo defaults to using ``UR``.
+..
+  Note: The default switched from ``UR`` to ``UB`` with cellsnp-lite v.1.2.3.
+  The Demuxafy Singularity image v. 2.0.1 bundles cellsnp-lite v.1.2.1, so the
+  old default applies. The above documentation should be updated to reflect the
+  upstream change, once cellsnp-lite is updated to v.1.2.3 or higher in the
+  Demuxafy Singularity image.
+
 
 
 
@@ -84,15 +100,18 @@ Please note that the ``\`` at the end of each line is purely for readability to 
 
 .. code-block:: bash
 
-  singularity exec Demuxafy.sif cellsnp-lite \
-    -s $BAM \
-    -b $BARCODES \
-    -O $VIREO_OUTDIR \
-    -R $VCF \
-    -p 20 \
-    --minMAF 0.1 \
-    --minCOUNT 20 \
-    --gzip 
+  singularity exec Demuxafy.sif cellsnp_pileup.py \
+            -s $BAM \
+            -b $BARCODES \
+            -O $VIREO_OUTDIR \
+            -R $VCF \
+            -p 20 \
+            --minMAF 0.1 \
+            --minCOUNT 20 \
+            --cellTAG $CELL_TAG \
+            --UMItag $UMI_TAG \
+            --gzip 
+
 
 You can alter the ``-p``, ``--minMAF`` and ``--minCOUNT`` parameters to fit your data and your needs.
 We have found these settings to work well with our data.
@@ -157,7 +176,11 @@ We've provided an example command for each of these differing amounts of donor S
 
         .. code-block::
 
-          singularity exec Demuxafy.sif bcftools view $VCF -R $VIREO_OUTDIR/cellSNP.base.vcf.gz -s sample1,sample2 -Ov -o $VIREO_OUTDIR/donor_subset.vcf
+          singularity exec Demuxafy.sif bcftools view $VCF \
+                  -R $VIREO_OUTDIR/cellSNP.base.vcf.gz \
+                  -s sample1,sample2 \
+                  -Ov \
+                  -o $VIREO_OUTDIR/donor_subset.vcf
 
         Alternatively, if you have the individuals from the pool in a file with each individuals separated by a new line (``individual_file.tsv``), then you can use ``-S individual_file.tsv``.
 
@@ -169,11 +192,11 @@ We've provided an example command for each of these differing amounts of donor S
     .. code-block::
 
       singularity exec Demuxafy.sif vireo \
-      -c $VIREO_OUTDIR \
-      -d $VIREO_OUTDIR/donor_subset.vcf \
-      -o $VIREO_OUTDIR \
-      -t $FIELD \
-      --callAmbientRNAs
+              -c $VIREO_OUTDIR \
+              -d $VIREO_OUTDIR/donor_subset.vcf \
+              -o $VIREO_OUTDIR \
+              -t $FIELD \
+              --callAmbientRNAs
 
     .. admonition:: HELP! It says my file/directory doesn't exist!
       :class: dropdown
@@ -205,7 +228,11 @@ We've provided an example command for each of these differing amounts of donor S
 
         .. code-block::
 
-          singularity exec Demuxafy.sif bcftools view $VCF -R $VIREO_OUTDIR/cellSNP.base.vcf.gz -s sample1,sample2 -Ov -o $VIREO_OUTDIR/donor_subset.vcf
+          singularity exec Demuxafy.sif bcftools view $VCF \
+                  -R $VIREO_OUTDIR/cellSNP.base.vcf.gz \
+                  -s sample1,sample2 \
+                  -Ov \
+                  -o $VIREO_OUTDIR/donor_subset.vcf
 
         Alternatively, if you have the individuals from the pool in a file with each individuals separated by a new line (``individual_file.tsv``), then you can use ``-S individual_file.tsv``.
 
@@ -217,19 +244,22 @@ We've provided an example command for each of these differing amounts of donor S
 
         .. code-block::
 
-          singularity exec Demuxafy.sif bcftools view $VCF -R $VIREO_OUTDIR/cellSNP.base.vcf.gz -Oz -o $VIREO_OUTDIR/donor_subset.vcf
+          singularity exec Demuxafy.sif bcftools view $VCF \
+                  -R $VIREO_OUTDIR/cellSNP.base.vcf.gz \
+                  -Oz \
+                  -o $VIREO_OUTDIR/donor_subset.vcf
 
     Please note that the ``\`` at the end of each line is purely for readability to put a separate parameter argument on each line.
 
     .. code-block::
 
       singularity exec Demuxafy.sif vireo \
-        -c $VIREO_OUTDIR \
-        -d $VIREO_OUTDIR/donor_subset.vcf.gz \
-        -o $VIREO_OUTDIR \
-        -t $FIELD \
-        -N $N \
-        --callAmbientRNAs
+                -c $VIREO_OUTDIR \
+                -d $VIREO_OUTDIR/donor_subset.vcf.gz \
+                -o $VIREO_OUTDIR \
+                -t $FIELD \
+                -N $N \
+                --callAmbientRNAs
 
     .. admonition:: HELP! It says my file/directory doesn't exist!
       :class: dropdown
@@ -245,10 +275,10 @@ We've provided an example command for each of these differing amounts of donor S
     .. code-block::
 
       singularity exec Demuxafy.sif vireo \
-        -c $VIREO_OUTDIR \
-        -o $VIREO_OUTDIR \
-        -N $N \
-        --callAmbientRNAs
+              -c $VIREO_OUTDIR \
+              -o $VIREO_OUTDIR \
+              -N $N \
+              --callAmbientRNAs
 
     .. admonition:: HELP! It says my file/directory doesn't exist!
       :class: dropdown
@@ -357,4 +387,4 @@ See :ref:`Combine Results <Combine-docs>`.
 
 Citation
 --------
-If you used the Demuxafy platform for analysis, please reference our preprint_ as well as `Vireo <https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1865-2>`__.
+If you used the Demuxafy platform for analysis, please reference our publication_ as well as `Vireo <https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1865-2>`__.

@@ -4,7 +4,7 @@ DoubletDecon
 ===========================
 
 .. _DoubletDecon: https://github.com/EDePasquale/DoubletDecon
-.. _preprint: https://www.biorxiv.org/content/10.1101/2022.03.07.483367v1
+.. _publication: https://genomebiology.biomedcentral.com/articles/10.1186/s13059-024-03224-8
 
 DoubletDecon_ is a transcription-based doublet detection software that uses deconvolution to identify doublets using the `R` statistical software.
 We have provided a wrapper script that takes common arguments for DoubletDecon_ and also provide example code for you to run manually if you prefer.
@@ -271,4 +271,4 @@ See :ref:`Combine Results <Combine-docs>`.
 
 Citation
 --------
-If you used the Demuxafy platform for analysis, please reference our preprint_ as well as `DoubletDecon <https://www.sciencedirect.com/science/article/pii/S2211124719312860>`__.
+If you used the Demuxafy platform for analysis, please reference our publication_ as well as `DoubletDecon <https://www.sciencedirect.com/science/article/pii/S2211124719312860>`__.
