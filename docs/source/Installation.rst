@@ -52,8 +52,8 @@ If you run into any issues with downloading the image or any issue with running 
 .. admonition:: Demuxafy software versions - for the curious
   :class: dropdown
 
-  Image version: 2.0.1
-  Image build date: 31 May, 2024
+  Image version: 3.0.0
+  Image build date: 5 June, 2024
  
     +----------------------------+---------------------------+-------------------------------+
     | Software Group             | Software                  | Version                       |
