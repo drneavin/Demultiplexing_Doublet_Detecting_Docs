@@ -1,50 +1,99 @@
-Bootstrap: docker
-From: continuumio/miniconda3
+BootStrap: library
+From: ubuntu:20.04
 
 %labels
     Author = Drew Neavin
-    Image_version = 2.0.1
+    Image_version = v3.0.0
+    Software = Demuxafy
 
 %environment
-    export PATH=/opt:/usr/games:/opt/samtools-1.16.1:/opt/bcftools-1.16:/opt/conda/envs/py37/bin:/opt/conda/bin:/opt/Demultiplexing_Doublet_Detecting_Docs/scripts:opt/Demultiplexing_Doublet_Detecting_Docs/mods:/opt/bedtools2/bin:opt/vcflib/bin:/opt/vcflib/scripts:/opt/souporcell:/opt/souporcell/troublet/target/release:/opt/minimap2-2.7:/root/.cargo/bin:/opt/freebayes/scripts:/opt/popscle/bin/:/opt/conda/envs/py37/lib/python3.7/site-packages/scSplit/:$PATH
-    export PYTHONPATH=/opt/conda/envs/py37/lib/python3.7/site-packages/
-    export LC_ALL=C 
+    # set up all essential environment variables
+    export LC_ALL=C
+    export PATH=/miniconda3/bin:/opt/minimap2-2.26_x64-linux:/opt/:/opt/hisat2-2.2.1:/opt/bedtools2/bin:/opt/souporcell:/opt/.cargo/bin:/opt/freebayes/scripts:/opt/popscle/bin/:/miniconda3/lib/python3.9/site-packages/scSplit:/opt/Demultiplexing_Doublet_Detecting_Docs/scripts:opt/Demultiplexing_Doublet_Detecting_Docs/mods:/usr/bin:/usr/local/cuda-11.8/bin:/opt/Drop-seq/dropseq-3.0.1-7-gf7acbbc/:/opt/gradle/gradle-8.8/bin:/$PATH
+    export PYTHONPATH=/miniconda3/lib/python3.9/:$PYTHONPATH
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu/:/miniconda3/lib/python3.9/site-packages/nvidia/cudnn/lib:/miniconda3/lib/
+    export JAVA_HOME=/usr/lib/jvm/jdk-21-oracle-x64
 
-
-%post 
-    #!/bin/bash
-    eval "$(command conda 'shell.bash' 'hook' 2> /dev/null)"
-    export PATH=/opt/conda/bin/:$PATH
+%post
+    #!/bin/dash
     export HOME=/root ## Needed for rust to behave correctly
+    export DEBIAN_FRONTEND=noninteractive
+    
+    # update and install essential dependencies
     apt update
-    yes | apt upgrade
-    yes | apt-get install build-essential
+    apt-get -y update
+    apt-get update && apt-get install -y automake build-essential bzip2 wget git default-jre unzip libcurl4-gnutls-dev libxml2-dev libssl-dev
+    apt-get install -y libcurl4-openssl-dev
     apt-get install -y --no-install-recommends apt-utils
-    gcc --version
-    yes | apt-get install wget
-    yes | apt-get install curl
+    apt-get -y install wget
+    apt-get -y install libtool
+    apt-get -y install flex
+    apt-get -y install zip unzip
+
+    apt-get -y install software-properties-common
+    apt update
+
+    apt-get -y install curl
+
+    export PATH=/usr/bin:$PATH
+
+    cd /opt
+    curl -V
+
+
+    ## Install java (for dropulation)
+    wget https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.deb
+    dpkg -i jdk-21_linux-x64_bin.deb
+    rm jdk-21_linux-x64_bin.deb
+
+    JAVA_HOME=/usr/lib/jvm/jdk-21-oracle-x64
+
+
+    ## dropulation
+    cd /opt
+
+    git clone https://github.com/broadinstitute/Drop-seq.git
+    cd Drop-seq
+    ./gradlew distZip
+    ls dropseq
+    ls dropseq/build/
+    ls dropseq/build/distributions
+    unzip -d /opt/Drop-seq ./dropseq/build/distributions/dropseq-3.0.1-7-gf7acbbc.zip
+    rm dropseq/build/distributions/dropseq-3.0.1-7-gf7acbbc.zip
+
+#    wget https://github.com/broadinstitute/Drop-seq/releases/download/v3.0.1/dropseq-3.0.1.zip
+#    unzip dropseq-3.0.1.zip
+#    rm dropseq-3.0.1.zip
+
+
     apt install -y dirmngr --install-recommends
     apt install -y software-properties-common
     apt install -y apt-transport-https
-    add-apt-repository 'deb http://deb.debian.org/debian buster-backports main'
     yes | apt-get update
     yes | apt-get upgrade
     apt install -y ca-certificates gnupg2
-    apt-key adv --keyserver keyserver.ubuntu.com --recv-key '95C0FAF38DB3CCAD0C080A7BDC78B2DDEABC47B7'
-    add-apt-repository 'deb http://cloud.r-project.org/bin/linux/debian bullseye-cran40/'
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-key 'E298A3A825C0D65DFD57CBB651716619E084DAB9'
+    yes | add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/'
+
+
     apt-get update
-    apt install -y r-base
+    apt install -y r-base 
     apt install -y r-base-dev
-    apt install -y r-cran-devtools
+    add-apt-repository ppa:c2d4u.team/c2d4u4.0+
+    apt update
+
+    apt list --upgradable
+
+    add-apt-repository ppa:cran/libgit2
+    apt install -y r-cran-devtools r-cran-usethis r-cran-gert -f
+
+
     apt-get update
     apt-get install -y libv8-dev
     apt-get update
     apt install -y ncdu
     apt install -y libgeos-dev
 
-
-    add-apt-repository 'deb http://security.debian.org/debian-security jessie/updates main'
-    apt-get update -y && apt-get install -y --no-install-recommends libssl1.0.0
 
     yes | apt-get install libncurses5-dev
     yes | apt-get install zlib1g-dev
@@ -53,13 +102,10 @@ From: continuumio/miniconda3
     yes | apt-get install zlib1g
     yes | apt-get install zlib1g-dev
     apt-get install -y pkg-config
-    apt-get install -y libcurl4-openssl-dev
     apt-get install -y graphviz
     apt-get install -y graphviz-dev
     apt-get install -y libxml2
-    apt-get install -y libxml2-dev
     apt-get install -y bzip2
-    apt-get install -y libssl-dev
     apt-get install -y devscripts
     apt-get install -y tabix
     apt-get install -y libcairo2-dev ## for complex heatmap
@@ -71,6 +117,17 @@ From: continuumio/miniconda3
     apt-get install -y libxt-dev
     apt-get install -y libhdf5-dev
     apt install -y libtiff-dev
+    apt-get install -y libasound2
+    apt-get -y install git
+    apt-get update
+    apt-get install -y libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev  libglpk-dev
+
+
+
+    ## igraph must be built before activating conda because of how it searches for some dependencies and decides things are available that aren't
+    R --slave -e 'install.packages("pak", repos = sprintf("https://r-lib.github.io/p/pak/stable/%s/%s/%s", .Platform$pkgType, R.Version()$os, R.Version()$arch))'
+    R --slave -e 'pak::pak("igraph/rigraph")'
+    R --slave -e 'devtools::install_github("cran/lsa")'
 
 
     cd /opt
@@ -81,130 +138,171 @@ From: continuumio/miniconda3
         make
         make install
         cmake --version
-
-
-    ### Install minimap 2 for souporcell ###
     cd /opt
-    wget https://github.com/lh3/minimap2/archive/v2.7.tar.gz
-        tar -xzvf v2.7.tar.gz
-        cd minimap2-2.7
-        make
+    rm cmake-3.14.4.tar.gz
 
-    ### Install bedtools2 for souporcell ###
+    # download, install, and update miniconda3
+    wget https://repo.anaconda.com/miniconda/Miniconda3-py39_24.3.0-0-Linux-x86_64.sh
+    bash Miniconda3-py39_24.3.0-0-Linux-x86_64.sh -b -f -p /miniconda3/
+    rm Miniconda3-py39_24.3.0-0-Linux-x86_64.sh
+
+    
+    # install dependencies via conda
+    eval "$(command conda 'shell.bash' 'hook' 2> /dev/null)"
+    export PATH="/miniconda3/bin:$PATH"
+    conda install -y -c conda-forge pip # general dependencies
+    conda update --all
+    
+    conda install -c conda-forge ncurses
+
+    apt-get -y install libncurses5-dev
+    apt-get -y install zlib1g-dev
+    apt-get -y install libbz2-dev
+    apt-get -y install liblzma-dev
+    apt-get -y install pkg-config
+
+
+    conda install conda-forge::pystan==2.19.1.1
+
+
+    
+    ### Install dependencies
     cd /opt
-    wget https://github.com/arq5x/bedtools2/releases/download/v2.30.0/bedtools-2.30.0.tar.gz
-        tar -zxvf bedtools-2.30.0.tar.gz
-        cd bedtools2
-        make
+    pip install pysam ##scSplit, souporcell
+    pip install pyfaidx ## souporcell
+    pip install "setuptools<58" --upgrade
+    pip install pyvcf  ##scSplit, souporcell
+    pip install scipy
+    pip install arviz==0.12.1
 
-    ### Activate cargo
+
+    ### Install solo ###
+
+    pip install tensorflow[and-cuda] tensorrt==8.6.1 tensorflow-gpu==2.8.0
+    yes | conda install cudatoolkit=11.8 nvidia/label/cuda-11.8.0::cuda
+    pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+    pip install torchmetrics==0.6.0 pytorch-lightning==1.3.1 scvi-tools==0.14.6 numpy==1.21.5
+
     cd /opt
-    CARGO_HOME=/opt/.cargo RUSTUP_HOME=/opt/.cargo bash -c 'curl https://sh.rustup.rs -sSf | sh -s -- -y'
-        . /opt/.cargo/env
-        which cargo
-        rustup default stable
+    git clone https://github.com/calico/solo.git
+    cd solo
+    git reset --hard cd0ec6b
+    git clean -df
+    ### There are some issues with updates to numpy handeling and other steps that were updated for python 3.12 but can't use 3.12 here (due to souporcell) but still need the updates => make the changes manually before building on the last commit before the 3.12 updates
+    sed -i 's/np.percentile(cell_umi_depth/np.percentile(np.array(cell_umi_depth)/g' /opt/solo/solo/solo.py
+    sed -i '319d' /opt/solo/solo/solo.py
+    sed -i '319i\    if logit_predictions.columns[0]=="doublet":' /opt/solo/solo/solo.py
+    sed -i '320i\        doublet_score = softmax_predictions[:, 0]' /opt/solo/solo/solo.py
+    sed -i '321i\    else:' /opt/solo/solo/solo.py
+    sed -i '322i\        doublet_score = softmax_predictions[:, 1]' /opt/solo/solo/solo.py
+    sed -i 's/.values//g' /opt/solo/solo/solo.py
 
-    ### Clone and install souporcell ###
-    cd /opt
-        git clone https://github.com/wheaton5/souporcell.git
-            cd souporcell/troublet
-            cargo build --release
-            cd /opt/souporcell/souporcell
-            cargo build --release
-
-
-    ### Update python to call for souporcell files
-    sed -i 's|#!/usr/bin/env python|#!/opt/conda/envs/py36/bin/python|g' /opt/souporcell/*.py
-    sed -i '1i #!/opt/conda/envs/py36/bin/python'  /opt/souporcell/check_modules.py
-
-    sed -i '2i import sys' /opt/souporcell/*.py
-    sed -i "3i sys.path.insert(0,'/opt/conda/envs/py36/lib/python3.6/site-packages')" /opt/souporcell/*.py
+    pip install -e .
 
 
+    pip install setuptools==57.5.0 ##scSplit, souporcell
+    pip install scikit-learn==1.0.2 ### later sklearns don't play well with scSplit need for numpy matrix...
+    pip install pandas==1.5.3
+    pip install matplotlib==3.2.2
+    pip install scikit-image
+    pip install numba
+    pip install annoy==1.15 ### can't be 1.17 based on feedback from some users about issues with scrublet on their system
+    pip install umap-learn
+    pip install h5py
+    pip install xgboost
+    pip install argparse
+    pip install biopython # to handle gzipped fasta files in souporcell
 
 
-    ## Make environment fo python 3.6.8 and install souporcell dependencies
-    yes | /opt/conda/bin/conda create -n py36 python=3.6.8 # 3.6 is needed for pystan to work properly;
-    yes | apt-get install git
-    /opt/conda/bin/conda init bash
-    eval "$(conda shell.bash hook)"
-    conda activate py36
 
-    /opt/conda/envs/py36/bin/pip install setuptools==57.5.0
-    yes | /opt/conda/envs/py36/bin/pip install pysam ##scSplit, souporcell
-    /opt/conda/envs/py36/bin/pip install pyvcf ##scSplit, souporcell
-    /opt/conda/envs/py36/bin/pip install numpy
-    /opt/conda/envs/py36/bin/pip install scipy
-    /opt/conda/envs/py36/bin/pip install pystan==2.17.1.0
-    /opt/conda/envs/py36/bin/pip install pyfaidx ## souporcell
-    /opt/conda/envs/py36/bin/pip install tensorflow ## required for souporcell
-
-    ## Make environment for conda and install python 3.7
-    yes | /opt/conda/bin/conda create -n py37 python=3.7.2 # I think 3.6 is needed for the pinned version of pystan to work properly; trying newer version with 3.7
-    conda activate py37
-
-
-    ### Install python dependencies  ###
-    /opt/conda/envs/py37/bin/pip install pytorch-lightning==1.3.1 torch==1.11.0 torchmetrics==0.7.2 torchvision==0.12.0
-    yes | conda install pytorch torchvision cudatoolkit=11.0.221 -c pytorch ## solo
-    /opt/conda/envs/py37/bin/pip install scvi-tools ## required for solo
-    /opt/conda/envs/py37/bin/pip install setuptools==57.5.0 ##scSplit, souporcell
-    /opt/conda/envs/py37/bin/pip install install Cython
-    yes | /opt/conda/envs/py37/bin/pip install pysam ##scSplit, souporcell
-    /opt/conda/envs/py37/bin/pip install pyvcf ##scSplit, souporcell
-    /opt/conda/envs/py37/bin/pip install numpy
-    /opt/conda/envs/py37/bin/pip install scipy 
-    /opt/conda/envs/py37/bin/pip install scikit-learn
-    /opt/conda/envs/py37/bin/pip install pandas
-    /opt/conda/envs/py37/bin/pip install matplotlib==3.2.2
-    /opt/conda/envs/py37/bin/pip install scikit-image
-    /opt/conda/envs/py37/bin/pip install numba
-    /opt/conda/envs/py37/bin/pip install annoy
-    /opt/conda/envs/py37/bin/pip install umap-learn
-    /opt/conda/envs/py37/bin/pip install h5py
-    /opt/conda/envs/py37/bin/pip install xgboost
-    /opt/conda/envs/py37/bin/pip install argparse
 
     ### Install R libraries ###
     ## Base helper packages ##
+    R --slave -e 'install.packages("textshaping", repo="http://cran.us.r-project.org")'
+    R --slave -e 'install.packages("ragg", repo="http://cran.us.r-project.org")'
+    R --slave -e 'install.packages("pkgdown", repos = "http://cran.us.r-project.org", dependecies=TRUE)'
     R --slave -e 'install.packages("V8", repos = "http://cran.us.r-project.org")'
     R --slave -e 'install.packages("devtools", repos = "http://cran.us.r-project.org")'
-    R --slave -e 'install.packages("tidyverse", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'remotes::install_github("tidyverse/tidyverse")'
     R --slave -e 'install.packages("data.table", repos = "http://cran.us.r-project.org")'
-    R --slave -e 'install.packages("BiocManager")'
-    R --slave -e 'install.packages("remotes", repos = "http://cran.us.r-project.org")'
     R --slave -e 'install.packages("xgboost", repos = "http://cran.us.r-project.org")'
-    R --slave -e 'install.packages("argparse", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'remotes::install_github("trevorld/r-argparse")'
     R --slave -e 'install.packages("https://cran.r-project.org/src/contrib/Archive/Matrix/Matrix_1.3-4.tar.gz", repos=NULL, type="source")'
 
     # ## Other helper pacages ##
+    R --slave -e 'install.packages("BiocManager")'
+    R --slave -e 'install.packages("remotes", repos = "http://cran.us.r-project.org")'
     R --slave -e 'install.packages("hdf5r", repos = "http://cran.us.r-project.org")'
-    R --slave -e 'devtools::install_github(repo="knausb/vcfR")'
+    R --slave -e 'devtools::install_github(repo="knausb/vcfR")' 
     R --slave -e 'install.packages("Cairo",repo="http://cran.us.r-project.org")' ### Required for Complex Heatmap
-    R --slave -e 'BiocManager::install("ComplexHeatmap")'
+    R --slave -e 'devtools::install_github("krassowski/complex-upset")'
     R --slave -e 'install.packages("lsa", repos = "http://cran.us.r-project.org")'
-    R --slave -e 'install.packages("ComplexUpset", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'devtools::install_github("cran/lsa")'
+#    R --slave -e 'install.packages("ComplexUpset", repos = "http://cran.us.r-project.org")'
+    R --slave -e 'devtools::install_github("jokergoo/ComplexHeatmap")'
 
     ## Single Cell packages ##
     R --slave -e 'install.packages("BH", repos = "http://cran.us.r-project.org")'
-    R --slave -e 'remotes::install_version("SeuratObject", version = "4.0.4")'
-    R --slave -e 'remotes::install_version("Seurat", version = "4.1.0")'
+    R --slave -e 'remotes::install_version("SeuratObject")'
+    R --slave -e 'remotes::install_version("Seurat")'
 
     # Doublet Detecting packages ##
-    R --slave -e 'install.packages("xgboost" ,repo="http://cran.us.r-project.org")' ### Depdnency for scDblFinder and scds
+    R --slave -e 'BiocManager::install("SparseArray")' ### Depdnency for scDblFinder and scds
     R --slave -e 'BiocManager::install("mbkmeans")' ### Depdnency for scDblFinder and scds
     R --slave -e 'devtools::install_github("kostkalab/scds", ref="master")' ### One of the dependencies = SCE so dont need to install separately
-    R --slave -e 'install.packages("ragg", repo="http://cran.us.r-project.org")'
     R --slave -e 'BiocManager::install("scDblFinder")'
     R --slave -e 'devtools::install_github("drneavin/DoubletDecon")' ### Forked and changed on August 2, 2022 because of errors with original directory and poor response from author of repo so unlikely to fix
     R --slave -e 'remotes::install_github("chris-mcginnis-ucsf/DoubletFinder")'
 
-    
+    ## For dropseq
+    R --slave -e 'devtools::install_github("broadinstitute/Drop-seq", subdir="/src/R/packages/DropSeq.utilities")'
+    R --slave -e 'devtools::install_github("broadinstitute/Drop-seq", subdir="/src/R/packages/DropSeq.dropulation")'
+
+
+
+    ### Install hisat2 for souporcell ###
+    cd /opt
+    wget https://cloud.biohpc.swmed.edu/index.php/s/oTtGWbWjaxsQ2Ho/download
+    mv download hisat2.zip
+    unzip hisat2.zip
+
+    ### Install minimap 2 for souporcell ###
+    cd /opt
+    wget https://github.com/lh3/minimap2/releases/download/v2.26/minimap2-2.26_x64-linux.tar.bz2
+    tar -xf minimap2-2.26_x64-linux.tar.bz2
+
+    ### Install bedtools2 for souporcell ###
+    cd /opt
+    wget https://github.com/arq5x/bedtools2/releases/download/v2.30.0/bedtools-2.30.0.tar.gz
+    tar -zxvf bedtools-2.30.0.tar.gz
+    cd bedtools2
+    make
+    cd /opt
+    rm bedtools-2.30.0.tar.gz
+
+    ### Activate cargo
+    cd /opt
+    CARGO_HOME=/opt/.cargo RUSTUP_HOME=/opt/.cargo bash -c 'curl https://sh.rustup.rs -sSf | sh -s -- -y'
+    . /opt/.cargo/env
+    which cargo
+    rustup default stable
+
+    ### Clone and install souporcell ###
+    cd /opt
+    git clone --recursive https://github.com/wheaton5/souporcell.git
+    cd souporcell/troublet
+    cargo build --release
+    cd /opt/souporcell/souporcell
+    cargo build --release
+
+
+
     ### Install CellSNP and Vireo ###
     pip3 install vireoSNP
     conda config --add channels bioconda
     conda config --add channels conda-forge
     conda install cellsnp-lite
+
 
     ### Install vartrix for souporcell ###
     cd /opt
@@ -215,44 +313,50 @@ From: continuumio/miniconda3
 
     ### Install htslib for samtools - souporcell ###
     cd /opt
-    wget https://github.com/samtools/htslib/releases/download/1.16/htslib-1.16.tar.bz2
-        tar xvfj htslib-1.16.tar.bz2
-        cd htslib-1.16
-        ./configure
-        make
-        make install
+    wget https://github.com/samtools/htslib/releases/download/1.20/htslib-1.20.tar.bz2
+    tar xvfj htslib-1.20.tar.bz2
+    rm htslib-1.20.tar.bz2
+    cd htslib-1.20
+    ./configure
+    make
+    make install
 
-    ### Install samtools - souporcell ###
-    cd /opt
-        wget https://github.com/samtools/samtools/releases/download/1.16.1/samtools-1.16.1.tar.bz2
-        tar xvfj samtools-1.16.1.tar.bz2
-        cd samtools-1.16.1
-        ./configure
-        make
-        make install
 
-    ### Install bcftools - souporcell ###
     cd /opt
-        wget https://github.com/samtools/bcftools/releases/download/1.16/bcftools-1.16.tar.bz2
-        tar xvfj bcftools-1.16.tar.bz2
-        cd bcftools-1.16
-        ./configure
-        make
-        make install
+    wget https://github.com/samtools/samtools/releases/download/1.20/samtools-1.20.tar.bz2
+    tar xvfj samtools-1.20.tar.bz2
+    rm samtools-1.20.tar.bz2
+    cd samtools-1.20
+    ./configure
+    make
+    make install
+
+
+    cd /opt
+    wget https://github.com/samtools/bcftools/releases/download/1.20/bcftools-1.20.tar.bz2
+    tar xvfj bcftools-1.20.tar.bz2
+    rm bcftools-1.20.tar.bz2
+    cd bcftools-1.20
+    ./configure --enable-versioned-symbols
+    make
+    make install
 
 
     ### Install freebayes - souporcell and scSplit ###
-    # conda install -c bioconda tabixpp ## For vcflib
     conda install -c bioconda freebayes=1.3.5 ## Some older version dont have the required functionality but know that 1.3.5 does so should use at leaast 1.3.5
 
 
+
     ### Install vcflib - I think for scSplit to parallelize if necessary? ###
-    conda install -c bioconda vcflib
+    conda install -c bioconda vcflib==1.0.3
+
+
 
     ### Install vcftools ###
     cd /opt
     wget https://github.com/vcftools/vcftools/releases/download/v0.1.16/vcftools-0.1.16.tar.gz
         tar xvf vcftools-0.1.16.tar.gz
+        rm vcftools-0.1.16.tar.gz
         cd vcftools-0.1.16
         ./configure
         make
@@ -269,48 +373,45 @@ From: continuumio/miniconda3
         cmake ..
         make
 
+
+
     ### Install scSplit ###
-    /opt/conda/envs/py37/bin/pip install scSplit
-    chmod 777 /opt/conda/envs/py37/lib/python3.7/site-packages/scSplit/scSplit
+    pip install scSplit
+    chmod 777 /miniconda3/lib/python3.9/site-packages/scSplit/scSplit
 
     ### Install scrublet
-    /opt/conda/envs/py37/bin/pip install scrublet
+    pip install scrublet
+
 
     ### Install DoubletDetection
     cd /opt
     git clone https://github.com/JonathanShor/DoubletDetection.git
     cd DoubletDetection
-        /opt/conda/envs/py37/bin/pip install .
+        pip install .
+
 
     ## Install gnu parallel for txn doublet detecting softwares ####
     cd /opt
     wget http://ftp.gnu.org/gnu/parallel/parallel-latest.tar.bz2
         tar xjf parallel-latest.tar.bz2
+        rm parallel-latest.tar.bz2
         cd parallel-*
         ./configure && make
         yes | make install
         cd /opt
 
 
-    # ### Set up louvain for solo ###
-    # sed -i 's/louvain.set_rng_seed(random_state)/partition_kwargs["seed"] = random_state/g'  /opt/conda/envs/py37/lib/python3.7/site-packages/scanpy/tools/_louvain.py
+    ## demuxalot
+    pip install demuxalot
 
-    ### Install solo ###
-    cd /opt
-    yes | git clone https://github.com/calico/solo.git && cd solo && /opt/conda/envs/py37/bin/pip install -e .
+
 
     ### Get the github repo with scripts for workflow ###
     cd /opt
-#        git clone  --branch v1.0.2 https://github.com/drneavin/Demultiplexing_Doublet_Detecting_Docs.git
-        git clone  --branch main https://github.com/drneavin/Demultiplexing_Doublet_Detecting_Docs.git
+        git clone  --branch v3.0.0 https://github.com/drneavin/Demultiplexing_Doublet_Detecting_Docs.git
                 cd Demultiplexing_Doublet_Detecting_Docs
                 rm -rf references ## Only hosting on  github for people to download if they want, no need to take up extra space in the image
                 rm -rf docs ## doc files, dont need in image
-
-    ### Needed for R libraries ###
-    cp /opt/conda/lib/libstdc++.so.6.0.29 /usr/lib/x86_64-linux-gnu/
-    mv /usr/lib/x86_64-linux-gnu/libstdc++.so.6 /usr/lib/x86_64-linux-gnu/libstdc++.so.6.bkp
-    ln -s /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.29 /usr/lib/x86_64-linux-gnu/libstdc++.so.6
 
 
 
@@ -320,15 +421,6 @@ From: continuumio/miniconda3
 
 
     ### Remove unnecessary files ###
-    cd /opt
-    rm cmake-3.14.4.tar.gz
-    rm v2.7.tar.gz
-    rm bedtools-2.30.0.tar.gz
-    rm htslib-1.16.tar.bz2
-    rm samtools-1.16.1.tar.bz2
-    rm bcftools-1.16.tar.bz2
-    rm vcftools-0.1.16.tar.gz
-    rm parallel-latest.tar.bz2
-
     conda clean --all 
 
+    unset DEBIAN_FRONTEND

@@ -103,9 +103,9 @@ Please note that the ``\`` at the end of each line is purely for readability to 
   .. code-block:: bash
 
     singularity exec Demuxafy.sif TagReadWithGeneFunction \
-              --ANNOTATIONS_FILE $GTF \
-              --INPUT $BAM \
-              --OUTPUT $DROPULATION_OUTDIR/possorted_genome_bam_dropulation_tag.bam
+              ANNOTATIONS_FILE=$GTF \
+              INPUT=$BAM \
+              OUTPUT=$DROPULATION_OUTDIR/possorted_genome_bam_dropulation_tag.bam
 
 
 If the bam annotation is successful, you will have these new files in your ``$DROPULATION_OUTDIR``:
@@ -140,10 +140,15 @@ Please note that the ``\`` at the end of each line is purely for readability to 
             --OUTPUT $DROPULATION_OUTDIR/assignments.tsv.gz \
             --VCF $VCF \
             --SAMPLE_FILE $INDS \
-            ${CELL_TAG:+--CELL_BARCODE_TAG $CELL_TAG} \
-            ${UMI_TAG:+--MOLECULAR_BARCODE_TAG $UMI_TAG} \
+            --CELL_BARCODE_TAG $CELL_TAG \
+            --MOLECULAR_BARCODE_TAG $UMI_TAG \
             --VCF_OUTPUT $DROPULATION_OUTDIR/assignment.vcf \
             --MAX_ERROR_RATE 0.05
+
+.. admonition:: note
+
+  You might choose not to include the ``--SAMPLE_FILE`` if you have genotype information for many donors across multiple pools.
+  This would help identify potential sample swaps between pools (we see this happen often in practice when multiple pools are processed for a single project).
 
 
 If the bam annotation is successful, you will have these new files in your ``$DROPULATION_OUTDIR``:
