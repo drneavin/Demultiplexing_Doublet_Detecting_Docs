@@ -79,7 +79,7 @@ First, let's assign the variables that will be used to execute each step.
       BARCODES=/path/to/TestData4PipelineFull/test_dataset/outs/filtered_gene_bc_matrices/Homo_sapiens_GRCh38p10/barcodes.tsv
       BAM=/path/to/test_dataset/possorted_genome_bam.bam
       SOUPORCELL_OUTDIR=/path/to/output/souporcell
-      N=13
+      N=14
 
 
 Run Souporcell Pipeline
@@ -126,7 +126,7 @@ Please note that the ``\`` at the end of each line is purely for readability to 
 
     .. code-block:: bash
 
-      singularity exec Demuxafy.sif Souprocell.py \
+      singularity exec Demuxafy.sif Souporcell.py \
         -i $BAM \
         -b $BARCODES \
         -f $FASTA \
@@ -136,7 +136,7 @@ Please note that the ``\`` at the end of each line is purely for readability to 
         ${UMI_TAG:+--umi_tag $UMI_TAG} \
         -k $N \
         --known_genotypes $VCF \
-        --known_genotypes_sample_names donor1 donor donor3 donor4
+        --known_genotypes_sample_names 113_113 349_350 352_353 39_39 40_40 41_41 42_42 43_43 465_466 596_597 597_598 632_633 633_634 660_661
 
     .. admonition:: HELP! It says my file/directory doesn't exist!
       :class: dropdown
