@@ -17,7 +17,7 @@ However, :ref:`Souporcell <Souporcell-docs>` and :ref:`Vireo <Vireo-docs>` are a
 +--------------------------------------+------------------------------------------+------------------------------------------+------------------------------------------+
 |:ref:`Dropulation <Dropulation-docs>` | .. centered:: |:heavy_check_mark:|       | .. centered:: |:heavy_check_mark:|       | .. centered:: |:heavy_multiplication_x:| |
 +--------------------------------------+------------------------------------------+------------------------------------------+------------------------------------------+
-|:ref:`Femuxlet <Freemuxlet-docs>`     | .. centered:: |:heavy_multiplication_x:| | .. centered:: |:heavy_multiplication_x:| | .. centered:: |:heavy_multiplication_x:| |
+|:ref:`Freemuxlet <Freemuxlet-docs>`     | .. centered:: |:heavy_multiplication_x:| | .. centered:: |:heavy_multiplication_x:| | .. centered:: |:heavy_multiplication_x:| |
 +--------------------------------------+------------------------------------------+------------------------------------------+------------------------------------------+
 |:ref:`scSplit <scSplit-docs>`         | .. centered:: |:heavy_multiplication_x:| | .. centered:: |:heavy_multiplication_x:| | .. centered:: |:heavy_multiplication_x:| |
 +--------------------------------------+------------------------------------------+------------------------------------------+------------------------------------------+
