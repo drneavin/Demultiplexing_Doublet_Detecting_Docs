@@ -12,9 +12,8 @@ Just download the singlularity image with:
 
   .. code-block:: bash
 
-    wget -O Demuxafy.sif 'https://www.dropbox.com/scl/fi/kykwi78vk4yifbbag5ajz/Demuxafy.sif?rlkey=5hcugu6ztpy0eik3xno63xiar'
-    wget -O Demuxafy.sif.md5 'https://www.dropbox.com/scl/fi/37oj9y1frzhqazl4h8s21/Demuxafy.sif.md5?rlkey=o2bn5wp9q68numlaav8gg95kh'
-
+    wget -O Demuxafy.sif 'https://drive.usercontent.google.com/download?id=19QBwd9kfhcGyTMJmQ4F28X3fojrFJC_9&export=download&confirm=t'
+    wget -O Demuxafy.sif.md5 'https://drive.usercontent.google.com/download?id=1ds2voi76v2HoUxrZ4IS5Q6vOUD3xER0w&export=download&confirm=t'
 
 
 
